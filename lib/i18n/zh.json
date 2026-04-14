@@ -1,0 +1,104 @@
+{
+  "appName": "联想 AML 风险雷达",
+  "appTagline": "面向客户与供应商的制裁、国家风险与规避分析",
+  "nav": {
+    "home": "仪表盘",
+    "companies": "公司",
+    "methodology": "评分方法",
+    "sources": "数据源"
+  },
+  "search": {
+    "placeholder": "搜索 200 家客户或供应商…",
+    "noResults": "没有匹配的公司",
+    "viewAll": "查看全部公司 →"
+  },
+  "home": {
+    "heroTitle": "为每一个客户与供应商评分——附完整引证。",
+    "heroSub": "六维度综合评分，融合 FATF、OFAC、UN、EU 制裁名单、巴塞尔反洗钱指数、透明国际 CPI、世界银行 WGI 以及 OpenSanctions。每一个因子都可追溯到原始数据源。",
+    "stat": {
+      "companies": "监测公司总数",
+      "highRisk": "高 / 极高风险",
+      "sanctionsHits": "制裁暴露",
+      "sources": "权威数据源"
+    },
+    "top10Title": "Top 10 最高风险交易对手",
+    "top10Sub": "按综合评分排序。合成公司名仅用于演示。",
+    "distributionTitle": "风险等级分布",
+    "geoTitle": "地理热点",
+    "geoSub": "按总部所在国计算的平均风险分。"
+  },
+  "company": {
+    "overall": "综合风险评分",
+    "customer": "客户",
+    "supplier": "供应商",
+    "tier1": "一级",
+    "tier2": "二级",
+    "tier3": "三级",
+    "hq": "总部",
+    "industry": "行业",
+    "operations": "运营辖区",
+    "annualVolume": "年度交易额（美元）",
+    "founded": "成立",
+    "subsidiaries": "子公司",
+    "ubos": "最终受益人",
+    "pep": "政治敏感人物",
+    "illustrative": "示意性占位——真实公司名仅用于锚定一个低风险 Tier-1 画像。",
+    "dimensionsTitle": "六维度风险分解",
+    "factorsHeader": "贡献因子",
+    "rationale": "得分解释",
+    "sources": "数据来源",
+    "value": "观测值",
+    "factorScore": "因子得分",
+    "weight": "权重"
+  },
+  "companies": {
+    "title": "全部公司",
+    "sub": "完整的客户与供应商监测清单及实时评分。",
+    "filters": {
+      "all": "全部",
+      "customer": "客户",
+      "supplier": "供应商",
+      "level": "风险等级",
+      "region": "地区"
+    },
+    "columns": {
+      "name": "名称",
+      "type": "类型",
+      "hq": "总部",
+      "industry": "行业",
+      "tier": "级别",
+      "score": "评分",
+      "level": "等级"
+    }
+  },
+  "methodology": {
+    "title": "评分方法论",
+    "sub": "基于规则的六类 AML 能力综合评分。无机器学习，每个因子都确定可引证。",
+    "weightTitle": "维度权重",
+    "levelsTitle": "风险等级",
+    "factorTitle": "各维度的因子"
+  },
+  "sources": {
+    "title": "数据源",
+    "sub": "用于评分国家级因子的权威公开数据源。快照日期反映本地数据最近刷新时间。",
+    "visit": "访问数据源",
+    "snapshot": "快照"
+  },
+  "risk": {
+    "low": "低",
+    "medium": "中",
+    "high": "高",
+    "critical": "极高"
+  },
+  "disclaimer": {
+    "short": "演示用例——合成公司数据 + 真实国家数据快照。",
+    "full": "本应用为 AML / 合规评分架构的技术演示。公司风险分数基于合成数据生成；出现在 Demo 中的真实公司名仅作为良性占位符，用于示意低风险 Tier-1 实体画像，并不反映任何真实合规评估。国家级参考数据来自权威公开来源（见数据源页面的快照日期），可能已过时于最新名单。本工具不能替代专业制裁筛查与尽职调查。"
+  },
+  "common": {
+    "viewDetails": "查看详情",
+    "back": "返回",
+    "backToDashboard": "返回仪表盘",
+    "scoreOutOf100": "/ 100",
+    "language": "语言"
+  }
+}

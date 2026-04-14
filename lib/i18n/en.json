@@ -1,0 +1,104 @@
+{
+  "appName": "Lenovo AML Risk Watch",
+  "appTagline": "Sanctions, country risk & circumvention analytics for customers and suppliers",
+  "nav": {
+    "home": "Dashboard",
+    "companies": "Companies",
+    "methodology": "Methodology",
+    "sources": "Data Sources"
+  },
+  "search": {
+    "placeholder": "Search any of 200 customers or suppliers…",
+    "noResults": "No company matches that name",
+    "viewAll": "View all companies →"
+  },
+  "home": {
+    "heroTitle": "Risk score every customer and supplier — with citations.",
+    "heroSub": "Six-dimension assessment combining FATF, OFAC, UN, EU sanctions, Basel AML Index, Transparency International CPI, World Bank WGI, and OpenSanctions. Every factor links back to its source.",
+    "stat": {
+      "companies": "Companies monitored",
+      "highRisk": "High / Critical risk",
+      "sanctionsHits": "Sanctions exposure",
+      "sources": "Authoritative sources"
+    },
+    "top10Title": "Top 10 Highest-Risk Counterparties",
+    "top10Sub": "Sorted by overall composite score. Synthetic names for illustrative purposes.",
+    "distributionTitle": "Risk Distribution",
+    "geoTitle": "Geographic Hotspots",
+    "geoSub": "Average risk score by headquarters country."
+  },
+  "company": {
+    "overall": "Overall composite score",
+    "customer": "Customer",
+    "supplier": "Supplier",
+    "tier1": "Tier 1",
+    "tier2": "Tier 2",
+    "tier3": "Tier 3",
+    "hq": "Headquarters",
+    "industry": "Industry",
+    "operations": "Operating jurisdictions",
+    "annualVolume": "Annual volume (USD)",
+    "founded": "Founded",
+    "subsidiaries": "Subsidiaries",
+    "ubos": "Ultimate beneficial owners",
+    "pep": "PEP",
+    "illustrative": "Illustrative placeholder — real company name used only to anchor a low-risk tier-1 profile.",
+    "dimensionsTitle": "Six-dimension risk breakdown",
+    "factorsHeader": "Contributing factors",
+    "rationale": "Why this score",
+    "sources": "Sources",
+    "value": "Observed value",
+    "factorScore": "Factor score",
+    "weight": "Weight"
+  },
+  "companies": {
+    "title": "All companies",
+    "sub": "Full book of monitored customers and suppliers with live scores.",
+    "filters": {
+      "all": "All",
+      "customer": "Customers",
+      "supplier": "Suppliers",
+      "level": "Risk level",
+      "region": "Region"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "hq": "HQ",
+      "industry": "Industry",
+      "tier": "Tier",
+      "score": "Score",
+      "level": "Level"
+    }
+  },
+  "methodology": {
+    "title": "Scoring methodology",
+    "sub": "Transparent, rule-based composite of six AML skills. No ML; every factor is deterministic and citable.",
+    "weightTitle": "Dimension weights",
+    "levelsTitle": "Risk levels",
+    "factorTitle": "Factors by dimension"
+  },
+  "sources": {
+    "title": "Data sources",
+    "sub": "Authoritative public sources used to score country-level factors. Snapshot dates reflect when we last refreshed the local data file.",
+    "visit": "Visit source",
+    "snapshot": "Snapshot"
+  },
+  "risk": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  "disclaimer": {
+    "short": "Illustrative demo — synthetic company data, real country snapshots.",
+    "full": "This application is a technical demonstration of AML/compliance scoring architecture. Company risk scores are generated from synthetic data. Real company names appearing in the demo are used only as benign placeholders to illustrate low-risk tier-1 entities and do not reflect any actual compliance assessment. Country-level reference data is sourced from public authorities with snapshot dates indicated on the Sources page and may be outdated relative to current lists. Not a substitute for professional sanctions screening or due diligence."
+  },
+  "common": {
+    "viewDetails": "View details",
+    "back": "Back",
+    "backToDashboard": "Back to dashboard",
+    "scoreOutOf100": "/ 100",
+    "language": "Language"
+  }
+}

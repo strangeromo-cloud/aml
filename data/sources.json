@@ -1,0 +1,134 @@
+[
+  {
+    "id": "fatf_lists",
+    "name": { "en": "FATF High-Risk & Monitored Jurisdictions", "zh": "FATF 高风险与受监控司法辖区" },
+    "authority": "Financial Action Task Force",
+    "url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html",
+    "snapshotDate": "2026-02-14",
+    "description": {
+      "en": "Public statement listing jurisdictions subject to a call for action (blacklist) and jurisdictions under increased monitoring (greylist).",
+      "zh": "公开声明所列的行动呼吁国（黑名单）和受加强监控的国家（灰名单）。"
+    }
+  },
+  {
+    "id": "ofac_sdn",
+    "name": { "en": "OFAC Specially Designated Nationals List", "zh": "OFAC 特别指定国民名单" },
+    "authority": "U.S. Department of the Treasury – OFAC",
+    "url": "https://sanctionssearch.ofac.treas.gov/",
+    "snapshotDate": "2026-03-28",
+    "description": {
+      "en": "Primary U.S. consolidated list of individuals and entities subject to asset blocking under OFAC programs.",
+      "zh": "美国 OFAC 项目下受资产冻结的个人和实体的主要综合名单。"
+    }
+  },
+  {
+    "id": "ofac_countries",
+    "name": { "en": "OFAC Sanctions Programs by Country", "zh": "OFAC 按国家划分的制裁项目" },
+    "authority": "U.S. Department of the Treasury – OFAC",
+    "url": "https://ofac.treasury.gov/sanctions-programs-and-country-information",
+    "snapshotDate": "2026-03-28",
+    "description": {
+      "en": "Country-level program descriptions including comprehensive embargoes (Cuba, Iran, North Korea, Syria) and sectoral programs (Russia, Venezuela).",
+      "zh": "按国家划分的制裁项目说明，包括全面禁运（古巴、伊朗、朝鲜、叙利亚）和部门制裁（俄罗斯、委内瑞拉）。"
+    }
+  },
+  {
+    "id": "un_consolidated",
+    "name": { "en": "UN Security Council Consolidated Sanctions List", "zh": "联合国安理会综合制裁名单" },
+    "authority": "United Nations Security Council",
+    "url": "https://www.un.org/securitycouncil/content/un-sc-consolidated-list",
+    "snapshotDate": "2026-03-20",
+    "description": {
+      "en": "Consolidated list of individuals and entities subject to UN Security Council sanctions regimes.",
+      "zh": "受联合国安理会各制裁机制约束的个人与实体综合清单。"
+    }
+  },
+  {
+    "id": "eu_consolidated",
+    "name": { "en": "EU Consolidated Financial Sanctions List", "zh": "欧盟综合金融制裁名单" },
+    "authority": "European Commission – Financial Sanctions Database",
+    "url": "https://webgate.ec.europa.eu/fsd/fsf",
+    "snapshotDate": "2026-03-22",
+    "description": {
+      "en": "Consolidated list of persons, groups and entities subject to EU financial sanctions.",
+      "zh": "受欧盟金融制裁的个人、团体和实体综合清单。"
+    }
+  },
+  {
+    "id": "basel_aml",
+    "name": { "en": "Basel AML Index", "zh": "巴塞尔反洗钱指数" },
+    "authority": "Basel Institute on Governance",
+    "url": "https://index.baselgovernance.org",
+    "snapshotDate": "2024-11-15",
+    "description": {
+      "en": "Annual country ranking of money laundering and terrorist financing risks based on 17 indicators (0–10 scale).",
+      "zh": "基于 17 个指标对各国洗钱与恐怖融资风险进行的年度排名（0-10 分）。"
+    }
+  },
+  {
+    "id": "ti_cpi",
+    "name": { "en": "Transparency International Corruption Perceptions Index", "zh": "透明国际清廉指数" },
+    "authority": "Transparency International",
+    "url": "https://www.transparency.org/en/cpi",
+    "snapshotDate": "2024-01-30",
+    "description": {
+      "en": "Annual country ranking on perceived levels of public-sector corruption (0 = highly corrupt, 100 = very clean).",
+      "zh": "对各国公共部门腐败感知程度的年度排名（0 = 极度腐败，100 = 非常清廉）。"
+    }
+  },
+  {
+    "id": "wb_wgi",
+    "name": { "en": "World Bank Worldwide Governance Indicators", "zh": "世界银行全球治理指标" },
+    "authority": "World Bank Group",
+    "url": "https://info.worldbank.org/governance/wgi/",
+    "snapshotDate": "2024-09-24",
+    "description": {
+      "en": "Six governance dimensions including Control of Corruption, scored from -2.5 (weak) to 2.5 (strong).",
+      "zh": "六大治理维度（包括腐败控制），评分范围 -2.5（弱）至 2.5（强）。"
+    }
+  },
+  {
+    "id": "wjp_rol",
+    "name": { "en": "WJP Rule of Law Index", "zh": "WJP 法治指数" },
+    "authority": "World Justice Project",
+    "url": "https://worldjusticeproject.org/rule-of-law-index",
+    "snapshotDate": "2024-10-23",
+    "description": {
+      "en": "Country scores on rule of law across constraints on government, corruption, fundamental rights, order, and regulatory enforcement.",
+      "zh": "对各国在政府约束、腐败、基本权利、秩序与监管执行等方面的法治评分。"
+    }
+  },
+  {
+    "id": "tjn_fsi",
+    "name": { "en": "Financial Secrecy Index", "zh": "金融保密指数" },
+    "authority": "Tax Justice Network",
+    "url": "https://taxjustice.net/topics/financial-secrecy-index/",
+    "snapshotDate": "2022-05-17",
+    "description": {
+      "en": "Ranks jurisdictions by their contribution to global financial secrecy and opacity of corporate/beneficial ownership.",
+      "zh": "按各司法辖区对全球金融保密及公司/受益所有权不透明的贡献进行排名。"
+    }
+  },
+  {
+    "id": "open_sanctions",
+    "name": { "en": "OpenSanctions", "zh": "OpenSanctions 开放制裁" },
+    "authority": "OpenSanctions e.V.",
+    "url": "https://www.opensanctions.org",
+    "snapshotDate": "2026-03-30",
+    "description": {
+      "en": "Aggregated open database of sanctions, PEPs, and other watchlists for entity screening.",
+      "zh": "用于实体筛查的制裁、PEP 及其他关注名单的聚合开放数据库。"
+    }
+  },
+  {
+    "id": "control_risks_geo",
+    "name": { "en": "Control Risks Country Risk Forecast", "zh": "Control Risks 国家风险预测" },
+    "authority": "Control Risks",
+    "url": "https://www.controlrisks.com/our-thinking/insights/riskmap",
+    "snapshotDate": "2025-12-10",
+    "description": {
+      "en": "Commercial geopolitical and operational risk ratings used as context for circumvention and jurisdiction monitoring.",
+      "zh": "用于规避风险与司法辖区监控的商业地缘政治与运营风险评级。"
+    }
+  }
+]
