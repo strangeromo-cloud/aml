@@ -13,7 +13,7 @@
     "viewAll": "View all companies →"
   },
   "home": {
-    "heroTitle": "Risk score every customer and supplier — with citations.",
+    "heroTitle": "Risk score every customer and supplier",
     "heroSub": "Six-dimension assessment combining FATF, OFAC, UN, EU sanctions, Basel AML Index, Transparency International CPI, World Bank WGI, and OpenSanctions. Every factor links back to its source.",
     "stat": {
       "companies": "Companies monitored",
