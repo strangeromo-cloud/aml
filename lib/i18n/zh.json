@@ -13,7 +13,7 @@
     "viewAll": "查看全部公司 →"
   },
   "home": {
-    "heroTitle": "为每一个客户与供应商评分——附完整引证。",
+    "heroTitle": "为每一个客户与供应商评分",
     "heroSub": "六维度综合评分，融合 FATF、OFAC、UN、EU 制裁名单、巴塞尔反洗钱指数、透明国际 CPI、世界银行 WGI 以及 OpenSanctions。每一个因子都可追溯到原始数据源。",
     "stat": {
       "companies": "监测公司总数",
