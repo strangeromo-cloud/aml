@@ -1,6 +1,6 @@
 "use client";
 
-import { DatabaseZap, Layers, FlaskConical } from "lucide-react";
+import { DatabaseZap, Layers, Shuffle, FlaskConical } from "lucide-react";
 import type { DataSource } from "@/lib/types";
 import { DIMENSION_NAMES, DIMENSION_WEIGHTS } from "@/lib/types";
 import { useI18n } from "@/lib/i18n/context";
@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 import { Card, CardBody, CardHeader, CardTitle } from "./ui";
 
 // "real"   = computed from real public-source country snapshot (data/countries.json)
-// "hybrid" = real reference data combined with synthetic entity data, OR proxy/hardcoded list
+// "hybrid" = real reference data combined with synthetic entity data
+// "proxy"  = approximated from a different real dataset or hand-curated dictionary
 // "mock"   = factor signal is fully synthetic (no real-data backing)
-type DataReality = "real" | "hybrid" | "mock";
+type DataReality = "real" | "hybrid" | "proxy" | "mock";
 
 type FactorMeta = {
   en: string;
@@ -49,14 +50,20 @@ const FACTOR_CATALOG: Record<keyof typeof DIMENSION_NAMES, FactorMeta[]> = {
   ],
   enrichment: [
     { en: "WGI Control of Corruption", zh: "WGI 腐败控制", weight: 0.5, sourceIds: ["wb_wgi"], dataReality: "real" },
-    { en: "Rule of Law Environment", zh: "法治环境", weight: 0.3, sourceIds: ["wjp_rol", "wb_wgi"], dataReality: "hybrid" },
-    { en: "Financial Secrecy", zh: "金融保密度", weight: 0.2, sourceIds: ["tjn_fsi"], dataReality: "hybrid" },
+    { en: "Rule of Law Environment", zh: "法治环境", weight: 0.3, sourceIds: ["wjp_rol", "wb_wgi"], dataReality: "proxy" },
+    { en: "Financial Secrecy", zh: "金融保密度", weight: 0.2, sourceIds: ["tjn_fsi"], dataReality: "proxy" },
   ],
 };
 
 const REALITY_META: Record<
   DataReality,
-  { Icon: typeof DatabaseZap; label: { en: string; zh: string }; tip: { en: string; zh: string }; cls: string }
+  {
+    Icon: typeof DatabaseZap;
+    label: { en: string; zh: string };
+    tip: { en: string; zh: string };
+    cls: string;
+    dotCls: string;
+  }
 > = {
   real: {
     Icon: DatabaseZap,
@@ -66,15 +73,27 @@ const REALITY_META: Record<
       zh: "由 data/countries.json 中手工录入的真实公开数据驱动（FATF / OFAC / Basel / CPI / WGI 快照）。",
     },
     cls: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+    dotCls: "bg-emerald-500",
   },
   hybrid: {
     Icon: Layers,
-    label: { en: "Hybrid", zh: "混合 / 代理" },
+    label: { en: "Hybrid", zh: "混合" },
     tip: {
-      en: "Combines real reference data (countries / hardcoded regulator-cited lists) with synthetic entity data, or uses a proxy mapping where the precise dataset is not bundled.",
-      zh: "结合真实参考数据（国家 / 监管引用的硬编码清单）与合成实体数据；或使用代理映射（精确数据集未打包）。",
+      en: "Real reference data (country classifications or hardcoded regulator-cited lists) combined with synthetic entity data.",
+      zh: "真实参考数据（国家分类或监管引用的硬编码清单）与合成实体数据的组合。",
     },
     cls: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30",
+    dotCls: "bg-amber-500",
+  },
+  proxy: {
+    Icon: Shuffle,
+    label: { en: "Proxy", zh: "代理近似" },
+    tip: {
+      en: "Approximated from a different real dataset (e.g., WGI used as a proxy for WJP) or a hand-curated dictionary (FSI hubs), because the precise source dataset is not bundled.",
+      zh: "用另一个真实数据集近似替代（如用 WGI 代 WJP 法治），或用手工字典近似（如 FSI 保密枢纽）——精确源数据集未打包。",
+    },
+    cls: "bg-violet-500/15 text-violet-700 dark:text-violet-300 border-violet-500/30",
+    dotCls: "bg-violet-500",
   },
   mock: {
     Icon: FlaskConical,
@@ -84,6 +103,7 @@ const REALITY_META: Record<
       zh: "信号完全模拟——由 scripts/generate-companies.ts 用种子 PRNG 生成，按公司风险等级标定。",
     },
     cls: "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30",
+    dotCls: "bg-rose-500",
   },
 };
 
@@ -162,13 +182,14 @@ export function MethodologyContent({ sources }: { sources: Record<string, DataSo
           <CardTitle>{t("methodology.dataRealityTitle")}</CardTitle>
         </CardHeader>
         <CardBody>
-          <div className="grid gap-3 md:grid-cols-3">
-            {(["real", "hybrid", "mock"] as const).map((k) => {
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {(["real", "hybrid", "proxy", "mock"] as const).map((k) => {
               const meta = REALITY_META[k];
               const count = dims.flatMap((d) => FACTOR_CATALOG[d]).filter((f) => f.dataReality === k).length;
               return (
                 <div key={k} className={cn("rounded-md border px-3 py-3", meta.cls)}>
                   <div className="flex items-center gap-2">
+                    <span className={cn("inline-block h-2.5 w-2.5 rounded-full", meta.dotCls)} />
                     <meta.Icon className="h-4 w-4" />
                     <span className="font-semibold">{tl(meta.label)}</span>
                     <span className="ml-auto rounded-md border border-current/30 bg-white/40 px-1.5 py-0.5 text-[11px] font-mono dark:bg-black/20">
@@ -202,15 +223,10 @@ export function MethodologyContent({ sources }: { sources: Record<string, DataSo
                   return (
                     <li key={i} className="flex flex-wrap items-center gap-2 rounded-md border px-3 py-2">
                       <span
-                        className={cn(
-                          "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium",
-                          meta.cls,
-                        )}
-                        title={tl(meta.tip)}
-                      >
-                        <meta.Icon className="h-3 w-3" />
-                        {tl(meta.label)}
-                      </span>
+                        className={cn("inline-block h-2.5 w-2.5 shrink-0 rounded-full", meta.dotCls)}
+                        title={`${tl(meta.label)} — ${tl(meta.tip)}`}
+                        aria-label={tl(meta.label)}
+                      />
                       <span className="flex-1">{locale === "zh" ? f.zh : f.en}</span>
                       <span className="text-xs text-[hsl(var(--muted-foreground))]">
                         {(f.weight * 100).toFixed(0)}%
