@@ -1,45 +1,90 @@
 "use client";
 
-import type { DataSource, DimensionScore } from "@/lib/types";
+import { DatabaseZap, Layers, FlaskConical } from "lucide-react";
+import type { DataSource } from "@/lib/types";
 import { DIMENSION_NAMES, DIMENSION_WEIGHTS } from "@/lib/types";
 import { useI18n } from "@/lib/i18n/context";
+import { cn } from "@/lib/utils";
 import { Card, CardBody, CardHeader, CardTitle } from "./ui";
 
+// "real"   = computed from real public-source country snapshot (data/countries.json)
+// "hybrid" = real reference data combined with synthetic entity data, OR proxy/hardcoded list
+// "mock"   = factor signal is fully synthetic (no real-data backing)
+type DataReality = "real" | "hybrid" | "mock";
+
+type FactorMeta = {
+  en: string;
+  zh: string;
+  weight: number;
+  sourceIds: string[];
+  dataReality: DataReality;
+};
+
 // Static factor catalog for docs — mirrors each scoring file.
-const FACTOR_CATALOG: Record<
-  keyof typeof DIMENSION_NAMES,
-  { en: string; zh: string; weight: number; sourceIds: string[] }[]
-> = {
+const FACTOR_CATALOG: Record<keyof typeof DIMENSION_NAMES, FactorMeta[]> = {
   sanctions: [
-    { en: "Direct Sanctions Hit (HQ listed on OFAC/UN/EU/FATF blacklist)", zh: "直接命中 (HQ 在 OFAC/UN/EU/FATF 黑名单)", weight: 0.6, sourceIds: ["ofac_sdn", "un_consolidated", "eu_consolidated", "fatf_lists"] },
-    { en: "UBO Sanctions Exposure", zh: "UBO 制裁暴露", weight: 0.3, sourceIds: ["ofac_sdn", "open_sanctions"] },
-    { en: "Fuzzy Watchlist Similarity", zh: "模糊名单相似度", weight: 0.1, sourceIds: ["open_sanctions", "ofac_sdn"] },
+    { en: "Direct Sanctions Hit (HQ listed on OFAC/UN/EU/FATF blacklist)", zh: "直接命中 (HQ 在 OFAC/UN/EU/FATF 黑名单)", weight: 0.6, sourceIds: ["ofac_sdn", "un_consolidated", "eu_consolidated", "fatf_lists"], dataReality: "real" },
+    { en: "UBO Sanctions Exposure", zh: "UBO 制裁暴露", weight: 0.3, sourceIds: ["ofac_sdn", "open_sanctions"], dataReality: "hybrid" },
+    { en: "Fuzzy Watchlist Similarity", zh: "模糊名单相似度", weight: 0.1, sourceIds: ["open_sanctions", "ofac_sdn"], dataReality: "mock" },
   ],
   countryRisk: [
-    { en: "HQ FATF Status", zh: "总部 FATF 状态", weight: 0.4, sourceIds: ["fatf_lists"] },
-    { en: "Basel AML Index of HQ", zh: "总部 Basel AML Index", weight: 0.3, sourceIds: ["basel_aml"] },
-    { en: "HQ CPI (inverse)", zh: "总部 CPI (反向)", weight: 0.3, sourceIds: ["ti_cpi"] },
+    { en: "HQ FATF Status", zh: "总部 FATF 状态", weight: 0.4, sourceIds: ["fatf_lists"], dataReality: "real" },
+    { en: "Basel AML Index of HQ", zh: "总部 Basel AML Index", weight: 0.3, sourceIds: ["basel_aml"], dataReality: "real" },
+    { en: "HQ CPI (inverse)", zh: "总部 CPI (反向)", weight: 0.3, sourceIds: ["ti_cpi"], dataReality: "real" },
   ],
   jurisdiction: [
-    { en: "High-Risk Operating Footprint", zh: "高风险运营足迹", weight: 0.4, sourceIds: ["fatf_lists", "ofac_countries"] },
-    { en: "Subsidiaries in Sanctioned Jurisdictions", zh: "受制裁辖区子公司", weight: 0.4, sourceIds: ["ofac_countries", "fatf_lists"] },
-    { en: "Recent High-Risk Expansion", zh: "近期高风险扩张", weight: 0.2, sourceIds: ["control_risks_geo"] },
+    { en: "High-Risk Operating Footprint", zh: "高风险运营足迹", weight: 0.4, sourceIds: ["fatf_lists", "ofac_countries"], dataReality: "hybrid" },
+    { en: "Subsidiaries in Sanctioned Jurisdictions", zh: "受制裁辖区子公司", weight: 0.4, sourceIds: ["ofac_countries", "fatf_lists"], dataReality: "hybrid" },
+    { en: "Recent High-Risk Expansion", zh: "近期高风险扩张", weight: 0.2, sourceIds: ["control_risks_geo"], dataReality: "mock" },
   ],
   circumvention: [
-    { en: "Transit Hub + Sanctioned Co-occurrence", zh: "中转枢纽 + 制裁地并存", weight: 0.5, sourceIds: ["control_risks_geo", "open_sanctions"] },
-    { en: "Sanctioned-Neighbor Exposure", zh: "制裁国周边暴露", weight: 0.3, sourceIds: ["control_risks_geo"] },
-    { en: "Opaque Ownership Chain", zh: "不透明所有权链", weight: 0.2, sourceIds: ["tjn_fsi", "open_sanctions"] },
+    { en: "Transit Hub + Sanctioned Co-occurrence", zh: "中转枢纽 + 制裁地并存", weight: 0.5, sourceIds: ["control_risks_geo", "open_sanctions"], dataReality: "hybrid" },
+    { en: "Sanctioned-Neighbor Exposure", zh: "制裁国周边暴露", weight: 0.3, sourceIds: ["control_risks_geo"], dataReality: "hybrid" },
+    { en: "Opaque Ownership Chain", zh: "不透明所有权链", weight: 0.2, sourceIds: ["tjn_fsi", "open_sanctions"], dataReality: "hybrid" },
   ],
   pepMedia: [
-    { en: "UBO PEP Status", zh: "UBO PEP 状态", weight: 0.5, sourceIds: ["open_sanctions"] },
-    { en: "Adverse Media Count", zh: "负面媒体数量", weight: 0.3, sourceIds: ["open_sanctions"] },
-    { en: "Regulatory Enforcement History", zh: "监管处罚历史", weight: 0.2, sourceIds: ["ofac_sdn", "open_sanctions"] },
+    { en: "UBO PEP Status", zh: "UBO PEP 状态", weight: 0.5, sourceIds: ["open_sanctions"], dataReality: "mock" },
+    { en: "Adverse Media Count", zh: "负面媒体数量", weight: 0.3, sourceIds: ["open_sanctions"], dataReality: "mock" },
+    { en: "Regulatory Enforcement History", zh: "监管处罚历史", weight: 0.2, sourceIds: ["ofac_sdn", "open_sanctions"], dataReality: "mock" },
   ],
   enrichment: [
-    { en: "WGI Control of Corruption", zh: "WGI 腐败控制", weight: 0.5, sourceIds: ["wb_wgi"] },
-    { en: "Rule of Law Environment", zh: "法治环境", weight: 0.3, sourceIds: ["wjp_rol", "wb_wgi"] },
-    { en: "Financial Secrecy", zh: "金融保密度", weight: 0.2, sourceIds: ["tjn_fsi"] },
+    { en: "WGI Control of Corruption", zh: "WGI 腐败控制", weight: 0.5, sourceIds: ["wb_wgi"], dataReality: "real" },
+    { en: "Rule of Law Environment", zh: "法治环境", weight: 0.3, sourceIds: ["wjp_rol", "wb_wgi"], dataReality: "hybrid" },
+    { en: "Financial Secrecy", zh: "金融保密度", weight: 0.2, sourceIds: ["tjn_fsi"], dataReality: "hybrid" },
   ],
+};
+
+const REALITY_META: Record<
+  DataReality,
+  { Icon: typeof DatabaseZap; label: { en: string; zh: string }; tip: { en: string; zh: string }; cls: string }
+> = {
+  real: {
+    Icon: DatabaseZap,
+    label: { en: "Real snapshot", zh: "真实数据快照" },
+    tip: {
+      en: "Driven by real public data hand-curated into data/countries.json (FATF / OFAC / Basel / CPI / WGI snapshots).",
+      zh: "由 data/countries.json 中手工录入的真实公开数据驱动（FATF / OFAC / Basel / CPI / WGI 快照）。",
+    },
+    cls: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+  },
+  hybrid: {
+    Icon: Layers,
+    label: { en: "Hybrid", zh: "混合 / 代理" },
+    tip: {
+      en: "Combines real reference data (countries / hardcoded regulator-cited lists) with synthetic entity data, or uses a proxy mapping where the precise dataset is not bundled.",
+      zh: "结合真实参考数据（国家 / 监管引用的硬编码清单）与合成实体数据；或使用代理映射（精确数据集未打包）。",
+    },
+    cls: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30",
+  },
+  mock: {
+    Icon: FlaskConical,
+    label: { en: "Mock", zh: "完全模拟" },
+    tip: {
+      en: "Signal is fully synthetic — generated by scripts/generate-companies.ts with seeded PRNG, calibrated by company risk band.",
+      zh: "信号完全模拟——由 scripts/generate-companies.ts 用种子 PRNG 生成，按公司风险等级标定。",
+    },
+    cls: "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30",
+  },
 };
 
 export function MethodologyContent({ sources }: { sources: Record<string, DataSource> }) {
@@ -114,6 +159,32 @@ export function MethodologyContent({ sources }: { sources: Record<string, DataSo
 
       <Card>
         <CardHeader>
+          <CardTitle>{t("methodology.dataRealityTitle")}</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <div className="grid gap-3 md:grid-cols-3">
+            {(["real", "hybrid", "mock"] as const).map((k) => {
+              const meta = REALITY_META[k];
+              const count = dims.flatMap((d) => FACTOR_CATALOG[d]).filter((f) => f.dataReality === k).length;
+              return (
+                <div key={k} className={cn("rounded-md border px-3 py-3", meta.cls)}>
+                  <div className="flex items-center gap-2">
+                    <meta.Icon className="h-4 w-4" />
+                    <span className="font-semibold">{tl(meta.label)}</span>
+                    <span className="ml-auto rounded-md border border-current/30 bg-white/40 px-1.5 py-0.5 text-[11px] font-mono dark:bg-black/20">
+                      {count} / 18
+                    </span>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed">{tl(meta.tip)}</p>
+                </div>
+              );
+            })}
+          </div>
+        </CardBody>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>{t("methodology.factorTitle")}</CardTitle>
         </CardHeader>
         <CardBody className="space-y-6">
@@ -126,31 +197,44 @@ export function MethodologyContent({ sources }: { sources: Record<string, DataSo
                 </span>
               </div>
               <ul className="space-y-2 text-sm">
-                {FACTOR_CATALOG[d].map((f, i) => (
-                  <li key={i} className="flex flex-wrap items-center gap-2 rounded-md border px-3 py-2">
-                    <span className="flex-1">{locale === "zh" ? f.zh : f.en}</span>
-                    <span className="text-xs text-[hsl(var(--muted-foreground))]">
-                      {(f.weight * 100).toFixed(0)}%
-                    </span>
-                    <div className="flex flex-wrap gap-1">
-                      {f.sourceIds.map((sid) => {
-                        const s = sources[sid];
-                        if (!s) return null;
-                        return (
-                          <a
-                            key={sid}
-                            href={s.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-md border px-1.5 py-0.5 text-[11px] hover:bg-[hsl(var(--muted))]"
-                          >
-                            {s.authority}
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </li>
-                ))}
+                {FACTOR_CATALOG[d].map((f, i) => {
+                  const meta = REALITY_META[f.dataReality];
+                  return (
+                    <li key={i} className="flex flex-wrap items-center gap-2 rounded-md border px-3 py-2">
+                      <span
+                        className={cn(
+                          "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium",
+                          meta.cls,
+                        )}
+                        title={tl(meta.tip)}
+                      >
+                        <meta.Icon className="h-3 w-3" />
+                        {tl(meta.label)}
+                      </span>
+                      <span className="flex-1">{locale === "zh" ? f.zh : f.en}</span>
+                      <span className="text-xs text-[hsl(var(--muted-foreground))]">
+                        {(f.weight * 100).toFixed(0)}%
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {f.sourceIds.map((sid) => {
+                          const s = sources[sid];
+                          if (!s) return null;
+                          return (
+                            <a
+                              key={sid}
+                              href={s.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="rounded-md border px-1.5 py-0.5 text-[11px] hover:bg-[hsl(var(--muted))]"
+                            >
+                              {s.authority}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

@@ -76,6 +76,7 @@
     "sub": "Transparent, rule-based composite of six AML skills. No ML; every factor is deterministic and citable.",
     "weightTitle": "Dimension weights",
     "levelsTitle": "Risk levels",
+    "dataRealityTitle": "Data reality — what's real vs. mock",
     "factorTitle": "Factors by dimension"
   },
   "sources": {

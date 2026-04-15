@@ -76,6 +76,7 @@
     "sub": "基于规则的六类 AML 能力综合评分。无机器学习，每个因子都确定可引证。",
     "weightTitle": "维度权重",
     "levelsTitle": "风险等级",
+    "dataRealityTitle": "数据真实度——哪些是真实/快照，哪些是模拟",
     "factorTitle": "各维度的因子"
   },
   "sources": {
