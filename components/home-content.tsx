@@ -37,6 +37,7 @@ type Props = {
     byLevel: { low: number; medium: number; high: number; critical: number };
   };
   nvidiaExportTotal?: number;
+  amdExportTotal?: number;
 };
 
 const LEVEL_COLOR: Record<string, string> = {
@@ -46,7 +47,7 @@ const LEVEL_COLOR: Record<string, string> = {
   critical: "#ef4444",
 };
 
-export function HomeContent({ companies, countries, top10, allAssessments, stats, nvidiaExportTotal }: Props) {
+export function HomeContent({ companies, countries, top10, allAssessments, stats, nvidiaExportTotal, amdExportTotal }: Props) {
   const { t, tl } = useI18n();
 
   const countryName = useMemo(
@@ -138,8 +139,8 @@ export function HomeContent({ companies, countries, top10, allAssessments, stats
         <TopRiskList rows={top10} countryName={countryName} />
       </section>
 
-      {/* NVIDIA Export Reference entry */}
-      {typeof nvidiaExportTotal === "number" && (
+      {/* Vendor Export Reference entry */}
+      {(typeof nvidiaExportTotal === "number" || typeof amdExportTotal === "number") && (
         <section>
           <Link
             href="/exports"
@@ -151,7 +152,9 @@ export function HomeContent({ companies, countries, top10, allAssessments, stats
             <div className="min-w-0 flex-1">
               <div className="font-semibold">{t("exports.homeCardTitle")}</div>
               <div className="mt-0.5 text-xs text-[hsl(var(--muted-foreground))]">
-                {t("exports.homeCardSub").replace("{total}", nvidiaExportTotal.toLocaleString())}
+                {t("exports.homeCardSub")
+                  .replace("{nvidia}", (nvidiaExportTotal ?? 0).toLocaleString())
+                  .replace("{amd}", (amdExportTotal ?? 0).toLocaleString())}
               </div>
             </div>
             <span className="inline-flex items-center gap-1 text-sm font-medium text-[hsl(var(--foreground))] transition-transform group-hover:translate-x-0.5">

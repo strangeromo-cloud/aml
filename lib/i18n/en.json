@@ -81,39 +81,24 @@
     "factorTitle": "Factors by dimension"
   },
   "exports": {
-    "title": "NVIDIA Export Regulation Reference",
-    "sub": "Full snapshot of NVIDIA's public parts classification — ECCN, HTS, TPP and lifecycle state for every published part. Scraped from NVIDIA's own ECCN portal and packaged as a downloadable spreadsheet.",
+    "title": "Vendor Export Classification Reference",
+    "sub": "Side-by-side catalogs of publicly-published ECCN / HTS product classifications from major chipmakers. Every tab pulls directly from the vendor's official source and offers a downloadable Excel workbook.",
     "downloadXlsx": "Download Excel",
     "sourceLabel": "Source",
     "snapshotAt": "Snapshot",
-    "apiNote": "Data via nvidia.com's public ECCN API (api-prod.nvidia.com/services/eccn/v1/getECCN)",
+    "nvidiaApiNote": "via nvidia.com ECCN API (api-prod.nvidia.com/services/eccn/v1/getECCN)",
+    "amdPdfNote": "Parsed from AMD product-master.pdf (classification as of {date})",
     "stat": {
       "total": "Parts on record",
       "eccn": "Distinct ECCN codes",
       "hts": "Distinct HTS codes",
-      "states": "Lifecycle states"
+      "states": "Lifecycle states",
+      "meets3A090": "Meets 3A090.a.1 AI-chip threshold"
     },
     "eccnDistTitle": "Top ECCN codes",
     "htsDistTitle": "Top HTS codes",
-    "tableTitle": "Parts catalog",
-    "searchPlaceholder": "Search part number, description, ECCN…",
-    "filters": {
-      "allEccn": "All ECCN",
-      "allStates": "All states"
-    },
-    "showing": "Showing {shown} of {total} matching parts",
-    "truncatedHint": "(first 500 rows — download Excel for all)",
-    "cols": {
-      "partNumber": "Part number",
-      "description": "Description",
-      "type": "Type",
-      "eccn": "ECCN",
-      "hts": "HTS",
-      "tpp": "TPP",
-      "state": "State"
-    },
-    "homeCardTitle": "NVIDIA Export Reference",
-    "homeCardSub": "{total} parts · ECCN + HTS classifications · downloadable Excel",
+    "homeCardTitle": "Vendor Export Reference",
+    "homeCardSub": "NVIDIA {nvidia} + AMD {amd} parts · ECCN / HTS · downloadable Excel",
     "homeCardCta": "Open"
   },
   "sources": {

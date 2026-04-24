@@ -81,39 +81,24 @@
     "factorTitle": "各维度的因子"
   },
   "exports": {
-    "title": "NVIDIA 出口管制参考",
-    "sub": "NVIDIA 公开零部件分类的完整快照——每个公布部件的 ECCN、HTS、TPP 和生命周期状态。数据抓取自 NVIDIA 自家的 ECCN 门户，并打包为可下载的 Excel 表。",
+    "title": "厂商出口管制分类参考",
+    "sub": "来自各大芯片厂商官方公开的 ECCN / HTS 产品分类对照。每个 Tab 直接抓自厂商官方来源，并提供可下载的 Excel。",
     "downloadXlsx": "下载 Excel",
     "sourceLabel": "来源",
     "snapshotAt": "快照时间",
-    "apiNote": "数据来自 nvidia.com 公开的 ECCN API（api-prod.nvidia.com/services/eccn/v1/getECCN）",
+    "nvidiaApiNote": "来自 nvidia.com ECCN API（api-prod.nvidia.com/services/eccn/v1/getECCN）",
+    "amdPdfNote": "解析自 AMD product-master.pdf（分类截至 {date}）",
     "stat": {
       "total": "部件总数",
       "eccn": "ECCN 种类数",
       "hts": "HTS 种类数",
-      "states": "生命周期状态数"
+      "states": "生命周期状态数",
+      "meets3A090": "达到 3A090.a.1 AI 芯片阈值"
     },
     "eccnDistTitle": "Top ECCN 分类分布",
     "htsDistTitle": "Top HTS 分类分布",
-    "tableTitle": "部件目录",
-    "searchPlaceholder": "搜索部件号、描述、ECCN…",
-    "filters": {
-      "allEccn": "全部 ECCN",
-      "allStates": "全部状态"
-    },
-    "showing": "显示 {shown} / {total} 条匹配",
-    "truncatedHint": "（仅显示前 500 条——下载 Excel 获取全部）",
-    "cols": {
-      "partNumber": "部件号",
-      "description": "描述",
-      "type": "类型",
-      "eccn": "ECCN",
-      "hts": "HTS",
-      "tpp": "TPP",
-      "state": "状态"
-    },
-    "homeCardTitle": "NVIDIA 出口合规参考",
-    "homeCardSub": "{total} 个部件 · ECCN + HTS 分类 · 可下载 Excel",
+    "homeCardTitle": "厂商出口合规参考",
+    "homeCardSub": "NVIDIA {nvidia} + AMD {amd} 个部件 · ECCN / HTS · 可下载 Excel",
     "homeCardCta": "打开"
   },
   "sources": {

@@ -1,0 +1,104 @@
+{
+  "total": 9629,
+  "fetchedAt": "2026-04-24T07:35:45+00:00",
+  "classificationDate": "February 26th, 2026",
+  "sourcePage": "https://www.amd.com/en/legal/compliance/trade-compliance.html",
+  "pdfUrl": "https://www.amd.com/content/dam/amd/en/documents/legal/product-master.pdf",
+  "distinctEccn": 13,
+  "distinctHs": 10,
+  "distinctCcats": 12,
+  "topEccn": [
+    {
+      "eccn": "5A992.c",
+      "count": 5864
+    },
+    {
+      "eccn": "EAR99",
+      "count": 1666
+    },
+    {
+      "eccn": "3A991.p.1",
+      "count": 1000
+    },
+    {
+      "eccn": "4A994.l",
+      "count": 829
+    },
+    {
+      "eccn": "4A090.a",
+      "count": 119
+    },
+    {
+      "eccn": "3A991.a.1",
+      "count": 81
+    },
+    {
+      "eccn": "3A090.a.1",
+      "count": 33
+    },
+    {
+      "eccn": "4A090.b",
+      "count": 23
+    },
+    {
+      "eccn": "5A991.b.4",
+      "count": 6
+    },
+    {
+      "eccn": "3A090.c",
+      "count": 4
+    }
+  ],
+  "topHs": [
+    {
+      "hs": "8542310045",
+      "count": 5878
+    },
+    {
+      "hs": "8542310040",
+      "count": 2082
+    },
+    {
+      "hs": "8473301180",
+      "count": 1257
+    },
+    {
+      "hs": "8542310030",
+      "count": 313
+    },
+    {
+      "hs": "8517620090",
+      "count": 68
+    },
+    {
+      "hs": "8542320036",
+      "count": 10
+    },
+    {
+      "hs": "4819100040",
+      "count": 10
+    },
+    {
+      "hs": "8542310050",
+      "count": 6
+    },
+    {
+      "hs": "8471500150",
+      "count": 4
+    },
+    {
+      "hs": "8473305100",
+      "count": 1
+    }
+  ],
+  "meets3A090": [
+    {
+      "meets": "N",
+      "count": 9476
+    },
+    {
+      "meets": "Y",
+      "count": 153
+    }
+  ]
+}

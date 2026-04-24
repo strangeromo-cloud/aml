@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start -p ${PORT:-3000}",
     "data:gen": "tsx scripts/generate-companies.ts",
-    "data:nvidia": "python3 scripts/fetch-nvidia-eccn.py"
+    "data:nvidia": "python3 scripts/fetch-nvidia-eccn.py",
+    "data:amd": "python3 scripts/fetch-amd-eccn.py"
   },
   "engines": {
     "node": ">=18.17.0"
