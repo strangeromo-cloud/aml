@@ -4,6 +4,7 @@
   "nav": {
     "home": "仪表盘",
     "companies": "公司",
+    "exports": "出口参考",
     "methodology": "评分方法",
     "sources": "数据源"
   },
@@ -78,6 +79,42 @@
     "levelsTitle": "风险等级",
     "dataRealityTitle": "数据真实度——哪些是真实/快照，哪些是模拟",
     "factorTitle": "各维度的因子"
+  },
+  "exports": {
+    "title": "NVIDIA 出口管制参考",
+    "sub": "NVIDIA 公开零部件分类的完整快照——每个公布部件的 ECCN、HTS、TPP 和生命周期状态。数据抓取自 NVIDIA 自家的 ECCN 门户，并打包为可下载的 Excel 表。",
+    "downloadXlsx": "下载 Excel",
+    "sourceLabel": "来源",
+    "snapshotAt": "快照时间",
+    "apiNote": "数据来自 nvidia.com 公开的 ECCN API（api-prod.nvidia.com/services/eccn/v1/getECCN）",
+    "stat": {
+      "total": "部件总数",
+      "eccn": "ECCN 种类数",
+      "hts": "HTS 种类数",
+      "states": "生命周期状态数"
+    },
+    "eccnDistTitle": "Top ECCN 分类分布",
+    "htsDistTitle": "Top HTS 分类分布",
+    "tableTitle": "部件目录",
+    "searchPlaceholder": "搜索部件号、描述、ECCN…",
+    "filters": {
+      "allEccn": "全部 ECCN",
+      "allStates": "全部状态"
+    },
+    "showing": "显示 {shown} / {total} 条匹配",
+    "truncatedHint": "（仅显示前 500 条——下载 Excel 获取全部）",
+    "cols": {
+      "partNumber": "部件号",
+      "description": "描述",
+      "type": "类型",
+      "eccn": "ECCN",
+      "hts": "HTS",
+      "tpp": "TPP",
+      "state": "状态"
+    },
+    "homeCardTitle": "NVIDIA 出口合规参考",
+    "homeCardSub": "{total} 个部件 · ECCN + HTS 分类 · 可下载 Excel",
+    "homeCardCta": "打开"
   },
   "sources": {
     "title": "数据源",

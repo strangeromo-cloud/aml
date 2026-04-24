@@ -18,7 +18,7 @@ import { useI18n } from "@/lib/i18n/context";
 import { Card, CardBody, CardHeader, CardTitle } from "./ui";
 import { SearchBar } from "./search-bar";
 import { TopRiskList } from "./top-risk-list";
-import { ShieldAlert, Building2, Globe2, Database } from "lucide-react";
+import { ShieldAlert, Building2, Globe2, Database, FileSpreadsheet, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
@@ -36,6 +36,7 @@ type Props = {
     countries: number;
     byLevel: { low: number; medium: number; high: number; critical: number };
   };
+  nvidiaExportTotal?: number;
 };
 
 const LEVEL_COLOR: Record<string, string> = {
@@ -45,7 +46,7 @@ const LEVEL_COLOR: Record<string, string> = {
   critical: "#ef4444",
 };
 
-export function HomeContent({ companies, countries, top10, allAssessments, stats }: Props) {
+export function HomeContent({ companies, countries, top10, allAssessments, stats, nvidiaExportTotal }: Props) {
   const { t, tl } = useI18n();
 
   const countryName = useMemo(
@@ -136,6 +137,30 @@ export function HomeContent({ companies, countries, top10, allAssessments, stats
         </div>
         <TopRiskList rows={top10} countryName={countryName} />
       </section>
+
+      {/* NVIDIA Export Reference entry */}
+      {typeof nvidiaExportTotal === "number" && (
+        <section>
+          <Link
+            href="/exports"
+            className="group flex flex-wrap items-center gap-4 rounded-lg border bg-[hsl(var(--card))] px-5 py-4 shadow-sm transition-colors hover:bg-[hsl(var(--muted))]/50"
+          >
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+              <FileSpreadsheet className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="font-semibold">{t("exports.homeCardTitle")}</div>
+              <div className="mt-0.5 text-xs text-[hsl(var(--muted-foreground))]">
+                {t("exports.homeCardSub").replace("{total}", nvidiaExportTotal.toLocaleString())}
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-1 text-sm font-medium text-[hsl(var(--foreground))] transition-transform group-hover:translate-x-0.5">
+              {t("exports.homeCardCta")}
+              <ArrowRight className="h-4 w-4" />
+            </span>
+          </Link>
+        </section>
+      )}
 
       {/* Charts */}
       <section className="grid gap-5 lg:grid-cols-2">

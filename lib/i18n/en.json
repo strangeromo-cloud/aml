@@ -4,6 +4,7 @@
   "nav": {
     "home": "Dashboard",
     "companies": "Companies",
+    "exports": "Export Reference",
     "methodology": "Methodology",
     "sources": "Data Sources"
   },
@@ -78,6 +79,42 @@
     "levelsTitle": "Risk levels",
     "dataRealityTitle": "Data reality — what's real vs. mock",
     "factorTitle": "Factors by dimension"
+  },
+  "exports": {
+    "title": "NVIDIA Export Regulation Reference",
+    "sub": "Full snapshot of NVIDIA's public parts classification — ECCN, HTS, TPP and lifecycle state for every published part. Scraped from NVIDIA's own ECCN portal and packaged as a downloadable spreadsheet.",
+    "downloadXlsx": "Download Excel",
+    "sourceLabel": "Source",
+    "snapshotAt": "Snapshot",
+    "apiNote": "Data via nvidia.com's public ECCN API (api-prod.nvidia.com/services/eccn/v1/getECCN)",
+    "stat": {
+      "total": "Parts on record",
+      "eccn": "Distinct ECCN codes",
+      "hts": "Distinct HTS codes",
+      "states": "Lifecycle states"
+    },
+    "eccnDistTitle": "Top ECCN codes",
+    "htsDistTitle": "Top HTS codes",
+    "tableTitle": "Parts catalog",
+    "searchPlaceholder": "Search part number, description, ECCN…",
+    "filters": {
+      "allEccn": "All ECCN",
+      "allStates": "All states"
+    },
+    "showing": "Showing {shown} of {total} matching parts",
+    "truncatedHint": "(first 500 rows — download Excel for all)",
+    "cols": {
+      "partNumber": "Part number",
+      "description": "Description",
+      "type": "Type",
+      "eccn": "ECCN",
+      "hts": "HTS",
+      "tpp": "TPP",
+      "state": "State"
+    },
+    "homeCardTitle": "NVIDIA Export Reference",
+    "homeCardSub": "{total} parts · ECCN + HTS classifications · downloadable Excel",
+    "homeCardCta": "Open"
   },
   "sources": {
     "title": "Data sources",
