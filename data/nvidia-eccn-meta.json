@@ -1,6 +1,6 @@
 {
   "total": 1267,
-  "fetchedAt": "2026-04-24T07:08:13+00:00",
+  "fetchedAt": "2026-04-27T05:39:41+00:00",
   "sourcePage": "https://www.nvidia.com/en-us/about-nvidia/company-policies/export-regulations/",
   "apiUrl": "https://api-prod.nvidia.com/services/eccn/v1/getECCN",
   "distinctEccn": 11,
