@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Download, ExternalLink, Info } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Download, ExternalLink, Info, RefreshCw, Loader2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
 import { Card, CardBody, CardHeader, CardTitle } from "./ui";
@@ -34,6 +34,24 @@ type AmdMeta = {
 
 type VendorKey = "nvidia" | "amd";
 
+const REFRESH_COOLDOWN_MS = 60_000;
+const STORAGE_KEY = "exports.lastRefresh";
+
+type LastRefreshMap = Partial<Record<VendorKey, number>>;
+
+function loadLastRefresh(): LastRefreshMap {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}") as LastRefreshMap;
+  } catch {
+    return {};
+  }
+}
+function saveLastRefresh(m: LastRefreshMap) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(m));
+}
+
 export function ExportsContent({
   nvidiaMeta,
   amdMeta,
@@ -43,6 +61,10 @@ export function ExportsContent({
 }) {
   const { t } = useI18n();
   const [vendor, setVendor] = useState<VendorKey>("nvidia");
+  const [nvidia, setNvidia] = useState<NvidiaMeta>(nvidiaMeta);
+  const [amd, setAmd] = useState<AmdMeta>(amdMeta);
+  // null = none refreshed in session yet → use static /<vendor>-eccn.xlsx
+  const [downloadVersion, setDownloadVersion] = useState<Partial<Record<VendorKey, number>>>({});
 
   return (
     <div className="space-y-6">
@@ -53,26 +75,39 @@ export function ExportsContent({
         </p>
       </div>
 
-      {/* Tab switcher */}
       <div className="inline-flex overflow-hidden rounded-md border text-sm">
         <VendorTab
           active={vendor === "nvidia"}
           onClick={() => setVendor("nvidia")}
           label="NVIDIA"
-          count={nvidiaMeta.total}
+          count={nvidia.total}
         />
         <VendorTab
           active={vendor === "amd"}
           onClick={() => setVendor("amd")}
           label="AMD"
-          count={amdMeta.total}
+          count={amd.total}
         />
       </div>
 
       {vendor === "nvidia" ? (
-        <NvidiaPanel meta={nvidiaMeta} />
+        <NvidiaPanel
+          meta={nvidia}
+          downloadVersion={downloadVersion.nvidia}
+          onRefreshed={(m, version) => {
+            setNvidia(m);
+            setDownloadVersion((d) => ({ ...d, nvidia: version }));
+          }}
+        />
       ) : (
-        <AmdPanel meta={amdMeta} />
+        <AmdPanel
+          meta={amd}
+          downloadVersion={downloadVersion.amd}
+          onRefreshed={(m, version) => {
+            setAmd(m);
+            setDownloadVersion((d) => ({ ...d, amd: version }));
+          }}
+        />
       )}
     </div>
   );
@@ -115,19 +150,30 @@ function VendorTab({
 // =========================================================================
 // NVIDIA PANEL
 // =========================================================================
-function NvidiaPanel({ meta }: { meta: NvidiaMeta }) {
+function NvidiaPanel({
+  meta,
+  downloadVersion,
+  onRefreshed,
+}: {
+  meta: NvidiaMeta;
+  downloadVersion?: number;
+  onRefreshed: (meta: NvidiaMeta, version: number) => void;
+}) {
   const { t, locale } = useI18n();
   return (
     <>
       <VendorHeader
-        downloadHref="/nvidia-eccn.xlsx"
+        vendor="nvidia"
+        downloadHref={
+          downloadVersion
+            ? `/api/refresh/nvidia?type=xlsx&t=${downloadVersion}`
+            : "/nvidia-eccn.xlsx"
+        }
         sourceHref={meta.sourcePage}
         sourceShort="nvidia.com/…/export-regulations"
-        snapshot={new Date(meta.fetchedAt).toLocaleString(
-          locale === "zh" ? "zh-CN" : "en-US",
-          { timeZone: "UTC", timeZoneName: "short" },
-        )}
+        snapshot={fmtTime(meta.fetchedAt, locale)}
         note={t("exports.nvidiaApiNote")}
+        onRefreshed={(m, version) => onRefreshed(m as NvidiaMeta, version)}
       />
       <DistributionPair
         titleLeft={t("exports.eccnDistTitle")}
@@ -142,19 +188,30 @@ function NvidiaPanel({ meta }: { meta: NvidiaMeta }) {
 // =========================================================================
 // AMD PANEL
 // =========================================================================
-function AmdPanel({ meta }: { meta: AmdMeta }) {
+function AmdPanel({
+  meta,
+  downloadVersion,
+  onRefreshed,
+}: {
+  meta: AmdMeta;
+  downloadVersion?: number;
+  onRefreshed: (meta: AmdMeta, version: number) => void;
+}) {
   const { t, locale } = useI18n();
   return (
     <>
       <VendorHeader
-        downloadHref="/amd-eccn.xlsx"
+        vendor="amd"
+        downloadHref={
+          downloadVersion
+            ? `/api/refresh/amd?type=xlsx&t=${downloadVersion}`
+            : "/amd-eccn.xlsx"
+        }
         sourceHref={meta.sourcePage}
         sourceShort="amd.com/…/trade-compliance"
-        snapshot={new Date(meta.fetchedAt).toLocaleString(
-          locale === "zh" ? "zh-CN" : "en-US",
-          { timeZone: "UTC", timeZoneName: "short" },
-        )}
+        snapshot={fmtTime(meta.fetchedAt, locale)}
         note={t("exports.amdPdfNote").replace("{date}", meta.classificationDate ?? "—")}
+        onRefreshed={(m, version) => onRefreshed(m as AmdMeta, version)}
       />
       <DistributionPair
         titleLeft={t("exports.eccnDistTitle")}
@@ -166,26 +223,85 @@ function AmdPanel({ meta }: { meta: AmdMeta }) {
   );
 }
 
+function fmtTime(iso: string, locale: string) {
+  return new Date(iso).toLocaleString(locale === "zh" ? "zh-CN" : "en-US", {
+    timeZone: "UTC",
+    timeZoneName: "short",
+  });
+}
+
 // =========================================================================
-// Shared sub-components
+// Vendor header (download + source + refresh)
 // =========================================================================
 function VendorHeader({
+  vendor,
   downloadHref,
   sourceHref,
   sourceShort,
   snapshot,
   note,
+  onRefreshed,
 }: {
+  vendor: VendorKey;
   downloadHref: string;
   sourceHref: string;
   sourceShort: string;
   snapshot: string;
   note: string;
+  onRefreshed: (meta: NvidiaMeta | AmdMeta, version: number) => void;
 }) {
   const { t } = useI18n();
+  const [now, setNow] = useState(() => Date.now());
+  const [lastRefresh, setLastRefresh] = useState<number | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Hydrate last refresh from localStorage (avoid SSR mismatch)
+  useEffect(() => {
+    const map = loadLastRefresh();
+    setLastRefresh(map[vendor]);
+  }, [vendor]);
+
+  // Tick every second so the cooldown countdown updates live
+  useEffect(() => {
+    if (!lastRefresh) return;
+    const remaining = REFRESH_COOLDOWN_MS - (Date.now() - lastRefresh);
+    if (remaining <= 0) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [lastRefresh]);
+
+  const cooldownRemaining = useMemo(() => {
+    if (!lastRefresh) return 0;
+    return Math.max(0, REFRESH_COOLDOWN_MS - (now - lastRefresh));
+  }, [lastRefresh, now]);
+  const cooldownActive = cooldownRemaining > 0;
+
+  async function onRefresh() {
+    if (cooldownActive || loading) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const r = await fetch(`/api/refresh/${vendor}?type=meta&t=${Date.now()}`);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const body = (await r.json()) as { meta: NvidiaMeta | AmdMeta };
+      const ts = Date.now();
+      onRefreshed(body.meta, ts);
+      const map = loadLastRefresh();
+      map[vendor] = ts;
+      saveLastRefresh(map);
+      setLastRefresh(ts);
+      setNow(ts);
+    } catch (e: any) {
+      setError(e?.message ?? "Refresh failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <Card>
-      <CardBody className="flex flex-wrap items-start gap-4">
+      <CardBody className="flex flex-wrap items-start gap-3">
         <a
           href={downloadHref}
           download
@@ -194,6 +310,39 @@ function VendorHeader({
           <Download className="h-4 w-4" />
           {t("exports.downloadXlsx")}
         </a>
+        <button
+          onClick={onRefresh}
+          disabled={cooldownActive || loading}
+          title={
+            cooldownActive
+              ? t("exports.refreshCooldown").replace(
+                  "{seconds}",
+                  Math.ceil(cooldownRemaining / 1000).toString(),
+                )
+              : t("exports.refreshTip")
+          }
+          className={cn(
+            "inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors",
+            "disabled:cursor-not-allowed disabled:opacity-60",
+            !cooldownActive && !loading && "hover:bg-[hsl(var(--muted))]",
+          )}
+        >
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className={cn("h-4 w-4", cooldownActive && "opacity-60")} />
+          )}
+          <span>
+            {loading
+              ? t("exports.refreshing")
+              : cooldownActive
+                ? t("exports.refreshCooldown").replace(
+                    "{seconds}",
+                    Math.ceil(cooldownRemaining / 1000).toString(),
+                  )
+                : t("exports.refreshNow")}
+          </span>
+        </button>
         <div className="flex flex-1 items-start gap-3 text-sm">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--muted-foreground))]" />
           <div className="flex-1 space-y-1">
@@ -214,6 +363,11 @@ function VendorHeader({
             <div className="text-xs text-[hsl(var(--muted-foreground))]">
               {t("exports.snapshotAt")}: {snapshot} · {note}
             </div>
+            {error && (
+              <div className="text-xs text-rose-600 dark:text-rose-400">
+                {t("exports.refreshError").replace("{error}", error)}
+              </div>
+            )}
           </div>
         </div>
       </CardBody>
@@ -280,4 +434,3 @@ function BarList({
     </ul>
   );
 }
-
