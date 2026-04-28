@@ -13,7 +13,6 @@ export function Header() {
   const links = [
     { href: "/", label: t("nav.home") },
     { href: "/companies", label: t("nav.companies") },
-    { href: "/exports", label: t("nav.exports") },
     { href: "/methodology", label: t("nav.methodology") },
     { href: "/sources", label: t("nav.sources") },
   ];

@@ -4,7 +4,6 @@
   "nav": {
     "home": "仪表盘",
     "companies": "公司",
-    "exports": "出口参考",
     "methodology": "评分方法",
     "sources": "数据源"
   },
@@ -79,25 +78,6 @@
     "levelsTitle": "风险等级",
     "dataRealityTitle": "数据真实度——哪些是真实/快照，哪些是模拟",
     "factorTitle": "各维度的因子"
-  },
-  "exports": {
-    "title": "厂商出口管制分类参考",
-    "sub": "来自各大芯片厂商官方公开的 ECCN / HTS 产品分类对照。每个 Tab 直接抓自厂商官方来源，并提供可下载的 Excel。",
-    "downloadXlsx": "下载 Excel",
-    "refreshNow": "立即刷新",
-    "refreshing": "刷新中…",
-    "refreshCooldown": "请等待 {seconds} 秒",
-    "refreshTip": "直接从厂商官方来源重新抓取",
-    "refreshError": "刷新失败：{error}",
-    "sourceLabel": "来源",
-    "snapshotAt": "快照时间",
-    "nvidiaApiNote": "来自 nvidia.com ECCN API（api-prod.nvidia.com/services/eccn/v1/getECCN）",
-    "amdPdfNote": "解析自 AMD product-master.pdf（分类截至 {date}）",
-    "eccnDistTitle": "Top ECCN 分类分布",
-    "htsDistTitle": "Top HTS 分类分布",
-    "homeCardTitle": "厂商出口合规参考",
-    "homeCardSub": "NVIDIA {nvidia} + AMD {amd} 个部件 · ECCN / HTS · 可下载 Excel",
-    "homeCardCta": "打开"
   },
   "sources": {
     "title": "数据源",

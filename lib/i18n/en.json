@@ -4,7 +4,6 @@
   "nav": {
     "home": "Dashboard",
     "companies": "Companies",
-    "exports": "Export Reference",
     "methodology": "Methodology",
     "sources": "Data Sources"
   },
@@ -79,25 +78,6 @@
     "levelsTitle": "Risk levels",
     "dataRealityTitle": "Data reality — what's real vs. mock",
     "factorTitle": "Factors by dimension"
-  },
-  "exports": {
-    "title": "Vendor Export Classification Reference",
-    "sub": "Side-by-side catalogs of publicly-published ECCN / HTS product classifications from major chipmakers. Every tab pulls directly from the vendor's official source and offers a downloadable Excel workbook.",
-    "downloadXlsx": "Download Excel",
-    "refreshNow": "Refresh now",
-    "refreshing": "Refreshing…",
-    "refreshCooldown": "Wait {seconds}s",
-    "refreshTip": "Re-fetch directly from the vendor's official source",
-    "refreshError": "Refresh failed: {error}",
-    "sourceLabel": "Source",
-    "snapshotAt": "Snapshot",
-    "nvidiaApiNote": "via nvidia.com ECCN API (api-prod.nvidia.com/services/eccn/v1/getECCN)",
-    "amdPdfNote": "Parsed from AMD product-master.pdf (classification as of {date})",
-    "eccnDistTitle": "Top ECCN codes",
-    "htsDistTitle": "Top HTS codes",
-    "homeCardTitle": "Vendor Export Reference",
-    "homeCardSub": "NVIDIA {nvidia} + AMD {amd} parts · ECCN / HTS · downloadable Excel",
-    "homeCardCta": "Open"
   },
   "sources": {
     "title": "Data sources",

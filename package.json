@@ -7,20 +7,16 @@
     "prebuild": "tsx scripts/generate-companies.ts",
     "build": "next build",
     "start": "next start -p ${PORT:-3000}",
-    "data:gen": "tsx scripts/generate-companies.ts",
-    "data:nvidia": "python3 scripts/fetch-nvidia-eccn.py",
-    "data:amd": "python3 scripts/fetch-amd-eccn.py"
+    "data:gen": "tsx scripts/generate-companies.ts"
   },
   "engines": {
     "node": ">=18.17.0"
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "exceljs": "^4.4.0",
     "fuse.js": "^7.0.0",
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
-    "pdfjs-dist": "^5.6.205",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "recharts": "^2.13.0",
