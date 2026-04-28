@@ -129,13 +129,6 @@ function NvidiaPanel({ meta }: { meta: NvidiaMeta }) {
         )}
         note={t("exports.nvidiaApiNote")}
       />
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Stat label={t("exports.stat.total")} value={meta.total.toLocaleString()} />
-        <Stat label={t("exports.stat.eccn")} value={meta.distinctEccn} />
-        <Stat label={t("exports.stat.hts")} value={meta.distinctHts} />
-        <Stat label={t("exports.stat.states")} value={meta.states.length} />
-      </div>
-
       <DistributionPair
         titleLeft={t("exports.eccnDistTitle")}
         leftBars={meta.topEccn.map((r) => ({ label: r.eccn, count: r.count, total: meta.total }))}
@@ -151,7 +144,6 @@ function NvidiaPanel({ meta }: { meta: NvidiaMeta }) {
 // =========================================================================
 function AmdPanel({ meta }: { meta: AmdMeta }) {
   const { t, locale } = useI18n();
-  const meetsCount = meta.meets3A090.find((m) => m.meets === "Y")?.count ?? 0;
   return (
     <>
       <VendorHeader
@@ -164,16 +156,6 @@ function AmdPanel({ meta }: { meta: AmdMeta }) {
         )}
         note={t("exports.amdPdfNote").replace("{date}", meta.classificationDate ?? "—")}
       />
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Stat label={t("exports.stat.total")} value={meta.total.toLocaleString()} />
-        <Stat label={t("exports.stat.eccn")} value={meta.distinctEccn} />
-        <Stat label={t("exports.stat.hts")} value={meta.distinctHs} />
-        <Stat
-          label={t("exports.stat.meets3A090")}
-          value={`${meetsCount} (${((meetsCount / meta.total) * 100).toFixed(1)}%)`}
-        />
-      </div>
-
       <DistributionPair
         titleLeft={t("exports.eccnDistTitle")}
         leftBars={meta.topEccn.map((r) => ({ label: r.eccn, count: r.count, total: meta.total }))}
@@ -299,15 +281,3 @@ function BarList({
   );
 }
 
-function Stat({ label, value }: { label: string; value: number | string }) {
-  return (
-    <Card>
-      <CardBody className="!py-4">
-        <div className="text-xs uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
-          {label}
-        </div>
-        <div className="mt-1 font-mono text-2xl font-semibold tabular-nums">{value}</div>
-      </CardBody>
-    </Card>
-  );
-}

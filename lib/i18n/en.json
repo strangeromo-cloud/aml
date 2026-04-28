@@ -88,13 +88,6 @@
     "snapshotAt": "Snapshot",
     "nvidiaApiNote": "via nvidia.com ECCN API (api-prod.nvidia.com/services/eccn/v1/getECCN)",
     "amdPdfNote": "Parsed from AMD product-master.pdf (classification as of {date})",
-    "stat": {
-      "total": "Parts on record",
-      "eccn": "Distinct ECCN codes",
-      "hts": "Distinct HTS codes",
-      "states": "Lifecycle states",
-      "meets3A090": "Meets 3A090.a.1 AI-chip threshold"
-    },
     "eccnDistTitle": "Top ECCN codes",
     "htsDistTitle": "Top HTS codes",
     "homeCardTitle": "Vendor Export Reference",

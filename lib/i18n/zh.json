@@ -88,13 +88,6 @@
     "snapshotAt": "快照时间",
     "nvidiaApiNote": "来自 nvidia.com ECCN API（api-prod.nvidia.com/services/eccn/v1/getECCN）",
     "amdPdfNote": "解析自 AMD product-master.pdf（分类截至 {date}）",
-    "stat": {
-      "total": "部件总数",
-      "eccn": "ECCN 种类数",
-      "hts": "HTS 种类数",
-      "states": "生命周期状态数",
-      "meets3A090": "达到 3A090.a.1 AI 芯片阈值"
-    },
     "eccnDistTitle": "Top ECCN 分类分布",
     "htsDistTitle": "Top HTS 分类分布",
     "homeCardTitle": "厂商出口合规参考",
