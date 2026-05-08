@@ -2,8 +2,8 @@ name: Refresh list-source data
 
 on:
   schedule:
-    # Daily at 03:00 UTC ≈ 11:00 Beijing
-    - cron: "0 3 * * *"
+    # Daily at 00:00 UTC = 08:00 Beijing
+    - cron: "0 0 * * *"
   workflow_dispatch:
     inputs:
       strict:
@@ -14,6 +14,11 @@ on:
 permissions:
   contents: write
   issues: write
+
+# Who gets pinged on failure issues. Override at repo level via Settings →
+# Secrets and variables → Actions → Variables: NOTIFY_USERS = "alice,bob"
+env:
+  NOTIFY_USERS: ${{ vars.NOTIFY_USERS || 'strangeromo-cloud' }}
 
 jobs:
   refresh:
@@ -105,13 +110,23 @@ jobs:
       - name: Open issue on failure
         if: ${{ always() && steps.manifest.outputs.failure_count != '0' && steps.manifest.outputs.failure_count != '' }}
         uses: actions/github-script@v7
+        env:
+          NOTIFY_USERS: ${{ env.NOTIFY_USERS }}
         with:
           script: |
             const summary = `${{ steps.manifest.outputs.summary }}`;
             const failedIds = `${{ steps.manifest.outputs.failed_ids }}`.split(",").filter(Boolean);
+            const notifyUsers = (process.env.NOTIFY_USERS || "")
+              .split(",").map(s => s.trim()).filter(Boolean);
+            const mentionLine = notifyUsers.length
+              ? notifyUsers.map(u => "@" + u).join(" ") + " — heads up:"
+              : "";
+
             const today = new Date().toISOString().slice(0,10);
             const title = `Data refresh failed (${today}) — ${failedIds.join(", ")}`;
             const body = [
+              mentionLine,
+              ``,
               `### One or more list-source fetchers failed in the daily refresh.`,
               ``,
               "```",
@@ -125,12 +140,13 @@ jobs:
               `Likely causes:`,
               `- Upstream URL changed`,
               `- HTML/PDF layout changed (selector / regex needs an update)`,
+              `- Cloudflare upgraded its bot-detection (FATF only)`,
               `- Network blip (re-run may resolve)`,
               ``,
               `**Action:** open the workflow run to inspect the failing fetcher's traceback, then patch the corresponding file under \`scripts/data-refresh/fetchers/\`.`,
-            ].join("\n");
+            ].filter(Boolean).join("\n");
 
-            // De-dupe: if there's already an open issue with the same title prefix today, skip
+            // De-dupe: if there's already an open issue today, comment instead
             const existing = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -147,11 +163,13 @@ jobs:
                 body,
               });
             } else {
-              await github.rest.issues.create({
+              const created = await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 title,
                 body,
                 labels: ["data-refresh-failure", "automation"],
+                assignees: notifyUsers,  // sends a direct GitHub notification + email
               });
+              core.info(`Created issue #${created.data.number}, assigned to ${notifyUsers.join(", ")}`);
             }
