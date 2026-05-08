@@ -14,32 +14,22 @@ workflow at `.github/workflows/refresh-data.yml` that:
 
 ## Sources covered (8)
 
-### Daily auto-run (5)
+| ID | Name | Mode | Headless? | Records (last run) |
+|---|---|---|---|---|
+| `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Wayback Machine + CDX freshness check | – | ~25–35 (when Wayback fresh) |
+| `ofac-country-programs` | OFAC Sanctions Programs by Country | HTML scrape | – | ~43 |
+| `un-consolidated` | UN Security Council Consolidated List | XML parse | – | ~1009 |
+| `eu-consolidated` | EU Consolidated Financial Sanctions | XML parse (token-gated) | – | ~6000 |
+| `ti-cpi` | Transparency International CPI | Annual `.xlsx` (Strict OOXML, parsed via raw XML) | – | 180 |
+| `wjp-rule-of-law` | WJP Rule of Law Index | Direct CSV (`/data/<year>.csv`) | – | 143 |
+| `basel-aml-index` | Basel AML Index | Headless Chromium → table scrape | ✓ | 177 |
+| `tjn-fsi` | Tax Justice Network FSI | Headless Chromium → network interception of `api.data.taxjustice.net/v1/query/fsi_jurisdictions` | ✓ | 141 |
 
-| ID | Name | Mode | Records (last run) |
-|---|---|---|---|
-| `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Wayback Machine + CDX freshness check | ~25–35 |
-| `ofac-country-programs` | OFAC Sanctions Programs by Country | HTML scrape | ~40 |
-| `un-consolidated` | UN Security Council Consolidated List | XML parse | ~1000 |
-| `eu-consolidated` | EU Consolidated Financial Sanctions | XML parse (token-gated) | ~6000 |
-| `ti-cpi` | Transparency International CPI | Annual `.xlsx` (Strict OOXML, parsed via raw XML) | ~180 |
-
-### Skipped — `requires_headless` (3)
-
-These pages are React/Nuxt SPAs whose data only materializes in a real browser
-runtime. They're skipped by the daily run to avoid noisy alerts.
-
-| ID | Name | Why skipped | Manual workaround |
-|---|---|---|---|
-| `basel-aml-index` | Basel AML Index | Nuxt + Directus; per-country scores require auth | Email-register for the annual PDF and manually update the spec |
-| `wjp-rule-of-law` | WJP Rule of Law Index | Initial HTML is ~5KB stub | Download the annual PDF from worldjusticeproject.org |
-| `tjn-fsi` | Tax Justice Network FSI | Ranking table renders from late-loaded JSON blob | Use the Excel "FSI Database" download from fsi.taxjustice.net/database |
-
-To run them anyway (e.g. once a quarter via Playwright):
-
-```bash
-python -m scripts.data-refresh.refresh_all --include-headless
-```
+The two `requires_headless` fetchers run real Chromium via Playwright. The
+daily GitHub Actions run installs Chromium with cache and invokes the
+orchestrator with `--include-headless`. Locally they're skipped by default
+(so you don't need Playwright installed) — pass `--include-headless` to
+run them.
 
 > Sources **not** listed above (OFAC SDN, World Bank WGI, OpenSanctions, the
 > commercial vendors) are accessed via their APIs at runtime — no daily

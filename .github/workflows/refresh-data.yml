@@ -33,10 +33,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/data-refresh/requirements.txt
 
-      - name: Run all fetchers
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-${{ hashFiles('scripts/data-refresh/requirements.txt') }}
+
+      - name: Install Playwright Chromium
+        run: |
+          python -m playwright install --with-deps chromium
+
+      - name: Run all fetchers (including headless)
         id: refresh
         run: |
-          python -m scripts.data-refresh.refresh_all
+          python -m scripts.data-refresh.refresh_all --include-headless
         continue-on-error: false
 
       - name: Inspect manifest
