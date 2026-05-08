@@ -16,7 +16,7 @@ workflow at `.github/workflows/refresh-data.yml` that:
 
 | ID | Name | Mode | Headless? | Records (last run) |
 |---|---|---|---|---|
-| `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Wayback Machine + CDX freshness check | – | ~25–35 (when Wayback fresh) |
+| `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Headless Chromium → Cloudflare bypass + scrape; Wayback fallback if Playwright fails | ✓ | ~25 |
 | `ofac-country-programs` | OFAC Sanctions Programs by Country | HTML scrape | – | ~43 |
 | `un-consolidated` | UN Security Council Consolidated List | XML parse | – | ~1009 |
 | `eu-consolidated` | EU Consolidated Financial Sanctions | XML parse (token-gated) | – | ~6000 |
