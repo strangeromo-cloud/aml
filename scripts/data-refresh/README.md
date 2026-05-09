@@ -2,10 +2,10 @@
 
 This subsystem handles every public AML data source that has **no usable API**
 (or whose API requires a paid subscription). For each, we download or scrape
-the upstream artifact and emit a clean `.xlsx` snapshot to `data/downloads/`.
+the upstream artifact and emit a clean `.xlsx` snapshot to `public/downloads/`.
 
 The orchestrator runs every fetcher in turn, captures status to
-`data/downloads/_manifest.json`, and is wired up to a daily GitHub Actions
+`public/downloads/_manifest.json`, and is wired up to a daily GitHub Actions
 workflow at `.github/workflows/refresh-data.yml` that:
 
 1. Runs all 8 fetchers
@@ -63,7 +63,7 @@ scripts/data-refresh/
     ├── wjp_rol.py
     └── tjn_fsi.py
 
-data/downloads/               # outputs (committed daily by the workflow)
+public/downloads/               # outputs (committed daily by the workflow)
 ├── _manifest.json
 ├── fatf-jurisdictions.xlsx
 ├── ofac-country-programs.xlsx
@@ -85,7 +85,7 @@ python -m scripts.data-refresh.refresh_all --only fatf-jurisdictions --only un-c
 python -m scripts.data-refresh.refresh_all --strict
 ```
 
-Every run rewrites `data/downloads/_manifest.json` with per-source status,
+Every run rewrites `public/downloads/_manifest.json` with per-source status,
 record count, and timestamps.
 
 ## Adding a new fetcher

@@ -60,7 +60,7 @@ jobs:
         run: |
           python <<'PY'
           import json, os, pathlib
-          p = pathlib.Path("data/downloads/_manifest.json")
+          p = pathlib.Path("public/downloads/_manifest.json")
           if not p.exists():
               print("::error::manifest not produced — refresh_all crashed before write")
               exit(1)
@@ -97,7 +97,7 @@ jobs:
           GIT_COMMITTER_NAME: aml-data-refresh-bot
           GIT_COMMITTER_EMAIL: aml-bot@noreply.github.com
         run: |
-          git add data/downloads/
+          git add public/downloads/
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

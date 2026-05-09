@@ -5,7 +5,8 @@
     "home": "仪表盘",
     "companies": "公司",
     "methodology": "评分方法",
-    "sources": "数据源"
+    "sources": "数据源",
+    "downloads": "数据下载"
   },
   "search": {
     "placeholder": "搜索 200 家客户或供应商…",
@@ -80,6 +81,26 @@
     "levelsTitle": "风险等级",
     "dataRealityTitle": "数据真实度——哪些是真实/快照，哪些是模拟",
     "factorTitle": "各维度的因子"
+  },
+  "downloads": {
+    "title": "每日数据下载",
+    "sub": "8 个列表型数据源的 Excel 快照，每天北京时间早 8 点由自动化流水线刷新。点击任意文件即可下载。",
+    "lastRun": "上次刷新",
+    "successOf": "{success} / {total} 数据源最新",
+    "fresh": "最新",
+    "records": "条",
+    "fetchedAt": "抓取时间",
+    "failedAt": "最近尝试",
+    "downloadXlsx": "下载 Excel",
+    "upstream": "上游来源",
+    "availableTitle": "可下载文件",
+    "failuresTitle": "上次运行失败",
+    "stat": {
+      "success": "成功",
+      "failures": "失败",
+      "total": "总数"
+    },
+    "howItWorks": "文件由 GitHub Actions 每天北京时间 8 点自动刷新。每个成功的 fetcher 会生成一份双 sheet 的 Excel（About + Data），写入 public/downloads/，然后 commit 回 main 触发 Zeabur 自动重部署。若任一 fetcher 失败，仓库会自动开 issue 并通过 GitHub 邮件 + 手机推送通知到指派人。"
   },
   "sources": {
     "title": "数据源",

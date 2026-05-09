@@ -1,4 +1,4 @@
-"""Run every list-source fetcher and write data/downloads/_manifest.json.
+"""Run every list-source fetcher and write public/downloads/_manifest.json.
 
 Designed to be invoked by GitHub Actions on a daily cron. Exits with code 0
 even if some fetchers fail — the per-source status is captured in the manifest

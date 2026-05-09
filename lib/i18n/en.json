@@ -5,7 +5,8 @@
     "home": "Dashboard",
     "companies": "Companies",
     "methodology": "Methodology",
-    "sources": "Data Sources"
+    "sources": "Data Sources",
+    "downloads": "Downloads"
   },
   "search": {
     "placeholder": "Search any of 200 customers or suppliers…",
@@ -80,6 +81,26 @@
     "levelsTitle": "Risk levels",
     "dataRealityTitle": "Data reality — what's real vs. mock",
     "factorTitle": "Factors by dimension"
+  },
+  "downloads": {
+    "title": "Daily Data Downloads",
+    "sub": "Excel snapshots of the 8 list-style data sources, refreshed every day at 08:00 Beijing time by an automated pipeline. Click any file to download.",
+    "lastRun": "Last refreshed",
+    "successOf": "{success} / {total} sources fresh",
+    "fresh": "fresh",
+    "records": "records",
+    "fetchedAt": "Fetched at",
+    "failedAt": "Last attempt",
+    "downloadXlsx": "Download Excel",
+    "upstream": "Upstream",
+    "availableTitle": "Available downloads",
+    "failuresTitle": "Failed in last run",
+    "stat": {
+      "success": "Success",
+      "failures": "Failures",
+      "total": "Total"
+    },
+    "howItWorks": "Files are refreshed by a GitHub Actions workflow that runs daily at 08:00 Beijing time. Each successful fetcher writes a 2-sheet Excel (About + Data) into public/downloads/, which is then committed back to main and auto-deployed to Zeabur. If any fetcher fails, an issue is opened in the repo and the assignees are notified by GitHub email + mobile push."
   },
   "sources": {
     "title": "Data sources",

@@ -23,7 +23,9 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-OUTPUT_DIR = REPO_ROOT / "data" / "downloads"
+# Output goes into public/ so Next.js serves the .xlsx files directly at
+# https://<host>/downloads/<filename>.xlsx
+OUTPUT_DIR = REPO_ROOT / "public" / "downloads"
 MANIFEST_FILE = OUTPUT_DIR / "_manifest.json"
 
 DEFAULT_HEADERS = {
@@ -168,7 +170,7 @@ class Fetcher:
     name: str = ""
     # Upstream URL (for logging + Excel about page)
     url: str = ""
-    # Output filename in data/downloads/
+    # Output filename in public/downloads/
     out_filename: str = ""
     # If True, the source is JS-rendered or behind auth and needs a headless
     # browser / API key to fetch reliably. The default orchestrator skips these
