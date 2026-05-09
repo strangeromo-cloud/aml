@@ -119,16 +119,5 @@
       "en": "Aggregated open database of sanctions, PEPs, and other watchlists for entity screening.",
       "zh": "用于实体筛查的制裁、PEP 及其他关注名单的聚合开放数据库。"
     }
-  },
-  {
-    "id": "control_risks_geo",
-    "name": { "en": "Control Risks Country Risk Forecast", "zh": "Control Risks 国家风险预测" },
-    "authority": "Control Risks",
-    "url": "https://www.controlrisks.com/our-thinking/insights/riskmap",
-    "snapshotDate": "2025-12-10",
-    "description": {
-      "en": "Commercial geopolitical and operational risk ratings used as context for circumvention and jurisdiction monitoring.",
-      "zh": "用于规避风险与司法辖区监控的商业地缘政治与运营风险评级。"
-    }
   }
 ]

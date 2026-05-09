@@ -41,7 +41,7 @@ export function scoreCircumvention(company: Company, countries: Record<string, C
       en: "Combining a transit hub (AE/TR/HK/SG/CY/VG/KY/…) with a sanctioned jurisdiction in the operating footprint is a documented circumvention signal.",
       zh: "运营足迹同时包含中转枢纽（AE/TR/HK/SG/CY/VG/KY 等）与受制裁辖区，是已记录的规避信号。",
     },
-    sourceIds: ["control_risks_geo", "open_sanctions"],
+    sourceIds: ["ofac_countries", "open_sanctions"],
   };
 
   // Factor 2: Neighboring sanctioned exposure
@@ -61,7 +61,7 @@ export function scoreCircumvention(company: Company, countries: Record<string, C
       en: "Each sanctioned-adjacent country in the footprint adds 20 (base 25 for presence), capped at 100.",
       zh: "运营足迹中每多一个制裁国邻国 +20 分（存在时基础 25 分），上限 100。",
     },
-    sourceIds: ["control_risks_geo"],
+    sourceIds: ["ofac_countries"],
   };
 
   // Factor 3: Opaque ownership chain — many UBOs and subsidiaries spanning secrecy-prone places

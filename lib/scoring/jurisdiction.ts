@@ -71,7 +71,7 @@ export function scoreJurisdiction(company: Company, countries: Record<string, Co
       en: "Dynamic monitoring signal — flag set if the entity began operating in a FATF blacklist/greylist jurisdiction within the last 6 months.",
       zh: "动态监控信号——若实体在过去 6 个月内开始在 FATF 黑/灰名单辖区运营，则触发标记。",
     },
-    sourceIds: ["control_risks_geo"],
+    sourceIds: ["fatf_lists", "ofac_countries"],
   };
 
   const factors = [pctFactor, subFactor, suddenFactor];

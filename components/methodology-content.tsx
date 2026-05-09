@@ -166,7 +166,7 @@ const FACTOR_CATALOG: Record<keyof typeof DIMENSION_NAMES, FactorMeta[]> = {
       en: "Recent High-Risk Expansion",
       zh: "近期高风险扩张",
       weight: 0.2,
-      sourceIds: ["control_risks_geo"],
+      sourceIds: ["fatf_lists", "ofac_countries"],
       dataReality: "mock",
       formula: "flag = true  →  85  ;  false  →  0",
       meaning: {
@@ -184,7 +184,7 @@ const FACTOR_CATALOG: Record<keyof typeof DIMENSION_NAMES, FactorMeta[]> = {
       en: "Transit Hub + Sanctioned Co-occurrence",
       zh: "中转枢纽 + 制裁地并存",
       weight: 0.5,
-      sourceIds: ["control_risks_geo", "open_sanctions"],
+      sourceIds: ["ofac_countries", "open_sanctions"],
       dataReality: "hybrid",
       formula: "both → 85   ·   one → 35   ·   neither → 0",
       meaning: {
@@ -200,7 +200,7 @@ const FACTOR_CATALOG: Record<keyof typeof DIMENSION_NAMES, FactorMeta[]> = {
       en: "Sanctioned-Neighbor Exposure",
       zh: "制裁国周边暴露",
       weight: 0.3,
-      sourceIds: ["control_risks_geo"],
+      sourceIds: ["ofac_countries"],
       dataReality: "hybrid",
       formula: "n = 0  →  0  ;  n ≥ 1  →  min(100,  25 + 20 × n)",
       meaning: {
