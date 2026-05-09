@@ -152,56 +152,6 @@ export function CompanyDetail({ company, assessment, countries, sources }: Props
         </Card>
       </section>
 
-      {/* Adverse Media Evidence (live GDELT) */}
-      {company.adverseMediaSamples && company.adverseMediaSamples.length > 0 && (
-        <section>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">
-                {t("company.adverseMediaEvidence")}
-                <span className="ml-2 inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-300">
-                  GDELT live
-                </span>
-              </CardTitle>
-              <p className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">
-                {t("company.adverseMediaEvidenceSub")
-                  .replace("{count}", String(company.adverseMediaCount ?? 0))
-                  .replace(
-                    "{date}",
-                    company.adverseMediaFetchedAt
-                      ? new Date(company.adverseMediaFetchedAt).toLocaleDateString(locale === "zh" ? "zh-CN" : "en-US")
-                      : "—",
-                  )}
-              </p>
-            </CardHeader>
-            <CardBody>
-              <ul className="space-y-2 text-sm">
-                {company.adverseMediaSamples.map((s, i) => {
-                  const dateLabel = s.date
-                    ? `${s.date.slice(0, 4)}-${s.date.slice(4, 6)}-${s.date.slice(6, 8)}`
-                    : "";
-                  return (
-                    <li key={i} className="flex flex-col gap-1 rounded-md border border-l-4 border-l-rose-500 bg-rose-500/5 px-3 py-2">
-                      <a
-                        href={s.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium hover:underline"
-                      >
-                        {s.title || s.url}
-                      </a>
-                      <div className="text-xs text-[hsl(var(--muted-foreground))]">
-                        {s.source}
-                        {dateLabel && <span> · {dateLabel}</span>}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </CardBody>
-          </Card>
-        </section>
-      )}
     </div>
   );
 }

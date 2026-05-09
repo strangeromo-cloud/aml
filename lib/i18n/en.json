@@ -44,8 +44,6 @@
     "ubos": "Ultimate beneficial owners",
     "pep": "PEP",
     "illustrative": "Illustrative placeholder — real company name used only to anchor a low-risk tier-1 profile.",
-    "adverseMediaEvidence": "Adverse Media Evidence",
-    "adverseMediaEvidenceSub": "{count} articles found via GDELT live search · last fetched {date}. Top 3 below.",
     "dimensionsTitle": "Six-dimension risk breakdown",
     "factorsHeader": "Contributing factors",
     "rationale": "Why this score",

@@ -15,7 +15,6 @@ export function Header() {
     { href: "/companies", label: t("nav.companies") },
     { href: "/methodology", label: t("nav.methodology") },
     { href: "/sources", label: t("nav.sources") },
-    { href: "/downloads", label: t("nav.downloads") },
   ];
   return (
     <header className="sticky top-0 z-10 border-b bg-[hsl(var(--background))]/80 backdrop-blur">
