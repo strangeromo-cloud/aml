@@ -297,12 +297,49 @@ function main() {
   const suppliers = generateSide("supplier", REAL_SUPPLIERS);
   const all = [...customers, ...suppliers];
   const out = path.join(process.cwd(), "data/companies.json");
+
+  // Preserve any GDELT-enriched fields from the existing file. The generator
+  // produces deterministic synthetic structure, but the live adverse-media
+  // signals come from scripts/enrich-gdelt.py and we don't want to wipe them
+  // on every prebuild.
+  let preservedCount = 0;
+  if (fs.existsSync(out)) {
+    try {
+      const prior: Company[] = JSON.parse(fs.readFileSync(out, "utf8"));
+      const byId = new Map(prior.map((p) => [p.id, p] as const));
+      for (const c of all) {
+        const old = byId.get(c.id);
+        if (!old) continue;
+        let touched = false;
+        for (const field of [
+          "adverseMediaCount",
+          "adverseMediaSamples",
+          "adverseMediaFetchedAt",
+          "adverseMediaSource",
+        ] as const) {
+          // Only carry fields that came from a real upstream (have a source tag),
+          // never carry raw mocked values across regenerations.
+          if (old.adverseMediaSource && old[field] !== undefined) {
+            (c as any)[field] = old[field];
+            touched = true;
+          }
+        }
+        if (touched) preservedCount++;
+      }
+    } catch {
+      // Corrupt prior file — fall through and overwrite cleanly
+    }
+  }
+
   fs.writeFileSync(out, JSON.stringify(all, null, 2));
   console.log(
     `Wrote ${all.length} companies (${customers.length} customers + ${suppliers.length} suppliers) to ${out}`,
   );
   const realCount = all.filter((c) => c.isReal).length;
   console.log(`  Real-name companies: ${realCount}`);
+  if (preservedCount) {
+    console.log(`  Preserved adverseMedia* (GDELT) fields on ${preservedCount} companies`);
+  }
 }
 
 main();

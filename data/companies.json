@@ -45,10 +45,13 @@
     "annualVolumeUsd": 142443668,
     "yearEstablished": 2014,
     "isReal": false,
-    "adverseMediaCount": 10,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 3,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 89
+    "fuzzyWatchlistMatchPct": 89,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-002",
@@ -85,10 +88,13 @@
     "annualVolumeUsd": 167037744,
     "yearEstablished": 2016,
     "isReal": false,
-    "adverseMediaCount": 7,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 3,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 97
+    "fuzzyWatchlistMatchPct": 97,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-003",
@@ -131,10 +137,13 @@
     "annualVolumeUsd": 33194685,
     "yearEstablished": 1969,
     "isReal": false,
-    "adverseMediaCount": 7,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 2,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 90
+    "fuzzyWatchlistMatchPct": 90,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-004",
@@ -182,10 +191,13 @@
     "annualVolumeUsd": 1074245,
     "yearEstablished": 2019,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 1,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 56
+    "fuzzyWatchlistMatchPct": 56,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-005",
@@ -219,10 +231,13 @@
     "annualVolumeUsd": 44115229,
     "yearEstablished": 1963,
     "isReal": false,
-    "adverseMediaCount": 6,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 56
+    "fuzzyWatchlistMatchPct": 56,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-006",
@@ -258,10 +273,13 @@
     "annualVolumeUsd": 60993284,
     "yearEstablished": 1993,
     "isReal": false,
-    "adverseMediaCount": 3,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 60
+    "fuzzyWatchlistMatchPct": 60,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-007",
@@ -313,10 +331,13 @@
     "annualVolumeUsd": 63100802,
     "yearEstablished": 1991,
     "isReal": false,
-    "adverseMediaCount": 7,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 46
+    "fuzzyWatchlistMatchPct": 46,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-008",
@@ -364,10 +385,13 @@
     "annualVolumeUsd": 213112589,
     "yearEstablished": 2009,
     "isReal": false,
-    "adverseMediaCount": 3,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 1,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 60
+    "fuzzyWatchlistMatchPct": 60,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-009",
@@ -417,10 +441,13 @@
     "annualVolumeUsd": 4245140,
     "yearEstablished": 1982,
     "isReal": false,
-    "adverseMediaCount": 5,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 64
+    "fuzzyWatchlistMatchPct": 64,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-010",
@@ -464,10 +491,13 @@
     "annualVolumeUsd": 4418990,
     "yearEstablished": 1990,
     "isReal": false,
-    "adverseMediaCount": 6,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 64
+    "fuzzyWatchlistMatchPct": 64,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-011",
@@ -508,10 +538,13 @@
     "annualVolumeUsd": 33599076,
     "yearEstablished": 1990,
     "isReal": false,
-    "adverseMediaCount": 7,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 65
+    "fuzzyWatchlistMatchPct": 65,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-012",
@@ -550,10 +583,13 @@
     "annualVolumeUsd": 1528413,
     "yearEstablished": 1987,
     "isReal": false,
-    "adverseMediaCount": 4,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 67
+    "fuzzyWatchlistMatchPct": 67,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-013",
@@ -600,10 +636,13 @@
     "annualVolumeUsd": 19535848,
     "yearEstablished": 1968,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 45
+    "fuzzyWatchlistMatchPct": 45,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-014",
@@ -646,10 +685,13 @@
     "annualVolumeUsd": 9535443,
     "yearEstablished": 1972,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 24
+    "fuzzyWatchlistMatchPct": 24,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-015",
@@ -698,10 +740,13 @@
     "annualVolumeUsd": 3448670,
     "yearEstablished": 1974,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 17
+    "fuzzyWatchlistMatchPct": 17,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-016",
@@ -761,7 +806,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 23
+    "fuzzyWatchlistMatchPct": 23,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-017",
@@ -811,7 +859,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 33
+    "fuzzyWatchlistMatchPct": 33,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-018",
@@ -861,7 +912,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 31
+    "fuzzyWatchlistMatchPct": 31,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-019",
@@ -907,10 +961,13 @@
     "annualVolumeUsd": 84179971,
     "yearEstablished": 1964,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 24
+    "fuzzyWatchlistMatchPct": 24,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-020",
@@ -962,10 +1019,13 @@
     "annualVolumeUsd": 467242688,
     "yearEstablished": 1960,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 18
+    "fuzzyWatchlistMatchPct": 18,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-021",
@@ -1012,7 +1072,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 28
+    "fuzzyWatchlistMatchPct": 28,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-022",
@@ -1063,7 +1126,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 22
+    "fuzzyWatchlistMatchPct": 22,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-023",
@@ -1110,7 +1176,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 33
+    "fuzzyWatchlistMatchPct": 33,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-024",
@@ -1162,7 +1231,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 21
+    "fuzzyWatchlistMatchPct": 21,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-025",
@@ -1209,10 +1281,13 @@
     "annualVolumeUsd": 1238151,
     "yearEstablished": 2015,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 25
+    "fuzzyWatchlistMatchPct": 25,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-026",
@@ -1260,10 +1335,13 @@
     "annualVolumeUsd": 5828924,
     "yearEstablished": 1983,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 33
+    "fuzzyWatchlistMatchPct": 33,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-027",
@@ -1313,10 +1391,20 @@
     "annualVolumeUsd": 166355723,
     "yearEstablished": 1983,
     "isReal": false,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 1,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 29
+    "fuzzyWatchlistMatchPct": 29,
+    "adverseMediaSamples": [
+      {
+        "title": "POLICE | News , Sports , Jobs - The Review",
+        "url": "https://www.reviewonline.com/news/police-courts/2026/05/police-552/",
+        "source": "reviewonline.com",
+        "date": "20260505T094500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-028",
@@ -1362,10 +1450,13 @@
     "annualVolumeUsd": 38568343,
     "yearEstablished": 1973,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 20
+    "fuzzyWatchlistMatchPct": 20,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-029",
@@ -1410,7 +1501,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 20
+    "fuzzyWatchlistMatchPct": 20,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-030",
@@ -1450,7 +1544,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 31
+    "fuzzyWatchlistMatchPct": 31,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-031",
@@ -1501,10 +1598,13 @@
     "annualVolumeUsd": 3156920,
     "yearEstablished": 1962,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 27
+    "fuzzyWatchlistMatchPct": 27,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-032",
@@ -1545,10 +1645,13 @@
     "annualVolumeUsd": 3502512,
     "yearEstablished": 1994,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 17
+    "fuzzyWatchlistMatchPct": 17,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-033",
@@ -1593,10 +1696,13 @@
     "annualVolumeUsd": 4775618,
     "yearEstablished": 1978,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 24
+    "fuzzyWatchlistMatchPct": 24,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-034",
@@ -1644,7 +1750,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-035",
@@ -1687,7 +1796,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-036",
@@ -1739,10 +1851,32 @@
     "annualVolumeUsd": 361365337,
     "yearEstablished": 2000,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [
+      {
+        "title": "Outgoing ASIC chair Joe Longo on his achievements at Australia corporate regulator",
+        "url": "https://www.watoday.com.au/business/banking-and-finance/asic-was-dubbed-a-watchdog-with-no-teeth-has-joe-longo-changed-it-20260507-p5zupd.html",
+        "source": "watoday.com.au",
+        "date": "20260509T010000Z"
+      },
+      {
+        "title": "FTSE 100 tumbles as Iran peace deal hopes rise",
+        "url": "https://finance.yahoo.com/markets/world-indices/articles/ftse-100-tumbles-iran-peace-164332570.html",
+        "source": "finance.yahoo.com",
+        "date": "20260509T001500Z"
+      },
+      {
+        "title": "Planet Fitness ( NYSE : PLNT ) Releases FY 2026 Earnings Guidance",
+        "url": "https://www.dailypolitical.com/2026/05/08/planet-fitness-nyseplnt-releases-fy-2026-earnings-guidance.html",
+        "source": "dailypolitical.com",
+        "date": "20260508T214500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-037",
@@ -1795,10 +1929,32 @@
     "annualVolumeUsd": 479360942,
     "yearEstablished": 2006,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 40,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [
+      {
+        "title": "MACAU DAILY TIMES 澳門每日時報HSBC Q1 earnings miss on higher credit losses",
+        "url": "https://macaudailytimes.com.mo/hsbc-q1-earnings-miss-on-higher-credit-losses.html",
+        "source": "macaudailytimes.com.mo",
+        "date": "20260507T031500Z"
+      },
+      {
+        "title": "滙控股價彈3 % 高盛籲買睇$160",
+        "url": "http://orientaldaily.on.cc/content/%E7%94%A2%E7%B6%93/odn-20260507-0507_00202_004/%E6%BB%99%E6%8E%A7%E8%82%A1%E5%83%B9%E5%BD%883---%E9%AB%98%E7%9B%9B%E7%B1%B2%E8%B2%B7%E7%9D%87-160",
+        "source": "orientaldaily.on.cc",
+        "date": "20260506T201500Z"
+      },
+      {
+        "title": "Western Markets Wrap",
+        "url": "https://www.indiainfoline.com/news/international/western-markets-wrap",
+        "source": "indiainfoline.com",
+        "date": "20260506T133000Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-038",
@@ -1837,10 +1993,32 @@
     "annualVolumeUsd": 154244958,
     "yearEstablished": 1970,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 6,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [
+      {
+        "title": "Japanese bank continues Texas LNG project despite community pleas",
+        "url": "https://cronkitenews.azpbs.org/2026/04/29/japanese-banks-invest-texas-gas/",
+        "source": "cronkitenews.azpbs.org",
+        "date": "20260430T003000Z"
+      },
+      {
+        "title": "FinancialContent - Jefferies Financial Group ( JEF ) Surges 7 % on Reports of Potential Sumitomo Acquisition",
+        "url": "https://markets.financialcontent.com/stocks/article/marketminute-2026-3-24-jefferies-financial-group-jef-surges-7-on-reports-of-potential-sumitomo-acquisition",
+        "source": "markets.financialcontent.com",
+        "date": "20260324T163000Z"
+      },
+      {
+        "title": "Japan Crypto Revolution : Speculative Bets To Institutional Backbones",
+        "url": "https://www.forbes.com/sites/digital-assets/2026/03/13/japans-crypto-revolution-speculative-bets-to-institutional-backbones/",
+        "source": "forbes.com",
+        "date": "20260313T011500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-039",
@@ -1886,7 +2064,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-040",
@@ -1935,7 +2116,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-041",
@@ -1980,10 +2164,32 @@
     "annualVolumeUsd": 438807474,
     "yearEstablished": 1976,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [
+      {
+        "title": "Denuncian que la corrupción y la mala administración mantienen a oscuras a Monagas",
+        "url": "https://lapatilla.com/2026/05/08/denuncian-que-la-corrupcion-y-la-mala-administracion-mantienen-a-oscuras-a-monagas/",
+        "source": "lapatilla.com",
+        "date": "20260509T003000Z"
+      },
+      {
+        "title": "Un gobernador chavista ofrece recompensa de mil dólares para desmantelar granjas de criptomonedas",
+        "url": "https://www.infobae.com/venezuela/2026/05/08/un-gobernador-chavista-ofrece-recompensa-de-mil-dolares-para-desmantelar-granjas-de-criptomonedas/",
+        "source": "infobae.com",
+        "date": "20260508T231500Z"
+      },
+      {
+        "title": "News diary 11 - 17 May : Cannes Film Festival , Trump in China , FA Cup final",
+        "url": "https://pressgazette.co.uk/news/news-diary-11-17-may-cannes-film-festival-trump-in-china-fa-cup-final/",
+        "source": "pressgazette.co.uk",
+        "date": "20260508T174500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-042",
@@ -2035,10 +2241,32 @@
     "annualVolumeUsd": 82718434,
     "yearEstablished": 1970,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 59,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [
+      {
+        "title": "Lack of response by Asiana airline officials after B777 crash in San Francisco",
+        "url": "https://eturbonews.com/lack-response-asiana-airline-officials-after-b777-crash-san-fran/",
+        "source": "eturbonews.com",
+        "date": "20260502T224500Z"
+      },
+      {
+        "title": "东航飞机落地滑行中撞廊桥 后退后再次撞击",
+        "url": "https://www.vava8.com/index.php?app=index&act=view&id=40053",
+        "source": "vava8.com",
+        "date": "20260502T180000Z"
+      },
+      {
+        "title": "Passenger jet crashes into bridge at airport terminal",
+        "url": "https://metro.co.uk/2026/05/02/passenger-jet-crashes-bridge-airport-terminal-28208554/",
+        "source": "metro.co.uk",
+        "date": "20260502T164500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-043",
@@ -2080,10 +2308,32 @@
     "annualVolumeUsd": 116540776,
     "yearEstablished": 1993,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [
+      {
+        "title": "Lobbying by Stove Industry undermines Council Public Health Campaigns and Housing Plans",
+        "url": "https://felixonline.co.uk/articles/lobbying-by-stove-industry-undermines-council-public-health-campaigns-and-housing-plans/",
+        "source": "felixonline.co.uk",
+        "date": "20260509T020000Z"
+      },
+      {
+        "title": "More than 20 British passengers and crew on board hantavirus - hit cruise ship could fly back to united kingdom this weekend after reaching Tenerife",
+        "url": "https://www.dailymail.com/news/article-15802741/20-British-passengers-crew-hantavirus-cruise-UK-weekend-Tenerife.html",
+        "source": "dailymail.com",
+        "date": "20260509T000000Z"
+      },
+      {
+        "title": "Crispin Odey reaches FCA endgame but has other battles to come",
+        "url": "https://www.thetimes.com/business/companies-markets/article/crispin-odey-reaches-fca-endgame-but-has-other-battles-to-come-k67r66hmb",
+        "source": "thetimes.com",
+        "date": "20260508T150000Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-044",
@@ -2135,10 +2385,32 @@
     "annualVolumeUsd": 465645065,
     "yearEstablished": 2015,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [
+      {
+        "title": "The war may end , but Iran internal crisis is just beginning",
+        "url": "https://www.ynetnews.com/opinions-analysis/article/b1h7xjnrzg",
+        "source": "ynetnews.com",
+        "date": "20260509T021500Z"
+      },
+      {
+        "title": "זאת הכלכלה , מוג  תבא",
+        "url": "https://www.ynet.co.il/news/article/yokra14763120",
+        "source": "ynet.co.il",
+        "date": "20260508T183000Z"
+      },
+      {
+        "title": "拒绝被  蒸馏  的年轻人 ， 开发反蒸馏skill ， 不进大厂|小满|李睿|香水|张雪峰",
+        "url": "https://www.163.com/dy/article/KSDFIIEC05148UNS.html",
+        "source": "163.com",
+        "date": "20260508T071500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-045",
@@ -2181,7 +2453,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-046",
@@ -2235,10 +2510,32 @@
     "annualVolumeUsd": 326099916,
     "yearEstablished": 1990,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 65,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [
+      {
+        "title": "Everything you thought about how Welcome to Country took over Australia is wrong : THIS is the little - known inside story of how the ceremony came to dominate every meeting , flight and school assembly",
+        "url": "https://www.dailymail.com/news/article-15774339/reconciliation-welcome-country-australia-PVO.html",
+        "source": "dailymail.com",
+        "date": "20260429T153000Z"
+      },
+      {
+        "title": "Next Week At A Glance - 27 - 24 Apr 2026",
+        "url": "https://fnarena.com/index.php/2026/04/24/next-week-at-a-glance-27-24-apr-2026/",
+        "source": "fnarena.com",
+        "date": "20260424T040000Z"
+      },
+      {
+        "title": "Quantium launches Gemini Enterprise practice with Google",
+        "url": "https://channellife.co.nz/story/quantium-launches-gemini-enterprise-practice-with-google",
+        "source": "channellife.co.nz",
+        "date": "20260423T031500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-047",
@@ -2285,10 +2582,32 @@
     "annualVolumeUsd": 382917419,
     "yearEstablished": 1961,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [
+      {
+        "title": "Feliz de tener estos políticos",
+        "url": "https://www.ultimahora.es/opinion/tribuna/2026/05/09/2625691/feliz-tener-estos-politicos.html",
+        "source": "ultimahora.es",
+        "date": "20260509T024500Z"
+      },
+      {
+        "title": "Mỹ tung 162 hồ sơ vật thể lạ trên không để người dân tự xem , khuyến khích tư nhân phân tích",
+        "url": "https://tuoitre.vn/my-tung-162-ho-so-vat-the-la-tren-khong-de-nguoi-dan-tu-xem-khuyen-khich-tu-nhan-phan-tich-20260509003347873.htm",
+        "source": "tuoitre.vn",
+        "date": "20260509T021500Z"
+      },
+      {
+        "title": "Condenados espías chinos que vigilaban disidentes en Reino Unido – EntornoInteligente . com",
+        "url": "https://www.entornointeligente.com/condenados-espias-chinos-que-vigilaban-disidentes-en-reino-unido/",
+        "source": "entornointeligente.com",
+        "date": "20260509T011500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-048",
@@ -2333,10 +2652,32 @@
     "annualVolumeUsd": 273168961,
     "yearEstablished": 1992,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 29,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [
+      {
+        "title": "1st Quarter Results | Company Announcement",
+        "url": "https://www.investegate.co.uk/announcement/rns/wheaton-precious-metals-corp-npv-cdi---wpm/1st-quarter-results/9558382",
+        "source": "investegate.co.uk",
+        "date": "20260508T063000Z"
+      },
+      {
+        "title": "Wheaton Precious Metals Announces Record Revenue , Earnings and Cash Flow for the First Quarter of 2026",
+        "url": "https://www.cantechletter.com/newswires/wheaton-precious-metals-announces-record-revenue-earnings-and-cash-flow-for-the-first-quarter-of-2026/",
+        "source": "cantechletter.com",
+        "date": "20260508T001500Z"
+      },
+      {
+        "title": "Wheaton Precious Metals Announces Record Revenue , Earnings and Cash Flow for the First Quarter of 2026",
+        "url": "http://www.prnewswire.com/news-releases/wheaton-precious-metals-announces-record-revenue-earnings-and-cash-flow-for-the-first-quarter-of-2026-302766193.html",
+        "source": "prnewswire.com",
+        "date": "20260507T213000Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-049",
@@ -2381,7 +2722,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-050",
@@ -2441,7 +2785,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-051",
@@ -2493,7 +2840,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-052",
@@ -2544,7 +2894,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-053",
@@ -2590,7 +2943,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-054",
@@ -2638,7 +2994,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-055",
@@ -2682,7 +3041,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-056",
@@ -2726,7 +3088,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-057",
@@ -2778,7 +3143,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-058",
@@ -2829,7 +3197,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-059",
@@ -2883,7 +3254,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-060",
@@ -2929,7 +3303,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-061",
@@ -2972,7 +3349,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 6
+    "fuzzyWatchlistMatchPct": 6,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-062",
@@ -3029,7 +3409,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-063",
@@ -3073,7 +3456,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-064",
@@ -3117,7 +3503,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-065",
@@ -3168,7 +3557,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-066",
@@ -3215,7 +3607,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-067",
@@ -3262,7 +3657,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-068",
@@ -3307,7 +3705,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-069",
@@ -3367,7 +3768,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-070",
@@ -3427,7 +3831,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-071",
@@ -3477,7 +3884,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-072",
@@ -3532,7 +3942,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-073",
@@ -3578,7 +3991,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-074",
@@ -3617,7 +4033,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-075",
@@ -3662,7 +4081,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-076",
@@ -3711,7 +4133,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-077",
@@ -3760,7 +4185,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-078",
@@ -3807,7 +4235,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-079",
@@ -3856,7 +4287,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-080",
@@ -3917,7 +4351,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-081",
@@ -3954,7 +4391,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-082",
@@ -4001,7 +4441,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-083",
@@ -4048,7 +4491,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-084",
@@ -4093,7 +4539,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-085",
@@ -4131,7 +4580,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-086",
@@ -4176,7 +4628,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-087",
@@ -4223,7 +4678,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-088",
@@ -4268,7 +4726,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 6
+    "fuzzyWatchlistMatchPct": 6,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-089",
@@ -4326,7 +4787,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-090",
@@ -4373,7 +4837,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-091",
@@ -4433,7 +4900,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-092",
@@ -4489,7 +4959,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-093",
@@ -4536,7 +5009,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-094",
@@ -4584,7 +5060,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-095",
@@ -4623,7 +5102,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-096",
@@ -4678,7 +5160,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-097",
@@ -4728,7 +5213,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-098",
@@ -4780,7 +5268,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-099",
@@ -4836,7 +5327,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "CUST-100",
@@ -4879,7 +5373,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-001",
@@ -4922,10 +5419,13 @@
     "annualVolumeUsd": 790702,
     "yearEstablished": 1967,
     "isReal": false,
-    "adverseMediaCount": 9,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 1,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 81
+    "fuzzyWatchlistMatchPct": 81,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-002",
@@ -4960,10 +5460,13 @@
     "annualVolumeUsd": 61367554,
     "yearEstablished": 2010,
     "isReal": false,
-    "adverseMediaCount": 15,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 3,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 81
+    "fuzzyWatchlistMatchPct": 81,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-003",
@@ -5015,10 +5518,13 @@
     "annualVolumeUsd": 42472974,
     "yearEstablished": 1987,
     "isReal": false,
-    "adverseMediaCount": 10,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 2,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 99
+    "fuzzyWatchlistMatchPct": 99,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-004",
@@ -5061,10 +5567,13 @@
     "annualVolumeUsd": 3993813,
     "yearEstablished": 1990,
     "isReal": false,
-    "adverseMediaCount": 4,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 1,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 59
+    "fuzzyWatchlistMatchPct": 59,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-005",
@@ -5107,10 +5616,13 @@
     "annualVolumeUsd": 159467914,
     "yearEstablished": 1970,
     "isReal": false,
-    "adverseMediaCount": 6,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 46
+    "fuzzyWatchlistMatchPct": 46,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-006",
@@ -5146,10 +5658,13 @@
     "annualVolumeUsd": 340850767,
     "yearEstablished": 1979,
     "isReal": false,
-    "adverseMediaCount": 7,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 54
+    "fuzzyWatchlistMatchPct": 54,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-007",
@@ -5186,10 +5701,13 @@
     "annualVolumeUsd": 19108494,
     "yearEstablished": 1972,
     "isReal": false,
-    "adverseMediaCount": 6,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 51
+    "fuzzyWatchlistMatchPct": 51,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-008",
@@ -5247,10 +5765,13 @@
     "annualVolumeUsd": 4007557,
     "yearEstablished": 1962,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 1,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 46
+    "fuzzyWatchlistMatchPct": 46,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-009",
@@ -5301,10 +5822,13 @@
     "annualVolumeUsd": 9960252,
     "yearEstablished": 1992,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 1,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 51
+    "fuzzyWatchlistMatchPct": 51,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-010",
@@ -5349,10 +5873,13 @@
     "annualVolumeUsd": 11939387,
     "yearEstablished": 2010,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 1,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 51
+    "fuzzyWatchlistMatchPct": 51,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-011",
@@ -5406,10 +5933,13 @@
     "annualVolumeUsd": 2860757,
     "yearEstablished": 1998,
     "isReal": false,
-    "adverseMediaCount": 4,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 41
+    "fuzzyWatchlistMatchPct": 41,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-012",
@@ -5454,10 +5984,13 @@
     "annualVolumeUsd": 11663456,
     "yearEstablished": 2006,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 49
+    "fuzzyWatchlistMatchPct": 49,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-013",
@@ -5513,10 +6046,13 @@
     "annualVolumeUsd": 9029629,
     "yearEstablished": 1986,
     "isReal": false,
-    "adverseMediaCount": 5,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 1,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 65
+    "fuzzyWatchlistMatchPct": 65,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-014",
@@ -5555,10 +6091,13 @@
     "annualVolumeUsd": 26790792,
     "yearEstablished": 1987,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 27
+    "fuzzyWatchlistMatchPct": 27,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-015",
@@ -5603,7 +6142,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 19
+    "fuzzyWatchlistMatchPct": 19,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-016",
@@ -5656,7 +6198,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 15
+    "fuzzyWatchlistMatchPct": 15,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-017",
@@ -5706,7 +6251,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 31
+    "fuzzyWatchlistMatchPct": 31,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-018",
@@ -5744,10 +6292,13 @@
     "annualVolumeUsd": 258725412,
     "yearEstablished": 2012,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 18
+    "fuzzyWatchlistMatchPct": 18,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-019",
@@ -5781,10 +6332,13 @@
     "annualVolumeUsd": 4418912,
     "yearEstablished": 1984,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 30
+    "fuzzyWatchlistMatchPct": 30,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-020",
@@ -5825,10 +6379,13 @@
     "annualVolumeUsd": 10627268,
     "yearEstablished": 1983,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 29
+    "fuzzyWatchlistMatchPct": 29,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-021",
@@ -5871,7 +6428,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 16
+    "fuzzyWatchlistMatchPct": 16,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-022",
@@ -5928,10 +6488,13 @@
     "annualVolumeUsd": 145708188,
     "yearEstablished": 1975,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 15
+    "fuzzyWatchlistMatchPct": 15,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-023",
@@ -5973,10 +6536,13 @@
     "annualVolumeUsd": 580224,
     "yearEstablished": 2015,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 22
+    "fuzzyWatchlistMatchPct": 22,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-024",
@@ -6010,10 +6576,13 @@
     "annualVolumeUsd": 47154303,
     "yearEstablished": 1983,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 30
+    "fuzzyWatchlistMatchPct": 30,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-025",
@@ -6055,10 +6624,13 @@
     "annualVolumeUsd": 2336299,
     "yearEstablished": 1969,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 31
+    "fuzzyWatchlistMatchPct": 31,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-026",
@@ -6116,7 +6688,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 33
+    "fuzzyWatchlistMatchPct": 33,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-027",
@@ -6165,7 +6740,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 19
+    "fuzzyWatchlistMatchPct": 19,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-028",
@@ -6205,10 +6783,13 @@
     "annualVolumeUsd": 10254296,
     "yearEstablished": 2004,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 26
+    "fuzzyWatchlistMatchPct": 26,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-029",
@@ -6243,10 +6824,13 @@
     "annualVolumeUsd": 45906577,
     "yearEstablished": 2016,
     "isReal": false,
-    "adverseMediaCount": 2,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 32
+    "fuzzyWatchlistMatchPct": 32,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-030",
@@ -6294,7 +6878,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 29
+    "fuzzyWatchlistMatchPct": 29,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-031",
@@ -6350,7 +6937,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 30
+    "fuzzyWatchlistMatchPct": 30,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-032",
@@ -6389,7 +6979,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": true,
-    "fuzzyWatchlistMatchPct": 21
+    "fuzzyWatchlistMatchPct": 21,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-033",
@@ -6437,10 +7030,13 @@
     "annualVolumeUsd": 428951433,
     "yearEstablished": 1999,
     "isReal": false,
-    "adverseMediaCount": 1,
+    "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 24
+    "fuzzyWatchlistMatchPct": 24,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-034",
@@ -6478,7 +7074,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-035",
@@ -6530,10 +7129,32 @@
     "annualVolumeUsd": 188916679,
     "yearEstablished": 2004,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [
+      {
+        "title": "美股异动 | 纳指现涨1 . 22 % 续创历史新高 明星科技股普涨 美国超微公司 ( AMD . US ) 涨超6 %_ 股市直播 _ 市场 _ 中金在线",
+        "url": "http://sc.stock.cnfol.com/gushizhibo/20260508/32211214.shtml",
+        "source": "sc.stock.cnfol.com",
+        "date": "20260508T154500Z"
+      },
+      {
+        "title": "美国调查英伟达GPU 25亿美元走私案 ： 通过泰国公司暗度陈仓",
+        "url": "https://tech.ifeng.com/c/8sxtynfIfcq",
+        "source": "tech.ifeng.com",
+        "date": "20260508T133000Z"
+      },
+      {
+        "title": "中國偷用輝達晶片被抓包 ？ 外媒爆經泰國流向阿里巴巴",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5430643",
+        "source": "ec.ltn.com.tw",
+        "date": "20260508T121500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-036",
@@ -6578,7 +7199,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-037",
@@ -6620,10 +7244,32 @@
     "annualVolumeUsd": 368362791,
     "yearEstablished": 1991,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [
+      {
+        "title": "Cybersecurity 2026 : AI - Compressed Attacks , the SEC Disclosure Era , and the $32B Cloud - Security Reset",
+        "url": "https://everything-pr.com/cybersecurity-2026-ai-compressed-attacks-the-sec-disclosure-era/",
+        "source": "everything-pr.com",
+        "date": "20260509T024500Z"
+      },
+      {
+        "title": "China Blinks on Iran , Tells Banks to Freeze Refinery Loans",
+        "url": "https://finance.yahoo.com/economy/policy/articles/china-blinks-iran-tells-banks-193718005.html",
+        "source": "finance.yahoo.com",
+        "date": "20260509T020000Z"
+      },
+      {
+        "title": "BlackLine Q1 Earnings Call Highlights",
+        "url": "https://www.tickerreport.com/banking-finance/13434075/blackline-q1-earnings-call-highlights.html",
+        "source": "tickerreport.com",
+        "date": "20260508T213000Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-038",
@@ -6666,7 +7312,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-039",
@@ -6722,10 +7371,32 @@
     "annualVolumeUsd": 110233487,
     "yearEstablished": 1975,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [
+      {
+        "title": "Inside the global battle over chip manufacturing with Chris Miller",
+        "url": "https://www.theverge.com/23578430/chip-war-chris-miller-asml-intel-apple-samsung-us-china-decoder",
+        "source": "theverge.com",
+        "date": "20260508T034500Z"
+      },
+      {
+        "title": " [ AI 카드뉴스 ] SK하이닉스 성과급은 왜 크게 늘었을까 ? ",
+        "url": "https://www.newspim.com/news/view/20260508000739",
+        "source": "newspim.com",
+        "date": "20260508T031500Z"
+      },
+      {
+        "title": " [ 특징주 ] 삼성전자 · SK하이닉스 , 미 · 이란 종전 기대 후퇴에 프리마켓서 약세",
+        "url": "https://www.newspim.com/news/view/20260508000086",
+        "source": "newspim.com",
+        "date": "20260507T234500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-040",
@@ -6774,7 +7445,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-041",
@@ -6814,10 +7488,32 @@
     "annualVolumeUsd": 148664264,
     "yearEstablished": 1980,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 34,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [
+      {
+        "title": "Le principal pôle industriel indien entre espoir et prudence face à larrivée au pouvoir de la star de cinéma Vijay",
+        "url": "https://www.zonebourse.com/actualite-bourse/le-principal-pole-industriel-indien-entre-espoir-et-prudence-face-a-l-arrivee-au-pouvoir-de-la-star-ce7f58d2da80f021",
+        "source": "zonebourse.com",
+        "date": "20260506T171500Z"
+      },
+      {
+        "title": "China celebrates 107th anniversary of the May Fourth Movement , the historic youth movement that ignited profound social changes in China",
+        "url": "https://countercurrents.org/2026/05/china-celebrates-107th-anniversary-of-the-may-fourth-movement-the-historic-youth-movement-that-ignited-profound-social-changes-in-china/",
+        "source": "countercurrents.org",
+        "date": "20260505T060000Z"
+      },
+      {
+        "title": "Thalapathy government ? Why Vijay historic rise in India industrial powerhouse state matters for stock market",
+        "url": "https://economictimes.indiatimes.com/markets/stocks/news/thalapathy-government-why-vijays-historic-rise-in-indias-industrial-powerhouse-state-matters-for-stock-market/articleshow/130798865.cms",
+        "source": "economictimes.indiatimes.com",
+        "date": "20260504T133000Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-042",
@@ -6865,7 +7561,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-043",
@@ -6916,10 +7615,32 @@
     "annualVolumeUsd": 151858602,
     "yearEstablished": 2017,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 4,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [
+      {
+        "title": "한화솔루션 해명에도 소액주주 납득 NO … 오너家 석고대죄해라  ",
+        "url": "https://zdnet.co.kr/view/?no=20260330152745",
+        "source": "zdnet.co.kr",
+        "date": "20260330T094500Z"
+      },
+      {
+        "title": "500대 기업 일자리 6700개 줄었다 … 올리브영 · SK하닉은 대폭 늘어",
+        "url": "https://www.edaily.co.kr/News/Read?newsId=04706806645349536&mediaCodeNo=257",
+        "source": "edaily.co.kr",
+        "date": "20260211T060000Z"
+      },
+      {
+        "title": "국내 500대 기업 일자리 지난해에만 6700개 감소",
+        "url": "https://inews24.com/view/1938188",
+        "source": "inews24.com",
+        "date": "20260211T030000Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-044",
@@ -6953,10 +7674,32 @@
     "annualVolumeUsd": 419146243,
     "yearEstablished": 1988,
     "isReal": true,
-    "adverseMediaCount": 0,
+    "adverseMediaCount": 100,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [
+      {
+        "title": "美股全线爆发 ， CPU双雄  大涨 _ 凤凰网",
+        "url": "https://finance.ifeng.com/c/8syo5XFKh0o",
+        "source": "finance.ifeng.com",
+        "date": "20260509T011500Z"
+      },
+      {
+        "title": "Jim Cramer Highlights Dell Servers and Vertiv Cooling as Major AI Components",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-highlights-dell-servers-150707456.html",
+        "source": "finance.yahoo.com",
+        "date": "20260508T154500Z"
+      },
+      {
+        "title": "美 · 이란 협상 불확실성에 증시 · 유가 혼조증권가  원자재 비중 확대해야  ",
+        "url": "https://www.newsway.co.kr/news/view?ud=2026050808030511984",
+        "source": "newsway.co.kr",
+        "date": "20260508T014500Z"
+      }
+    ],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-045",
@@ -7003,7 +7746,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-046",
@@ -7052,7 +7798,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:47:12+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-047",
@@ -7097,7 +7846,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-048",
@@ -7137,7 +7889,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-049",
@@ -7178,7 +7933,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-050",
@@ -7231,7 +7989,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-051",
@@ -7273,7 +8034,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-052",
@@ -7309,7 +8073,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-053",
@@ -7363,7 +8130,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-054",
@@ -7407,7 +8177,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-055",
@@ -7450,7 +8223,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-056",
@@ -7498,7 +8274,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-057",
@@ -7544,7 +8323,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-058",
@@ -7604,7 +8386,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-059",
@@ -7652,7 +8437,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-060",
@@ -7698,7 +8486,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-061",
@@ -7746,7 +8537,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-062",
@@ -7797,7 +8591,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-063",
@@ -7848,7 +8645,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-064",
@@ -7888,7 +8688,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-065",
@@ -7940,7 +8743,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-066",
@@ -8000,7 +8806,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-067",
@@ -8047,7 +8856,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-068",
@@ -8090,7 +8902,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 6
+    "fuzzyWatchlistMatchPct": 6,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-069",
@@ -8142,7 +8957,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-070",
@@ -8197,7 +9015,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-071",
@@ -8240,7 +9061,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-072",
@@ -8278,7 +9102,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-073",
@@ -8326,7 +9153,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-074",
@@ -8381,7 +9211,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-075",
@@ -8425,7 +9258,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-076",
@@ -8475,7 +9311,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-077",
@@ -8532,7 +9371,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-078",
@@ -8585,7 +9427,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-079",
@@ -8626,7 +9471,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-080",
@@ -8682,7 +9530,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-081",
@@ -8723,7 +9574,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 5
+    "fuzzyWatchlistMatchPct": 5,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-082",
@@ -8761,7 +9615,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-083",
@@ -8800,7 +9657,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-084",
@@ -8849,7 +9709,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-085",
@@ -8898,7 +9761,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-086",
@@ -8951,7 +9817,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-087",
@@ -8998,7 +9867,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 7
+    "fuzzyWatchlistMatchPct": 7,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-088",
@@ -9034,7 +9906,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 3
+    "fuzzyWatchlistMatchPct": 3,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-089",
@@ -9085,7 +9960,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-090",
@@ -9129,7 +10007,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-091",
@@ -9181,7 +10062,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-092",
@@ -9235,7 +10119,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 1
+    "fuzzyWatchlistMatchPct": 1,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-093",
@@ -9284,7 +10171,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 9
+    "fuzzyWatchlistMatchPct": 9,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-094",
@@ -9325,7 +10215,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-095",
@@ -9370,7 +10263,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-096",
@@ -9422,7 +10318,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 4
+    "fuzzyWatchlistMatchPct": 4,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-097",
@@ -9471,7 +10370,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-098",
@@ -9529,7 +10431,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 0
+    "fuzzyWatchlistMatchPct": 0,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-099",
@@ -9570,7 +10475,10 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 8
+    "fuzzyWatchlistMatchPct": 8,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   },
   {
     "id": "SUPP-100",
@@ -9623,6 +10531,9 @@
     "adverseMediaCount": 0,
     "regulatoryEnforcementCount": 0,
     "suddenJurisdictionExpansion": false,
-    "fuzzyWatchlistMatchPct": 2
+    "fuzzyWatchlistMatchPct": 2,
+    "adverseMediaSamples": [],
+    "adverseMediaFetchedAt": "2026-05-09T02:28:54+00:00",
+    "adverseMediaSource": "gdelt-doc-v2"
   }
 ]

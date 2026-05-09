@@ -36,10 +36,10 @@ export function scorePepMedia(company: Company, _countries: Record<string, Count
     score: mediaScore,
     weightWithinDimension: 0.3,
     rationale: {
-      en: "Count of adverse media hits mentioning AML/fraud/sanctions/corruption keywords. Each article adds 8, capped at 100.",
-      zh: "涉及反洗钱 / 欺诈 / 制裁 / 腐败等关键词的负面新闻数量。每篇 +8 分，上限 100。",
+      en: "Live count from GDELT 2.0 of articles in the last 24 months mentioning the entity with AML / fraud / sanctions / corruption keywords. Each article adds 8 points, capped at 100.",
+      zh: "GDELT 2.0 实时计数：过去 24 个月内涉及反洗钱 / 欺诈 / 制裁 / 腐败关键词的新闻篇数。每篇 +8 分，上限 100。",
     },
-    sourceIds: ["open_sanctions"],
+    sourceIds: ["gdelt", "open_sanctions"],
   };
 
   // Factor 3: Regulatory enforcement history

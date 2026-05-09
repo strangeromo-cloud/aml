@@ -130,5 +130,16 @@
       "en": "Commercial geopolitical and operational risk ratings used as context for circumvention and jurisdiction monitoring.",
       "zh": "用于规避风险与司法辖区监控的商业地缘政治与运营风险评级。"
     }
+  },
+  {
+    "id": "gdelt",
+    "name": { "en": "GDELT — Global Database of Events, Language, and Tone", "zh": "GDELT 全球新闻事件数据库" },
+    "authority": "The GDELT Project",
+    "url": "https://www.gdeltproject.org/",
+    "snapshotDate": "live",
+    "description": {
+      "en": "Free open API monitoring news in 65 languages, refreshed every 15 minutes. Drives the live Adverse Media Count factor.",
+      "zh": "免费的开放 API，监控 65 种语言的全球新闻，每 15 分钟更新。驱动负面媒体实时计数因子。"
+    }
   }
 ]

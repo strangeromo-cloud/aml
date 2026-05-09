@@ -46,6 +46,9 @@ export type Company = {
   isReal: boolean;
   // Optional mock signals injected by generator to drive scoring
   adverseMediaCount?: number;
+  adverseMediaSamples?: { title: string; url: string; source: string; date: string }[];
+  adverseMediaFetchedAt?: string;
+  adverseMediaSource?: string;
   regulatoryEnforcementCount?: number;
   suddenJurisdictionExpansion?: boolean;
   fuzzyWatchlistMatchPct?: number;

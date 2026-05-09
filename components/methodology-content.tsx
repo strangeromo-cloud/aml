@@ -250,12 +250,12 @@ const FACTOR_CATALOG: Record<keyof typeof DIMENSION_NAMES, FactorMeta[]> = {
       en: "Adverse Media Count",
       zh: "负面媒体数量",
       weight: 0.3,
-      sourceIds: ["open_sanctions"],
-      dataReality: "mock",
+      sourceIds: ["gdelt", "open_sanctions"],
+      dataReality: "real",
       formula: "min(100,  8 × n)",
       meaning: {
-        en: "Articles in the last 24 months mentioning the entity in connection with AML/fraud/sanctions/corruption keywords. Each article adds 8 points.",
-        zh: "过去 24 个月内涉及反洗钱/欺诈/制裁/腐败关键词的负面新闻数量。每篇文章 +8 分。",
+        en: "Articles in the last 24 months mentioning the entity in connection with AML/fraud/sanctions/corruption keywords, fetched live from the GDELT 2.0 API. Each article adds 8 points; capped at 100.",
+        zh: "过去 24 个月内涉及反洗钱/欺诈/制裁/腐败关键词的负面新闻数量，通过 GDELT 2.0 API 实时拉取。每篇文章 +8 分，上限 100。",
       },
       example: {
         en: "5 negative articles  →  40   ·   13+ articles  →  100 (capped)",

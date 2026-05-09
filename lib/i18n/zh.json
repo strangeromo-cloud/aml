@@ -43,6 +43,8 @@
     "ubos": "最终受益人",
     "pep": "政治敏感人物",
     "illustrative": "示意性占位——真实公司名仅用于锚定一个低风险 Tier-1 画像。",
+    "adverseMediaEvidence": "负面媒体证据",
+    "adverseMediaEvidenceSub": "通过 GDELT 实时搜索匹配到 {count} 篇文章 · 上次刷新 {date}。下方为前 3 条样本。",
     "dimensionsTitle": "六维度风险分解",
     "factorsHeader": "贡献因子",
     "rationale": "得分解释",
