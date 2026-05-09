@@ -24,6 +24,11 @@ export type Country = {
   baselAmlIndex: number; // 0-10, higher = riskier
   cpi: number; // 0-100, higher = cleaner
   wgiControlOfCorruption: number; // -2.5 ~ 2.5, higher = better
+  // Optional, populated by scripts/enrich-countries-from-downloads.py from
+  // the daily public/downloads/{wjp-rule-of-law,tjn-fsi}.xlsx snapshots.
+  // Missing for jurisdictions not covered by the upstream dataset.
+  wjpRoLScore?: number; // 0-1, higher = stronger rule of law
+  tjnSecrecyScore?: number; // 0-100, higher = more financial secrecy
 };
 
 export type Subsidiary = { name: string; country: string };
