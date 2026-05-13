@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-12T00:28:19+00:00",
+  "updatedAt": "2026-05-13T00:30:50+00:00",
   "totalFetchers": 8,
   "successCount": 8,
   "failureCount": 0,
@@ -8,73 +8,73 @@
       "name": "FATF High-Risk & Other Monitored Jurisdictions",
       "url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html",
       "outputFile": "public/downloads/fatf-jurisdictions.xlsx",
-      "startedAt": "2026-05-12T00:27:28+00:00",
+      "startedAt": "2026-05-13T00:29:52+00:00",
       "status": "success",
       "records": 26,
-      "finishedAt": "2026-05-12T00:27:33+00:00"
+      "finishedAt": "2026-05-13T00:29:54+00:00"
     },
     "ofac-country-programs": {
       "name": "OFAC Sanctions Programs by Country",
       "url": "https://ofac.treasury.gov/sanctions-programs-and-country-information",
       "outputFile": "public/downloads/ofac-country-programs.xlsx",
-      "startedAt": "2026-05-12T00:27:33+00:00",
+      "startedAt": "2026-05-13T00:29:54+00:00",
       "status": "success",
       "records": 43,
-      "finishedAt": "2026-05-12T00:27:34+00:00"
+      "finishedAt": "2026-05-13T00:29:54+00:00"
     },
     "un-consolidated": {
       "name": "UN Security Council Consolidated Sanctions List",
       "url": "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
       "outputFile": "public/downloads/un-consolidated.xlsx",
-      "startedAt": "2026-05-12T00:27:34+00:00",
+      "startedAt": "2026-05-13T00:29:54+00:00",
       "status": "success",
       "records": 1009,
-      "finishedAt": "2026-05-12T00:27:35+00:00"
+      "finishedAt": "2026-05-13T00:29:56+00:00"
     },
     "eu-consolidated": {
       "name": "EU Consolidated Financial Sanctions List",
       "url": "https://webgate.ec.europa.eu/fsd/fsf/public/files/xmlFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
       "outputFile": "public/downloads/eu-consolidated.xlsx",
-      "startedAt": "2026-05-12T00:27:35+00:00",
+      "startedAt": "2026-05-13T00:29:56+00:00",
       "status": "success",
       "records": 5996,
-      "finishedAt": "2026-05-12T00:28:01+00:00"
+      "finishedAt": "2026-05-13T00:30:33+00:00"
     },
     "basel-aml-index": {
       "name": "Basel AML Index",
       "url": "https://index.baselgovernance.org/ranking",
       "outputFile": "public/downloads/basel-aml-index.xlsx",
-      "startedAt": "2026-05-12T00:28:01+00:00",
+      "startedAt": "2026-05-13T00:30:33+00:00",
       "status": "success",
       "records": 177,
-      "finishedAt": "2026-05-12T00:28:04+00:00"
+      "finishedAt": "2026-05-13T00:30:36+00:00"
     },
     "ti-cpi": {
       "name": "Transparency International CPI",
       "url": "",
       "outputFile": "public/downloads/ti-cpi.xlsx",
-      "startedAt": "2026-05-12T00:28:04+00:00",
+      "startedAt": "2026-05-13T00:30:36+00:00",
       "status": "success",
       "records": 180,
-      "finishedAt": "2026-05-12T00:28:10+00:00"
+      "finishedAt": "2026-05-13T00:30:43+00:00"
     },
     "wjp-rule-of-law": {
       "name": "WJP Rule of Law Index",
       "url": "",
       "outputFile": "public/downloads/wjp-rule-of-law.xlsx",
-      "startedAt": "2026-05-12T00:28:10+00:00",
+      "startedAt": "2026-05-13T00:30:43+00:00",
       "status": "success",
       "records": 143,
-      "finishedAt": "2026-05-12T00:28:11+00:00"
+      "finishedAt": "2026-05-13T00:30:44+00:00"
     },
     "tjn-fsi": {
       "name": "Tax Justice Network Financial Secrecy Index",
       "url": "https://fsi.taxjustice.net/",
       "outputFile": "public/downloads/tjn-fsi.xlsx",
-      "startedAt": "2026-05-12T00:28:11+00:00",
+      "startedAt": "2026-05-13T00:30:44+00:00",
       "status": "success",
       "records": 141,
-      "finishedAt": "2026-05-12T00:28:19+00:00"
+      "finishedAt": "2026-05-13T00:30:50+00:00"
     }
   }
 }
