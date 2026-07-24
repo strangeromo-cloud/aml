@@ -26,7 +26,16 @@
     "top10Sub": "按综合评分排序。合成公司名仅用于演示。",
     "distributionTitle": "风险等级分布",
     "geoTitle": "地理热点",
-    "geoSub": "按总部所在国计算的平均风险分。"
+    "geoSub": "按总部所在国计算的平均风险分。",
+    "gradeTitle": "评级分布",
+    "gradeSub": "按风险评级划分的交易对手数量。",
+    "regionTitle": "地区分布",
+    "regionSub": "按地区划分的交易对手数量，并按风险评级细分。",
+    "ruleTitle": "规则命中分布",
+    "ruleSub": "在各风险维度中评分偏高（≥50）的交易对手数量。",
+    "quarterTitle": "季度分布",
+    "quarterSub": "各季度的筛查量，并按风险评级细分（示意）。",
+    "chartCount": "交易对手"
   },
   "company": {
     "overall": "综合风险评分",

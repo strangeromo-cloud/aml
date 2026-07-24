@@ -26,7 +26,16 @@
     "top10Sub": "Sorted by overall composite score. Synthetic names for illustrative purposes.",
     "distributionTitle": "Risk Distribution",
     "geoTitle": "Geographic Hotspots",
-    "geoSub": "Average risk score by headquarters country."
+    "geoSub": "Average risk score by headquarters country.",
+    "gradeTitle": "Grade Distribution",
+    "gradeSub": "Counterparties by risk grade.",
+    "regionTitle": "Regional Distribution",
+    "regionSub": "Counterparties by region, split by risk grade.",
+    "ruleTitle": "Rule-Based Distribution",
+    "ruleSub": "Counterparties with an elevated score (≥50) in each risk dimension.",
+    "quarterTitle": "Quarterly Distribution",
+    "quarterSub": "Screening volume per quarter, split by risk grade (illustrative).",
+    "chartCount": "Counterparties"
   },
   "company": {
     "overall": "Overall composite score",
