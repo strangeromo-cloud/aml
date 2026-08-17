@@ -844,6 +844,61 @@ def send_mail(report: dict, recipients: list[str]) -> dict:
         return {"sent": False, "error": f"{type(e).__name__}: {e}"}
 
 
+# The upload page's GitHub token lives on the backend, not in CI, so CI cannot inspect
+# it — it asks the backend to report on itself. A fine-grained PAT expires silently,
+# and the day Legal needs to update the baseline is the worst day to find out.
+BACKEND_URL = os.getenv("BACKEND_URL", "https://aml-p.zeabur.app").rstrip("/")
+TOKEN_WARN_DAYS = 21
+
+
+def baseline_upload_status() -> tuple[list[str], bool]:
+    """(report lines, healthy). Never raises — this is a diagnostic, not a gate."""
+    url = f"{BACKEND_URL}/api/aml/fatf-baseline/status"
+    try:
+        raw = _http(url, 25, headers={"User-Agent": "aml-data-refresh/1.0",
+                                      "Accept": "application/json"})
+        d = json.loads(raw)
+    except Exception as e:
+        return ([f"· 基线上传服务：无法访问（{type(e).__name__}）—— {url}"], False)
+
+    lines, healthy = [], bool(d.get("ready"))
+    lines.append(f"· 基线上传服务：{'正常' if healthy else '**不可用**'}　{d.get('repo')}")
+    if not d.get("uploadTokenConfigured"):
+        lines.append("    ⚠ BASELINE_UPLOAD_TOKEN 未配置 —— 法务无法上传基线")
+    if not d.get("repoTokenConfigured"):
+        lines.append("    ⚠ GH_REPO_TOKEN 未配置 —— 无法写入仓库")
+    elif not d.get("repoReadable"):
+        lines.append(f"    ⚠ 仓库读取失败：{d.get('error')}")
+    elif d.get("canWrite") is False:
+        lines.append("    ⚠ GH_REPO_TOKEN 没有写权限（需要 Contents: Read and write）")
+    if d.get("baselineFound") is False:
+        lines.append("    ⚠ 仓库里找不到基线文件")
+
+    exp = d.get("tokenExpiresAt")
+    if exp:
+        # Header form is like "2026-11-15 08:00:00 UTC"; keep the date part.
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", str(exp))
+        if m:
+            try:
+                left = (datetime.fromisoformat(m.group(1)).replace(tzinfo=TZ_SHANGHAI)
+                        - datetime.now(TZ_SHANGHAI)).days
+                if left < 0:
+                    lines.append(f"    ⚠ GH_REPO_TOKEN 已于 {m.group(1)} 过期")
+                    healthy = False
+                elif left <= TOKEN_WARN_DAYS:
+                    lines.append(f"    ⚠ GH_REPO_TOKEN 将在 {left} 天后过期（{m.group(1)}）—— 请提前更换")
+                    healthy = False
+                else:
+                    lines.append(f"    GH_REPO_TOKEN 有效期至 {m.group(1)}（剩 {left} 天）")
+            except ValueError:
+                lines.append(f"    GH_REPO_TOKEN 有效期：{exp}")
+    else:
+        lines.append("    GH_REPO_TOKEN 未报告有效期（可能是 classic token，无法自动监控过期）")
+    if d.get("listDate"):
+        lines.append(f"    仓库中基线名单日期：{d['listDate']}")
+    return lines, healthy
+
+
 def selftest() -> int:
     """Prove the alert channels are alive, without inventing an alert.
 
@@ -854,6 +909,10 @@ def selftest() -> int:
     """
     now = datetime.now(TZ_SHANGHAI).strftime("%Y-%m-%d %H:%M")
     keyword = os.getenv("LARK_KEYWORD", "").strip()
+    up_lines, up_ok = baseline_upload_status()
+    for ln in up_lines:
+        print(ln)
+    up_block = "\n".join(up_lines).replace("· ", "").replace("    ", "　")
     card = {
         "msg_type": "interactive",
         "card": {
@@ -903,6 +962,11 @@ def selftest() -> int:
     if not (lark["sent"] or mail["sent"]):
         print("::error::告警通道自检失败 —— Lark 与邮件均不可用，真实告警将无法送达")
         return 1
+    if not up_ok:
+        # A warning, not a failure: Legal being unable to upload does not stop the
+        # pipeline from detecting or alerting, and failing the run here would train
+        # people to ignore red runs.
+        print("::warning::基线上传服务不可用或凭据即将过期 —— 详见上方明细")
     if not lark["sent"]:
         print(f"::warning::Lark 通道不可用（{lark['error']}），仅邮件可用")
     if not mail["sent"]:
