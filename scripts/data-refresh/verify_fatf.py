@@ -57,11 +57,22 @@ ALIASES = {
     "burma": "myanmar",
     "virgin islands uk": "british virgin islands",
     "virgin islands british": "british virgin islands",
+    "democratic republic of congo": "democratic republic of the congo",
+    "drc": "democratic republic of the congo",
+    "lao peoples democratic republic": "laos",
+    "syrian arab republic": "syria",
+    "united republic of tanzania": "tanzania",
+    "viet nam": "vietnam",
 }
 
 
 def norm(name: str) -> str:
-    s = re.sub(r"[^a-z\s]", "", (name or "").lower()).strip()
+    """Fold accents before stripping, so Côte d'Ivoire survives as "cote divoire"
+    rather than losing the ô entirely and differing between sources."""
+    import unicodedata
+    decomposed = unicodedata.normalize("NFKD", name or "")
+    ascii_only = "".join(c for c in decomposed if not unicodedata.combining(c))
+    s = re.sub(r"[^a-z\s]", "", ascii_only.lower()).strip()
     s = re.sub(r"\s+", " ", s)
     return ALIASES.get(s, s)
 
@@ -159,7 +170,84 @@ def _parse_fatf_html(html: str) -> list[dict]:
     return out
 
 
-SOURCES = [source_fresh_fetch, source_wayback]
+WIKI_API = "https://en.wikipedia.org/w/api.php"
+WIKI_PAGE = "Financial Action Task Force blacklist"
+
+
+def _wiki_section(wikitext: str, heading: str) -> str | None:
+    m = re.search(r"^==+\s*" + re.escape(heading) + r"\s*==+\s*$(.*?)(?=^==+\s|\Z)",
+                  wikitext, re.M | re.S)
+    return m.group(1) if m else None
+
+
+def _wiki_flags(section: str) -> tuple[list[str], str | None]:
+    """Names from the first numbered {{flag|…}} block, plus the stated "as of" date."""
+    as_of = None
+    m = re.search(r"As of\s+(\d{1,2}\s+\w+\s+\d{4})", section)
+    if m:
+        as_of = m.group(1)
+    # Only the leading div-col block holds the current list; prose and history
+    # tables below it mention many other countries.
+    block = section
+    b = re.search(r"\{\{div col.*?\}\}(.*?)\{\{col div end\}\}", section, re.S | re.I)
+    if b:
+        block = b.group(1)
+    names = []
+    for line in block.splitlines():
+        line = line.strip()
+        if not line.startswith("#"):
+            continue
+        f = re.search(r"\{\{\s*flag(?:country|icon)?\s*\|\s*([^}|]+)", line, re.I)
+        if f:
+            names.append(f.group(1).strip())
+            continue
+        # Fall back to a plain wiki link if the flag template is absent.
+        f = re.search(r"\[\[([^\]\|]+)", line)
+        if f:
+            names.append(f.group(1).strip())
+    return names, as_of
+
+
+def source_wikipedia() -> tuple[str, list[dict] | None, str | None]:
+    """English Wikipedia's maintained "Current FATF blacklist / grey list" sections.
+
+    Chosen as the machine-readable cross-check because Wikidata carries no
+    membership statements for these lists (Q607466 is a topic item only) and
+    OpenSanctions does not publish jurisdiction lists at all. This is community-
+    maintained data, so it is a tripwire against the Legal baseline — never a
+    replacement for it.
+    """
+    label = "Wikipedia（Current FATF lists）"
+    url = (f"{WIKI_API}?action=parse&format=json&prop=wikitext&redirects=1&page="
+           + urllib.request.quote(WIKI_PAGE))
+    try:
+        with urllib.request.urlopen(
+            urllib.request.Request(url, headers={"User-Agent": "aml-data-refresh/1.0"}),
+            timeout=40,
+        ) as r:
+            wt = json.loads(r.read())["parse"]["wikitext"]["*"]
+    except Exception as e:
+        return label, None, f"Wikipedia 取页失败: {type(e).__name__}: {e}"
+
+    rows: list[dict] = []
+    dates: list[str] = []
+    for heading, status in (("Current FATF blacklist", "Call for Action"),
+                            ("Current FATF grey list", "Increased Monitoring")):
+        sec = _wiki_section(wt, heading)
+        if not sec:
+            return label, None, f"章节缺失: {heading}（条目结构可能已改）"
+        names, as_of = _wiki_flags(sec)
+        if not names:
+            return label, None, f"章节 {heading} 未解析出辖区（结构可能已改）"
+        if as_of:
+            dates.append(as_of)
+        rows += [{"status": status, "country": n} for n in names]
+
+    suffix = f" @ as of {dates[0]}" if dates else ""
+    return f"{label}{suffix}", rows, None
+
+
+SOURCES = [source_fresh_fetch, source_wikipedia, source_wayback]
 
 
 # ── Comparison ──────────────────────────────────────────────────────────
