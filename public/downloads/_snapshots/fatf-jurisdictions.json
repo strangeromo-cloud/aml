@@ -78,18 +78,6 @@
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Vietnam",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Türkiye",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
   "country": "Bolivia",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
@@ -102,7 +90,13 @@
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Angola",
+  "country": "Vietnam",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Türkiye",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
@@ -114,25 +108,7 @@
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Syria",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Kenya",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Haiti",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Yemen",
+  "country": "Angola",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
@@ -144,13 +120,37 @@
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Namibia",
+  "country": "Syria",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Haiti",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Kenya",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Yemen",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
  },
  {
   "country": "Algeria",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Namibia",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
