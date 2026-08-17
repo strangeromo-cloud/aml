@@ -82,6 +82,33 @@ def classify(status: str) -> str:
     return "black" if ("call for action" in s or "black" in s) else "grey"
 
 
+# Plausibility bounds for any FATF list, whatever produced it. The black list has
+# been 1-5 jurisdictions for its entire history and the grey list 10-30.
+BLACK_RANGE = (1, 6)
+GREY_RANGE = (8, 40)
+
+
+def validate_rows(rows: list[dict] | None) -> str | None:
+    """Return None when the parsed list is plausible, else why it is not.
+
+    Applied to EVERY source, including our own official fetcher — a mis-parsing
+    fetcher feeding the comparison would raise a fake "the list changed" alert,
+    which is worse than the source being absent.
+    """
+    if not rows:
+        return "无数据"
+    sets = as_sets(rows)
+    black, grey = sets["black"], sets["grey"]
+    if not (BLACK_RANGE[0] <= len(black) <= BLACK_RANGE[1]):
+        return f"黑名单 {len(black)} 条，超出合理范围 {BLACK_RANGE}"
+    if not (GREY_RANGE[0] <= len(grey) <= GREY_RANGE[1]):
+        return f"灰名单 {len(grey)} 条，超出合理范围 {GREY_RANGE}"
+    overlap = black & grey
+    if overlap:
+        return f"同一辖区同时出现在黑灰名单: {', '.join(sorted(overlap))}"
+    return None
+
+
 def as_sets(rows: list[dict]) -> dict[str, set[str]]:
     out = {"black": set(), "grey": set()}
     for r in rows or []:
@@ -98,10 +125,15 @@ def source_fresh_fetch() -> tuple[str, list[dict] | None, str | None]:
     p = SNAPSHOT_DIR / "fatf-jurisdictions.json"
     if not p.exists():
         return "官方页面（本次抓取）", None, "本次抓取未产出快照"
+    label = "官方页面（本次抓取）"
     try:
-        return "官方页面（本次抓取）", json.loads(p.read_text()), None
+        rows = json.loads(p.read_text())
     except json.JSONDecodeError as e:
-        return "官方页面（本次抓取）", None, f"快照解析失败: {e}"
+        return label, None, f"快照解析失败: {e}"
+    bad = validate_rows(rows)
+    if bad:
+        return label, None, f"抓取结果不可信，已忽略: {bad}"
+    return label, rows, None
 
 
 # FATF publishes after each plenary — February, June and October. archive.org is
@@ -114,52 +146,72 @@ def _wayback_attempts() -> int:
     return 5 if datetime.now(TZ_SHANGHAI).month in PLENARY_MONTHS else 2
 
 
-def _http(url: str, timeout: int = 40) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": "aml-data-refresh/1.0"})
+# archive.org rejects the plain-http + custom-User-Agent combination: the CDX
+# endpoint answers 200 over https with a browser UA and 503 over http with
+# "aml-data-refresh/1.0". Always use https and this UA here.
+ARCHIVE_HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                   "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"),
+    "Accept": "text/html,application/xhtml+xml,*/*",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+
+
+def _http(url: str, timeout: int = 40, headers: dict[str, str] | None = None) -> bytes:
+    req = urllib.request.Request(url, headers=headers or ARCHIVE_HEADERS)
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read()
 
 
-def _wayback_snapshot(attempts: int) -> tuple[str | None, str | None, str | None]:
-    """Return (html, stamp, error). Tries three independent archive.org endpoints,
-    because they fail independently — the availability API being down does not mean
-    CDX is."""
-    quoted = urllib.request.quote(FATF_PAGE, safe="")
+def _wayback_stamp() -> tuple[str | None, str | None]:
+    """Newest capture timestamp for the FATF page. CDX first — it is the endpoint
+    that actually stays up; the availability API has been 502 for a while."""
     bare = FATF_PAGE.split("//", 1)[1]
-    last_err = "unknown"
-    for attempt in range(1, attempts + 1):
-        # 1) availability API
+    try:
+        raw = _http("https://web.archive.org/cdx/search/cdx?url=" + bare
+                    + "&output=json&limit=-1&filter=statuscode:200&fl=timestamp", 30)
+        data = [r for r in json.loads(raw or b"[]") if r and r[0] != "timestamp"]
+        if data:
+            return data[-1][0], None
+        return None, "CDX 无 200 状态的存档"
+    except Exception as cdx_err:
         try:
-            meta = json.loads(_http(f"http://archive.org/wayback/available?url={quoted}", 30))
+            quoted = urllib.request.quote(FATF_PAGE, safe="")
+            meta = json.loads(_http(f"https://archive.org/wayback/available?url={quoted}", 30))
             snap = ((meta.get("archived_snapshots") or {}).get("closest") or {})
-            if snap.get("url"):
-                return (_http(snap["url"], 45).decode("utf-8", "replace"),
-                        str(snap.get("timestamp", ""))[:8], None)
-        except Exception as e:
-            last_err = f"availability: {type(e).__name__}"
-        # 2) CDX API
-        try:
-            raw = _http("http://web.archive.org/cdx/search/cdx?url=" + bare
-                        + "&output=json&limit=-1&filter=statuscode:200&fl=timestamp,original", 30)
-            rows = json.loads(raw or b"[]")
-            data = [r for r in rows if r and r[0] != "timestamp"]
-            if data:
-                stamp = data[-1][0]
-                return (_http(f"http://web.archive.org/web/{stamp}id_/{FATF_PAGE}", 45)
-                        .decode("utf-8", "replace"), stamp[:8], None)
-        except Exception as e:
-            last_err = f"cdx: {type(e).__name__}"
-        # 3) year-redirect form
-        try:
-            year = datetime.now(TZ_SHANGHAI).year
-            return (_http(f"http://web.archive.org/web/{year}/{FATF_PAGE}", 45)
-                    .decode("utf-8", "replace"), str(year), None)
-        except Exception as e:
-            last_err = f"year-redirect: {type(e).__name__}"
+            if snap.get("timestamp"):
+                return str(snap["timestamp"]), None
+        except Exception as avail_err:
+            return None, (f"CDX: {type(cdx_err).__name__} / "
+                          f"availability: {type(avail_err).__name__}")
+    return None, f"CDX: {type(cdx_err).__name__}"
+
+
+def _wayback_snapshot(attempts: int) -> tuple[str | None, str | None, str | None]:
+    """Return (html, stamp, error).
+
+    The index and the replay server fail independently: CDX can answer 200 while
+    web.archive.org/web/… returns 503. Report which half failed so a transient
+    replay outage is not mistaken for "no archive exists".
+    """
+    import time
+    stamp, stamp_err = _wayback_stamp()
+    if not stamp:
+        return None, None, f"存档索引查询失败（{stamp_err}）"
+    # id_ serves the original bytes without the archive's toolbar injection.
+    forms = [f"https://web.archive.org/web/{stamp}id_/{FATF_PAGE}",
+             f"https://web.archive.org/web/{stamp}/{FATF_PAGE}"]
+    last = "unknown"
+    for attempt in range(1, attempts + 1):
+        for form in forms:
+            try:
+                return _http(form, 60).decode("utf-8", "replace"), stamp[:8], None
+            except Exception as e:
+                last = f"{type(e).__name__}: {str(e)[:60]}"
         if attempt < attempts:
-            import time
             time.sleep(3 * attempt)
-    return None, None, f"archive.org 三个端点均不可用（最后一次: {last_err}，尝试 {attempts} 轮）"
+    return None, stamp[:8], (f"存档 {stamp[:8]} 存在，但回放服务器取不到"
+                             f"（{last}，尝试 {attempts} 轮）")
 
 
 def source_wayback() -> tuple[str, list[dict] | None, str | None]:
@@ -178,11 +230,6 @@ def source_wayback() -> tuple[str, list[dict] | None, str | None]:
     return f"{label} @ {stamp}", rows, None
 
 
-# Plausibility bounds for a parsed FATF list. The black list has been 1-5
-# jurisdictions for its entire history and the grey list 10-30; anything outside
-# these ranges means the page layout changed and the parse is junk.
-BLACK_RANGE = (1, 6)
-GREY_RANGE = (8, 40)
 NAME_RE = re.compile(r"^[A-Z][A-Za-z'\u2019 \-\(\),\.]{2,49}$")
 # Words that appear in FATF page navigation and never in a jurisdiction name.
 NOT_A_JURISDICTION = re.compile(
@@ -212,18 +259,12 @@ def _parse_fatf_html(html: str) -> tuple[list[dict] | None, str]:
             if NAME_RE.match(name) and not NOT_A_JURISDICTION.search(name):
                 buckets[status].append(name)
 
-    black = {norm(n) for n in buckets["Call for Action"]} - {""}
-    grey = {norm(n) for n in buckets["Increased Monitoring"]} - {""}
-    if not (BLACK_RANGE[0] <= len(black) <= BLACK_RANGE[1]):
-        return None, f"黑名单解析出 {len(black)} 条，超出合理范围 {BLACK_RANGE}"
-    if not (GREY_RANGE[0] <= len(grey) <= GREY_RANGE[1]):
-        return None, f"灰名单解析出 {len(grey)} 条，超出合理范围 {GREY_RANGE}"
-    overlap = black & grey
-    if overlap:
-        return None, f"同一辖区同时出现在黑灰名单: {', '.join(sorted(overlap))}"
-
-    rows = ([{"status": "Call for Action", "country": n} for n in sorted(black)]
-            + [{"status": "Increased Monitoring", "country": n} for n in sorted(grey)])
+    rows = ([{"status": "Call for Action", "country": n} for n in buckets["Call for Action"]]
+            + [{"status": "Increased Monitoring", "country": n}
+               for n in buckets["Increased Monitoring"]])
+    bad = validate_rows(rows)
+    if bad:
+        return None, bad
     return rows, "ok"
 
 
@@ -300,6 +341,9 @@ def source_wikipedia() -> tuple[str, list[dict] | None, str | None]:
             dates.append(as_of)
         rows += [{"status": status, "country": n} for n in names]
 
+    bad = validate_rows(rows)
+    if bad:
+        return label, None, f"解析结果不可信: {bad}"
     suffix = f" @ as of {dates[0]}" if dates else ""
     return f"{label}{suffix}", rows, None
 
