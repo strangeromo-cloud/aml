@@ -146,15 +146,30 @@ COUNTRY_LINK_RE = re.compile(
 
 
 def _countries_from_facet(html: str) -> list[str]:
-    """Jurisdictions from the Country facet only. [] if the facet is not found."""
+    """Jurisdictions from the Country facet only. [] if the facet is not found.
+
+    The facet can span several <p> elements inside one container — the June 2026
+    black-list page splits it as "DPRK, Iran" then "Myanmar", so reading only the
+    first paragraph loses Myanmar. Take every country link in the container holding
+    the first one, which keeps the footer's FATF-member list out (that lives in a
+    different container: 41 links on the black page and 60 on the grey page, versus
+    3 and 22 in the facet).
+    """
     soup = BeautifulSoup(html, "html.parser")
-    for para in soup.find_all("p"):
-        links = [a for a in para.find_all("a", href=True)
-                 if "/countries/detail/" in a["href"]]
-        if len(links) < 2:
-            continue                      # a lone in-prose link is not the facet
-        names, seen = [], set()
-        for a in links:
+
+    def country_links(tag):
+        return [a for a in tag.find_all("a", href=True)
+                if "/countries/detail/" in a["href"]]
+
+    paras = [para for para in soup.find_all("p") if country_links(para)]
+    if not paras:
+        return []
+    box = paras[0].parent
+    names, seen = [], set()
+    for para in paras:
+        if para.parent is not box:
+            continue
+        for a in country_links(para):
             name = a.get_text(strip=True)
             if not name:
                 # Fall back to the href slug when the anchor text is empty.
@@ -162,8 +177,7 @@ def _countries_from_facet(html: str) -> list[str]:
             if name not in seen:
                 seen.add(name)
                 names.append(name)
-        return names
-    return []
+    return names
 
 
 def _extract_pub_date(url: str, html_head: str) -> str:
