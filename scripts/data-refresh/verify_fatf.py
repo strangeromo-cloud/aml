@@ -104,70 +104,127 @@ def source_fresh_fetch() -> tuple[str, list[dict] | None, str | None]:
         return "官方页面（本次抓取）", None, f"快照解析失败: {e}"
 
 
+# FATF publishes after each plenary — February, June and October. archive.org is
+# intermittently down (all three of its endpoints returned 5xx while this was
+# built), so retry harder in the months where the list can actually move.
+PLENARY_MONTHS = (2, 6, 10)
+
+
+def _wayback_attempts() -> int:
+    return 5 if datetime.now(TZ_SHANGHAI).month in PLENARY_MONTHS else 2
+
+
+def _http(url: str, timeout: int = 40) -> bytes:
+    req = urllib.request.Request(url, headers={"User-Agent": "aml-data-refresh/1.0"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read()
+
+
+def _wayback_snapshot(attempts: int) -> tuple[str | None, str | None, str | None]:
+    """Return (html, stamp, error). Tries three independent archive.org endpoints,
+    because they fail independently — the availability API being down does not mean
+    CDX is."""
+    quoted = urllib.request.quote(FATF_PAGE, safe="")
+    bare = FATF_PAGE.split("//", 1)[1]
+    last_err = "unknown"
+    for attempt in range(1, attempts + 1):
+        # 1) availability API
+        try:
+            meta = json.loads(_http(f"http://archive.org/wayback/available?url={quoted}", 30))
+            snap = ((meta.get("archived_snapshots") or {}).get("closest") or {})
+            if snap.get("url"):
+                return (_http(snap["url"], 45).decode("utf-8", "replace"),
+                        str(snap.get("timestamp", ""))[:8], None)
+        except Exception as e:
+            last_err = f"availability: {type(e).__name__}"
+        # 2) CDX API
+        try:
+            raw = _http("http://web.archive.org/cdx/search/cdx?url=" + bare
+                        + "&output=json&limit=-1&filter=statuscode:200&fl=timestamp,original", 30)
+            rows = json.loads(raw or b"[]")
+            data = [r for r in rows if r and r[0] != "timestamp"]
+            if data:
+                stamp = data[-1][0]
+                return (_http(f"http://web.archive.org/web/{stamp}id_/{FATF_PAGE}", 45)
+                        .decode("utf-8", "replace"), stamp[:8], None)
+        except Exception as e:
+            last_err = f"cdx: {type(e).__name__}"
+        # 3) year-redirect form
+        try:
+            year = datetime.now(TZ_SHANGHAI).year
+            return (_http(f"http://web.archive.org/web/{year}/{FATF_PAGE}", 45)
+                    .decode("utf-8", "replace"), str(year), None)
+        except Exception as e:
+            last_err = f"year-redirect: {type(e).__name__}"
+        if attempt < attempts:
+            import time
+            time.sleep(3 * attempt)
+    return None, None, f"archive.org 三个端点均不可用（最后一次: {last_err}，尝试 {attempts} 轮）"
+
+
 def source_wayback() -> tuple[str, list[dict] | None, str | None]:
-    """Most recent Wayback capture of the official page.
-
-    Authoritative content, just time-shifted — the best independent check we have
-    while the live page is behind Cloudflare.
-    """
+    """Most recent Wayback capture of the official page — authoritative content,
+    just time-shifted. This is the closest thing to the official source we can
+    reach while the live page is behind Cloudflare."""
     label = "Wayback 存档（官方页面）"
-    api = ("http://archive.org/wayback/available?url="
-           + urllib.request.quote(FATF_PAGE, safe=""))
-    try:
-        with urllib.request.urlopen(
-            urllib.request.Request(api, headers={"User-Agent": "aml-data-refresh"}),
-            timeout=30,
-        ) as r:
-            meta = json.loads(r.read())
-    except Exception as e:
-        return label, None, f"Wayback 查询失败: {type(e).__name__}: {e}"
-
-    snap = ((meta.get("archived_snapshots") or {}).get("closest") or {})
-    url = snap.get("url")
-    if not url:
-        return label, None, "Wayback 无可用存档"
-    try:
-        with urllib.request.urlopen(
-            urllib.request.Request(url, headers={"User-Agent": "aml-data-refresh"}),
-            timeout=45,
-        ) as r:
-            html = r.read().decode("utf-8", errors="replace")
-    except Exception as e:
-        return label, None, f"Wayback 取页失败: {type(e).__name__}: {e}"
-
-    rows = _parse_fatf_html(html)
-    if not rows:
-        return label, None, "Wayback 页面结构无法解析"
-    return f"{label} @ {snap.get('timestamp', '')[:8]}", rows, None
+    html, stamp, err = _wayback_snapshot(_wayback_attempts())
+    if html is None:
+        return label, None, err
+    rows, reason = _parse_fatf_html(html)
+    if rows is None:
+        # Never hand an unvalidated parse to the comparison: a garbled parse would
+        # surface as a fake "list changed" alert, which is worse than no source.
+        return f"{label} @ {stamp}", None, f"存档页面解析不可信: {reason}"
+    return f"{label} @ {stamp}", rows, None
 
 
-def _parse_fatf_html(html: str) -> list[dict]:
-    """Pull jurisdiction names out of the two FATF sections of the official page."""
+# Plausibility bounds for a parsed FATF list. The black list has been 1-5
+# jurisdictions for its entire history and the grey list 10-30; anything outside
+# these ranges means the page layout changed and the parse is junk.
+BLACK_RANGE = (1, 6)
+GREY_RANGE = (8, 40)
+NAME_RE = re.compile(r"^[A-Z][A-Za-z'\u2019 \-\(\),\.]{2,49}$")
+# Words that appear in FATF page navigation and never in a jurisdiction name.
+NOT_A_JURISDICTION = re.compile(
+    r"\b(fatf|report|statement|publication|document|read|more|home|about|news|"
+    r"jurisdiction|monitoring|action|country|countries|list|search|contact|privacy)\b",
+    re.I)
+
+
+def _parse_fatf_html(html: str) -> tuple[list[dict] | None, str]:
+    """Pull jurisdiction names from the two FATF sections.
+
+    Returns (rows, reason). rows is None when the result fails plausibility
+    checks, so the caller can treat it as "source unusable" rather than as data.
+    """
     import html as html_mod
     text = re.sub(r"<script.*?</script>|<style.*?</style>", "", html, flags=re.S)
-    rows: list[dict] = []
-    # The page lists the two groups under headings; take the anchor text inside
-    # each section, which is the jurisdiction name.
+    buckets: dict[str, list[str]] = {"Call for Action": [], "Increased Monitoring": []}
     for status, pattern in (
         ("Call for Action", r"Call for Action(.*?)(?:Increased Monitoring|</main>)"),
-        ("Increased Monitoring", r"Increased Monitoring(.*?)(?:</main>|Documents)"),
+        ("Increased Monitoring", r"Increased Monitoring(.*?)(?:</main>|Documents|</body>)"),
     ):
         m = re.search(pattern, text, re.S | re.I)
         if not m:
-            continue
-        chunk = m.group(1)
-        for a in re.findall(r"<a[^>]*>(.*?)</a>", chunk, re.S):
+            return None, f"页面中找不到 “{status}” 区块"
+        for a in re.findall(r"<a[^>]*>(.*?)</a>", m.group(1), re.S):
             name = html_mod.unescape(re.sub(r"<[^>]+>", "", a)).strip()
-            if 3 <= len(name) <= 60 and re.match(r"^[A-Z][A-Za-z' \-\(\),\.]+$", name):
-                rows.append({"status": status, "country": name})
-    # De-duplicate while keeping the first classification seen.
-    seen, out = set(), []
-    for r in rows:
-        k = (r["status"], norm(r["country"]))
-        if k not in seen:
-            seen.add(k)
-            out.append(r)
-    return out
+            if NAME_RE.match(name) and not NOT_A_JURISDICTION.search(name):
+                buckets[status].append(name)
+
+    black = {norm(n) for n in buckets["Call for Action"]} - {""}
+    grey = {norm(n) for n in buckets["Increased Monitoring"]} - {""}
+    if not (BLACK_RANGE[0] <= len(black) <= BLACK_RANGE[1]):
+        return None, f"黑名单解析出 {len(black)} 条，超出合理范围 {BLACK_RANGE}"
+    if not (GREY_RANGE[0] <= len(grey) <= GREY_RANGE[1]):
+        return None, f"灰名单解析出 {len(grey)} 条，超出合理范围 {GREY_RANGE}"
+    overlap = black & grey
+    if overlap:
+        return None, f"同一辖区同时出现在黑灰名单: {', '.join(sorted(overlap))}"
+
+    rows = ([{"status": "Call for Action", "country": n} for n in sorted(black)]
+            + [{"status": "Increased Monitoring", "country": n} for n in sorted(grey)])
+    return rows, "ok"
 
 
 WIKI_API = "https://en.wikipedia.org/w/api.php"
