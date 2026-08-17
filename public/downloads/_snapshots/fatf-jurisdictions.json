@@ -1,18 +1,6 @@
 [
  {
-  "country": "South Africa",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/call-for-action-june-2026.html",
-  "status": "Blacklist (Call for Action)"
- },
- {
-  "country": "Myanmar",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/call-for-action-june-2026.html",
-  "status": "Blacklist (Call for Action)"
- },
- {
-  "country": "Türkiye",
+  "country": "Democratic Republic of Korea",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/call-for-action-june-2026.html",
   "status": "Blacklist (Call for Action)"
@@ -24,61 +12,7 @@
   "status": "Blacklist (Call for Action)"
  },
  {
-  "country": "Democratic People's Republic of Korea",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/call-for-action-june-2026.html",
-  "status": "Blacklist (Call for Action)"
- },
- {
-  "country": "DPRK",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/call-for-action-june-2026.html",
-  "status": "Blacklist (Call for Action)"
- },
- {
-  "country": "Democratic Republic of the Congo",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Côte d'Ivoire",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "South Africa",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "South Sudan",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Venezuela",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Cameroon",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Bulgaria",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Lebanon",
+  "country": "Angola",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
@@ -90,25 +24,31 @@
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Vietnam",
+  "country": "Bosnia and Herzegovina",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Türkiye",
+  "country": "Bulgaria",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Monaco",
+  "country": "Cameroon",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Angola",
+  "country": "Côte d'Ivoire",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Democratic Republic of the Congo",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
@@ -120,13 +60,7 @@
   "status": "Greylist (Increased Monitoring)"
  },
  {
-  "country": "Syria",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Nepal",
+  "country": "Iraq",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
@@ -138,19 +72,73 @@
   "status": "Greylist (Increased Monitoring)"
  },
  {
+  "country": "Kuwait",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Lao PDR",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Lebanon",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Monaco",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Nepal",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Papua New Guinea",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "South Sudan",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Syria",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Venezuela",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Vietnam",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
+  "country": "Virgin Islands (UK)",
+  "publication_date": "June 2026",
+  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
+  "status": "Greylist (Increased Monitoring)"
+ },
+ {
   "country": "Yemen",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Namibia",
-  "publication_date": "June 2026",
-  "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
-  "status": "Greylist (Increased Monitoring)"
- },
- {
-  "country": "Algeria",
   "publication_date": "June 2026",
   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions/increased-monitoring-june-2026.html",
   "status": "Greylist (Increased Monitoring)"
