@@ -74,7 +74,37 @@ def norm(name: str) -> str:
     ascii_only = "".join(c for c in decomposed if not unicodedata.combining(c))
     s = re.sub(r"[^a-z\s]", "", ascii_only.lower()).strip()
     s = re.sub(r"\s+", " ", s)
+    # Sources vary on the leading article ("the Democratic People's Republic of
+    # Korea" vs "Democratic People's Republic of Korea"), which would otherwise miss
+    # the alias table entirely.
+    s = re.sub(r"^the ", "", s)
     return ALIASES.get(s, s)
+
+
+_MONTHS = {m.lower(): i for i, m in enumerate(
+    ["January", "February", "March", "April", "May", "June", "July",
+     "August", "September", "October", "November", "December"], 1)}
+
+
+def parse_date(text: str | None) -> str | None:
+    """Normalise the date forms these sources use into YYYY-MM-DD.
+
+    Baseline writes 2026-06-19, Wikipedia "13 February 2026", FinCEN
+    "February 13, 2026". Returns None when nothing parseable is present.
+    """
+    if not text:
+        return None
+    t = str(text).strip()
+    m = re.search(r"(\d{4})-(\d{2})-(\d{2})", t)
+    if m:
+        return m.group(0)
+    m = re.search(r"\b(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})\b", t)
+    if m and m.group(2).lower() in _MONTHS:
+        return f"{m.group(3)}-{_MONTHS[m.group(2).lower()]:02d}-{int(m.group(1)):02d}"
+    m = re.search(r"\b([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})\b", t)
+    if m and m.group(1).lower() in _MONTHS:
+        return f"{m.group(3)}-{_MONTHS[m.group(1).lower()]:02d}-{int(m.group(2)):02d}"
+    return None
 
 
 def classify(status: str) -> str:
@@ -133,7 +163,9 @@ def source_fresh_fetch() -> tuple[str, list[dict] | None, str | None]:
     bad = validate_rows(rows)
     if bad:
         return label, None, f"抓取结果不可信，已忽略: {bad}"
-    return label, rows, None
+    pub = next((r.get("publication_date") for r in rows if r.get("publication_date")), None)
+    return label, {"rows": rows, "list_date": parse_date(pub),
+                   "scope": ("black", "grey")}, None
 
 
 # FATF publishes after each plenary — February, June and October. archive.org is
@@ -227,7 +259,11 @@ def source_wayback() -> tuple[str, list[dict] | None, str | None]:
         # Never hand an unvalidated parse to the comparison: a garbled parse would
         # surface as a fake "list changed" alert, which is worse than no source.
         return f"{label} @ {stamp}", None, f"存档页面解析不可信: {reason}"
-    return f"{label} @ {stamp}", rows, None
+    # The capture timestamp is when it was crawled, not the list's own date; take the
+    # list date from the page text when it states one.
+    m = re.search(r"(\d{1,2}\s+\w+\s+20\d{2}|\w+\s+\d{1,2},?\s+20\d{2})", html[:20000])
+    return f"{label} @ {stamp}", {"rows": rows, "list_date": parse_date(m.group(1)) if m else None,
+                                  "scope": ("black", "grey")}, None
 
 
 NAME_RE = re.compile(r"^[A-Z][A-Za-z'\u2019 \-\(\),\.]{2,49}$")
@@ -344,23 +380,94 @@ def source_wikipedia() -> tuple[str, list[dict] | None, str | None]:
     bad = validate_rows(rows)
     if bad:
         return label, None, f"解析结果不可信: {bad}"
+    as_of = parse_date(dates[0]) if dates else None
     suffix = f" @ as of {dates[0]}" if dates else ""
-    return f"{label}{suffix}", rows, None
+    return f"{label}{suffix}", {"rows": rows, "list_date": as_of,
+                                "scope": ("black", "grey")}, None
 
 
-SOURCES = [source_fresh_fetch, source_wikipedia, source_wayback]
+# ── FinCEN: US Treasury republication of each plenary outcome ────────────
+# Not behind Cloudflare, and one release per plenary with an incrementing slug, so
+# the newest is found by probing until 404. It states the black list in full but
+# only the grey-list *changes*, hence scope=("black",) — see compare().
+FINCEN_BASE = ("https://www.fincen.gov/news/news-releases/"
+               "financial-action-task-force-identifies-jurisdictions-anti-money-laundering")
+FINCEN_MAX_PROBE = 12
+
+
+def _fincen_text(url: str) -> str | None:
+    try:
+        raw = _http(url, 30, headers={"User-Agent": "aml-data-refresh/1.0",
+                                      "Accept": "text/html"}).decode("utf-8", "replace")
+    except Exception:
+        return None
+    import html as html_mod
+    stripped = re.sub(r"<script.*?</script>|<style.*?</style>|<[^>]+>", " ", raw, flags=re.S)
+    return re.sub(r"\s+", " ", html_mod.unescape(stripped))
+
+
+def source_fincen() -> tuple[str, dict | None, str | None]:
+    label = "FinCEN（美国财政部转载）"
+    newest_text, newest_url = None, None
+    for i in range(FINCEN_MAX_PROBE):
+        url = FINCEN_BASE if i == 0 else f"{FINCEN_BASE}-{i}"
+        t = _fincen_text(url)
+        if t is None:
+            break          # first 404 ends the series; the previous one is newest
+        newest_text, newest_url = t, url
+    if not newest_text:
+        return label, None, "FinCEN 页面取不到"
+
+    plenary = parse_date(
+        (re.search(r"On (\w+ \d{1,2}, \d{4}), the FATF", newest_text) or [None, None])[1]
+        if re.search(r"On (\w+ \d{1,2}, \d{4}), the FATF", newest_text) else None)
+    released = parse_date(
+        (re.search(r"Immediate Release\s*(\w+ \d{1,2},? \d{4})", newest_text) or [None, None])[1]
+        if re.search(r"Immediate Release\s*(\w+ \d{1,2},? \d{4})", newest_text) else None)
+
+    # "...Call for Action remains the same, with Iran, the Democratic People's
+    # Republic of Korea (DPRK), and Burma subject to calls for action."
+    m = re.search(r"Call for Action[^.]*?with (.{0,220}?) subject to calls for action",
+                  newest_text, re.S)
+    if not m:
+        return label, None, "FinCEN 文本里找不到黑名单句式（页面措辞可能已变）"
+    seg = re.sub(r"\(([^)]*)\)", r", \1", m.group(1))          # DPRK 等括号别名拆出来
+    names = [n.strip(" ,.") for n in re.split(r",| and ", seg) if n.strip(" ,.")]
+    rows = [{"status": "Call for Action", "country": n} for n in names]
+    black = as_sets(rows)["black"]
+    if not (BLACK_RANGE[0] <= len(black) <= BLACK_RANGE[1]):
+        return label, None, f"FinCEN 解析出 {len(black)} 条黑名单，超出合理范围 {BLACK_RANGE}"
+
+    suffix = f" @ 全会 {plenary}" if plenary else ""
+    return f"{label}{suffix}", {
+        "rows": rows, "list_date": plenary, "released": released,
+        "scope": ("black",), "url": newest_url,
+    }, None
+
+
+SOURCES = [source_fresh_fetch, source_wikipedia, source_fincen, source_wayback]
 
 
 # ── Comparison ──────────────────────────────────────────────────────────
 
-def compare(baseline: dict[str, set[str]], candidate: dict[str, set[str]]) -> dict:
-    res = {}
+def compare(baseline: dict[str, set[str]], candidate: dict[str, set[str]],
+            scope: tuple[str, ...] = ("black", "grey")) -> dict:
+    """Diff only the lists a source actually publishes.
+
+    FinCEN states the full black list but only the grey-list *changes*, so diffing
+    its grey set against the baseline would report the whole grey list as removed.
+    """
+    res: dict = {"scope": list(scope)}
     for key in ("black", "grey"):
+        if key not in scope:
+            res[key] = {"added": [], "removed": [], "skipped": True}
+            continue
         res[key] = {
             "added": sorted(candidate[key] - baseline[key]),
             "removed": sorted(baseline[key] - candidate[key]),
+            "skipped": False,
         }
-    res["identical"] = not any(res[k]["added"] or res[k]["removed"] for k in ("black", "grey"))
+    res["identical"] = not any(res[k]["added"] or res[k]["removed"] for k in scope)
     return res
 
 
@@ -376,33 +483,82 @@ def verify() -> dict:
         "baselineCounts": {k: len(v) for k, v in baseline.items()},
         "sources": [],
     }
+    base_date = parse_date(seed.get("listDate"))
+    report["baselineDate"] = seed.get("listDate")
     for fn in SOURCES:
-        label, rows, err = fn()
-        if rows is None:
+        label, payload, err = fn()
+        if payload is None:
             report["sources"].append({"label": label, "reachable": False, "error": err})
             continue
+        # Sources return either a bare row list or a payload dict.
+        if isinstance(payload, dict):
+            rows = payload.get("rows") or []
+            scope = tuple(payload.get("scope") or ("black", "grey"))
+            list_date = payload.get("list_date")
+        else:
+            rows, scope, list_date = payload, ("black", "grey"), None
         cand = as_sets(rows)
-        diff = compare(baseline, cand)
+        diff = compare(baseline, cand, scope)
+
+        # FATF republishes three times a year, and every mirror lags the plenary by
+        # days to weeks. Without this, each plenary would produce weeks of false
+        # "the list changed" alerts against a freshly updated baseline.
+        if list_date and base_date and list_date < base_date:
+            staleness = "source_behind"
+        elif list_date and base_date and list_date > base_date:
+            staleness = "baseline_behind"
+        elif list_date and base_date:
+            staleness = "same_date"
+        else:
+            staleness = "unknown_date"
+
         report["sources"].append({
             "label": label, "reachable": True,
             "counts": {k: len(v) for k, v in cand.items()},
+            "scope": list(scope), "listDate": list_date, "staleness": staleness,
             "identical": diff["identical"], "diff": diff,
         })
 
-    reachable = [s for s in report["sources"] if s["reachable"]]
+    reachable = [x for x in report["sources"] if x["reachable"]]
     if not reachable:
         report["ok"] = False
         report["reason"] = "no_source"
-    elif all(s["identical"] for s in reachable):
-        report["ok"] = True
-        report["reason"] = "identical"
-    else:
+        return report
+
+    # A source that predates the baseline disagreeing with it is expected, not an
+    # anomaly — the baseline is simply newer. Only these are worth waking someone:
+    baseline_behind = [x for x in reachable
+                       if x["staleness"] == "baseline_behind" and not x["identical"]]
+    same_date_conflict = [x for x in reachable
+                          if x["staleness"] == "same_date" and not x["identical"]]
+    unknown_conflict = [x for x in reachable
+                        if x["staleness"] == "unknown_date" and not x["identical"]]
+    report["behind"] = [x["label"] for x in reachable if x["staleness"] == "source_behind"]
+
+    if same_date_conflict:
+        report["ok"] = False
+        report["reason"] = "same_date_conflict"
+    elif baseline_behind:
+        report["ok"] = False
+        report["reason"] = "baseline_behind"
+    elif unknown_conflict:
         report["ok"] = False
         report["reason"] = "mismatch"
+    else:
+        report["ok"] = True
+        report["reason"] = "identical" if not report["behind"] else "sources_behind_baseline"
     return report
 
 
 # ── Alerting ────────────────────────────────────────────────────────────
+
+STALENESS_CN = {
+    "source_behind": "该源比基线旧（基线更新，属正常）",
+    "baseline_behind": "**该源比基线新 —— 基线可能已过期**",
+    "same_date": "同一名单日期",
+    "unknown_date": "名单日期未知",
+}
+
 
 def _diff_lines(report: dict) -> list[str]:
     lines: list[str] = []
@@ -410,16 +566,24 @@ def _diff_lines(report: dict) -> list[str]:
         if not s["reachable"]:
             lines.append(f"· {s['label']}：取不到 —— {s.get('error')}")
             continue
+        scope = s.get("scope") or ["black", "grey"]
+        counts = " / ".join(
+            f"{'黑' if k == 'black' else '灰'} {s['counts'][k]}" for k in scope)
+        cover = "" if len(scope) == 2 else "（仅覆盖黑名单）"
+        date_note = f"名单日期 {s.get('listDate') or '未知'} · {STALENESS_CN.get(s.get('staleness'), '')}"
+        verdict = "与基线一致" if s["identical"] else "**与基线不一致**"
+        lines.append(f"· {s['label']}：{verdict}（{counts}）{cover}")
+        lines.append(f"    {date_note}")
         if s["identical"]:
-            lines.append(f"· {s['label']}：与基线一致（黑 {s['counts']['black']} / 灰 {s['counts']['grey']}）")
             continue
-        lines.append(f"· {s['label']}：**与基线不一致**（黑 {s['counts']['black']} / 灰 {s['counts']['grey']}）")
         for key, cn in (("black", "黑名单"), ("grey", "灰名单")):
             d = s["diff"][key]
+            if d.get("skipped"):
+                continue
             if d["added"]:
-                lines.append(f"    {cn} 新增：{', '.join(d['added'])}")
+                lines.append(f"    {cn} 该源有、基线无：{', '.join(d['added'])}")
             if d["removed"]:
-                lines.append(f"    {cn} 移除：{', '.join(d['removed'])}")
+                lines.append(f"    {cn} 基线有、该源无：{', '.join(d['removed'])}")
     return lines
 
 
@@ -435,12 +599,15 @@ def send_lark(webhook: str, report: dict) -> dict:
     now = datetime.now(TZ_SHANGHAI).strftime("%Y-%m-%d %H:%M")
     keyword = os.getenv("LARK_KEYWORD", "").strip()
     reason = report.get("reason")
-    if reason == "mismatch":
-        title, colour = "⚠ FATF 名单与基线不一致，需人工核查", "orange"
-    elif reason == "no_source":
-        title, colour = "⚠ FATF 名单无法核验（所有数据源都取不到）", "red"
-    else:
-        title, colour = "FATF 名单核验通过", "green"
+    TITLES = {
+        "same_date_conflict": ("🚨 FATF 名单同日期内容冲突，需立即人工核查", "red"),
+        "baseline_behind": ("⚠ 有数据源比基线更新 —— 基线可能已过期", "orange"),
+        "mismatch": ("⚠ FATF 名单与基线不一致（名单日期未知），需人工核查", "orange"),
+        "no_source": ("⚠ FATF 名单无法核验（所有数据源都取不到）", "red"),
+        "sources_behind_baseline": ("FATF 核验通过（部分数据源滞后于基线）", "green"),
+        "identical": ("FATF 名单核验通过", "green"),
+    }
+    title, colour = TITLES.get(reason, ("FATF 名单核验", "grey"))
 
     body = "\n".join(_diff_lines(report)) or "（无明细）"
     card = {
@@ -498,10 +665,13 @@ def send_mail(report: dict, recipients: list[str]) -> dict:
     now_bj = datetime.now(TZ_SHANGHAI)
     date_label = now_bj.strftime("%Y-%m-%d")
     reason = report.get("reason")
-    if reason == "mismatch":
-        subject = f"[AML · 需人工核查] FATF 名单与基线不一致 · {date_label}"
-    else:
-        subject = f"[AML · 需人工核查] FATF 名单无法核验 · {date_label}"
+    SUBJ = {
+        "same_date_conflict": "FATF 名单同日期内容冲突",
+        "baseline_behind": "有数据源比基线更新，基线可能过期",
+        "mismatch": "FATF 名单与基线不一致（名单日期未知）",
+        "no_source": "FATF 名单无法核验",
+    }
+    subject = f"[AML · 需人工核查] {SUBJ.get(reason, 'FATF 核验异常')} · {date_label}"
 
     lines = _diff_lines(report)
     text = "\n".join([
