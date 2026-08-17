@@ -97,6 +97,20 @@ jobs:
                   f.write(f"failed_ids={failed_ids}\n")
           PY
 
+      # FATF sits behind Cloudflare, so its list is cross-checked against the
+      # Legal-approved baseline instead of being trusted blindly. Identical → pass
+      # silently; different or unverifiable → Lark card + email for manual review.
+      # Never fails the run: a verification problem must not block the data refresh.
+      - name: Verify FATF list against the Legal baseline
+        if: always()
+        env:
+          LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          FATF_REVIEW_RECIPIENT: ${{ vars.FATF_REVIEW_RECIPIENT || 'xujz4@lenovo.com' }}
+        run: |
+          python -m scripts.data-refresh.verify_fatf
+
       # Runs BEFORE the commit step on purpose: notify_email diffs the freshly
       # written snapshot against the one still in HEAD, so it must see the old
       # commit. Sends only when a watched list's row content actually changed
