@@ -30,6 +30,7 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr, formatdate
+import re
 from html import escape
 from pathlib import Path
 
@@ -48,6 +49,47 @@ WATCHED = [
     ("fatf-jurisdictions", "FATF 黑 / 灰名单"),
     ("eu-offshore-centres", "离岸金融中心名单（EU / Eurostat）"),
 ]
+
+# The FATF sheet in the attachment comes from the Legal-maintained baseline, not from
+# the fetchers, so a baseline edit changes what Legal receives while every fetched
+# source stays byte-identical. Watched separately, otherwise Legal updates the
+# workbook and gets no email confirming it took effect.
+BASELINE_ID = "fatf-baseline"
+BASELINE_LABEL = "FATF 基线（法务人工维护）"
+
+
+def baseline_state() -> dict | None:
+    """Effective baseline as {listDate, rows}, or None when it cannot be read."""
+    try:
+        from .verify_fatf import load_baseline
+        seed = load_baseline()
+    except Exception as e:
+        print(f"::warning::读取基线失败（{type(e).__name__}: {e}），本次不做基线变更判定")
+        return None
+    if not seed:
+        return None
+    rows = sorted(
+        f"{'black' if 'call for action' in str(r.get('status', '')).lower() else 'grey'}|"
+        f"{str(r.get('country', '')).strip()}"
+        for r in seed.get("rows") or []
+    )
+    return {"listDate": seed.get("listDate"), "rows": rows,
+            "provenance": seed.get("provenance")}
+
+
+def baseline_changed() -> tuple[bool, dict | None, dict | None]:
+    """(changed, current, previous) against the copy committed in git."""
+    cur = baseline_state()
+    if cur is None:
+        return False, None, None
+    SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
+    (SNAPSHOT_DIR / f"{BASELINE_ID}.json").write_text(
+        json.dumps(cur, ensure_ascii=False, indent=1, sort_keys=True))
+    prev = _load_git_previous_snapshot(BASELINE_ID)
+    if prev is None:
+        return False, cur, None            # first run establishes the baseline record
+    return (prev.get("listDate") != cur.get("listDate")
+            or prev.get("rows") != cur.get("rows")), cur, prev
 
 # Which column identifies a row, per source — used to render an added/removed diff.
 KEY_FIELD = {
@@ -133,16 +175,25 @@ def _chips(items: list[str], color: str, limit: int = 40) -> str:
     return html
 
 
-def build_email(manifest: dict, changed_ids: list[str], forced: bool) -> tuple[str, str, str, list[Path]]:
+def build_email(manifest: dict, changed_ids: list[str], forced: bool,
+                baseline: tuple[bool, dict | None, dict | None] = (False, None, None),
+                ) -> tuple[str, str, str, list[Path]]:
     """Return (subject, html, text, attachments)."""
     sources = manifest.get("sources", {})
     now_bj = datetime.now(TZ_SHANGHAI)
     weekday = "一二三四五六日"[now_bj.weekday()]
     date_label = f"{now_bj.strftime('%Y-%m-%d')}（周{weekday}）"
 
+    base_changed, base_cur, base_prev = baseline
     failed_ids = [i for i, _ in WATCHED
                   if (sources.get(i) or {}).get("status") not in ("success", None)]
-    if changed_ids:
+    if base_changed:
+        subject = (f"[AML 公开名单] {date_label} · FATF 基线已更新至 "
+                   f"{(base_cur or {}).get('listDate')}")
+        headline = (f"法务维护的 FATF 基线已更新："
+                    f"{(base_prev or {}).get('listDate')} → {(base_cur or {}).get('listDate')}。"
+                    f"本邮件附件已使用新基线。")
+    elif changed_ids:
         names = [n for i, n in WATCHED if i in changed_ids]
         suffix = f" · {len(failed_ids)} 个抓取失败" if failed_ids else ""
         subject = f"[AML 公开名单] {date_label} · {len(changed_ids)} 个名单有更新{suffix}"
@@ -227,6 +278,29 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool) -> tuple[s
     att_note = (f'附件：{legal_path.name}（CPI / 离岸 / FATF 三个 sheet，'
                 f'格式与法务参考文件一致）'
                 + ('　⚠ FATF 为基线名单，非本次抓取' if seeded else ''))
+    # A receipt Legal can check at a glance: which baseline version this attachment
+    # was built from, and whether it changed since the last email.
+    bl = base_cur or {}
+    if base_changed:
+        base_line = (f'FATF 基线：<strong>{escape(str(bl.get("listDate")))}</strong>'
+                     f'（{len(bl.get("rows") or [])} 条）· 已更新，上一版为 '
+                     f'{escape(str((base_prev or {}).get("listDate")))}')
+    elif bl:
+        base_line = (f'FATF 基线：{escape(str(bl.get("listDate")))}'
+                     f'（{len(bl.get("rows") or [])} 条）· 本次无变化')
+    else:
+        base_line = 'FATF 基线：读取失败'
+    # Say which of the two the sheet actually used. They normally agree — that is what
+    # the verification is for — but when they do not, an unexplained sheet is worse
+    # than a blunt one.
+    fr = legal_report.get("fatf", {})
+    if fr.get("seeded"):
+        base_line += (f'　|　附件 FATF 页使用：<strong>基线</strong>'
+                      f'（本次抓取不可用）')
+    elif fr.get("records"):
+        base_line += (f'　|　附件 FATF 页使用：<strong>本次官方抓取</strong>'
+                      f'（名单日期 {escape(str(fr.get("listDate") or "未知"))}）')
+    text_lines.insert(3, f"[基线] {re.sub(r'<[^>]+>', '', base_line)}")
     html = f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>AML 公开名单更新</title></head>
 <body style="margin:0;padding:20px;background:#F7F7F7;font-family:'Helvetica Neue',Arial,'PingFang SC','Microsoft YaHei',sans-serif;color:#222">
@@ -237,6 +311,7 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool) -> tuple[s
       </div>
       <div style="font-size:12px;color:#888;margin-top:6px">{escape(headline)}</div>
       <div style="font-size:12px;color:#888;margin-top:4px">抓取时间（UTC）：{escape(str(manifest.get('updatedAt') or ''))} · {escape(att_note)}</div>
+      <div style="font-size:12px;color:#555;margin-top:6px;padding:8px 10px;background:#FAFAFA;border:1px solid #EEE;border-radius:6px">{base_line}</div>
     </div>
     {''.join(blocks)}
     <div style="border-top:1px solid #EEE;margin-top:22px;padding-top:12px;font-size:11px;color:#999;text-align:center">
@@ -298,19 +373,26 @@ def main() -> int:
         print(f"::warning::watched sources absent from manifest: {', '.join(missing)}")
 
     changed_ids = [i for i in watched_ids if (sources.get(i) or {}).get("changed")]
+    base_changed, base_cur, base_prev = baseline_changed()
     failed_ids = [i for i in watched_ids if (sources.get(i) or {}).get("status") not in ("success", None)]
 
-    print(f"watched={watched_ids}")
-    print(f"changed={changed_ids}  failed={failed_ids}  force={args.force}")
+    print(f"watched={watched_ids} + {BASELINE_ID}")
+    print(f"changed={changed_ids}  failed={failed_ids}  "
+          f"baseline_changed={base_changed}  force={args.force}")
+    if base_cur:
+        print(f"baseline in this run: {base_cur.get('listDate')} "
+              f"({len(base_cur.get('rows') or [])} 条) · {base_cur.get('provenance')}")
 
     # A failed watched fetcher is worth an email even without a content change —
     # silence would otherwise be indistinguishable from "no update".
-    should_send = bool(changed_ids) or bool(failed_ids) or args.force
+    should_send = bool(changed_ids) or bool(failed_ids) or base_changed or args.force
     if not should_send:
         print("No change in any watched list — not sending.")
         return 0
 
-    subject, html, text, attachments = build_email(manifest, changed_ids, args.force)
+    subject, html, text, attachments = build_email(
+        manifest, changed_ids, args.force,
+        baseline=(base_changed, base_cur, base_prev))
     print(f"subject: {subject}")
     print(f"attachments: {[p.name for p in attachments]}")
 
