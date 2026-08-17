@@ -58,6 +58,56 @@ BASELINE_ID = "fatf-baseline"
 BASELINE_LABEL = "FATF 基线（法务人工维护）"
 
 
+# Legal's confirmed CPI / offshore lists take precedence in the attachment, so the
+# fetched data can drift away unseen. Report the gap on every email: "以法务为准" must
+# not become "从此不再更新".
+OVERRIDES = [
+    ("cpi-override.json", "ti-cpi", "CPI", "scores", "country"),
+    ("offshore-override.json", "eu-offshore-centres", "离岸中心", "jurisdictions", "jurisdiction"),
+]
+
+
+def override_drift() -> list[str]:
+    lines: list[str] = []
+    seeds = Path(__file__).resolve().parent / "seeds"
+    try:
+        from .verify_fatf import norm
+    except Exception:
+        return lines
+    for fname, source_id, label, key, field in OVERRIDES:
+        p = seeds / fname
+        if not p.exists():
+            continue
+        try:
+            ov = json.loads(p.read_text())
+        except json.JSONDecodeError:
+            lines.append(f"{label}：法务确认版本文件无法解析，已回退到抓取数据")
+            continue
+        confirmed = ov.get(key) or {}
+        names_ov = {norm(k) for k in (confirmed.keys() if isinstance(confirmed, dict) else confirmed)}
+        snap = SNAPSHOT_DIR / f"{source_id}.json"
+        if not snap.exists():
+            continue
+        try:
+            fetched = json.loads(snap.read_text())
+        except json.JSONDecodeError:
+            continue
+        names_f = {norm(str(r.get(field) or "")) for r in fetched} - {""}
+        extra, missing = sorted(names_f - names_ov), sorted(names_ov - names_f)
+        who = f"{ov.get('confirmedBy', '?')} · {ov.get('confirmedAt', '?')}"
+        if not extra and not missing:
+            lines.append(f"{label}：以法务确认版本为准（{who}），与本次抓取一致")
+        else:
+            bits = []
+            if extra:
+                bits.append(f"抓取多出 {len(extra)} 项：{', '.join(extra[:12])}")
+            if missing:
+                bits.append(f"法务版多出 {len(missing)} 项：{', '.join(missing[:12])}")
+            lines.append(f"⚠ {label}：以法务确认版本为准（{who}），但与本次抓取不一致 —— "
+                         + "；".join(bits) + "。请复核是否需要更新法务版本。")
+    return lines
+
+
 def baseline_state() -> dict | None:
     """Effective baseline as {listDate, rows}, or None when it cannot be read."""
     try:
@@ -301,6 +351,12 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
         base_line += (f'　|　附件 FATF 页使用：<strong>本次官方抓取</strong>'
                       f'（名单日期 {escape(str(fr.get("listDate") or "未知"))}）')
     text_lines.insert(3, f"[基线] {re.sub(r'<[^>]+>', '', base_line)}")
+    drift = override_drift()
+    for i, d in enumerate(drift):
+        text_lines.insert(4 + i, f"[覆盖] {d}")
+    drift_html = "".join(
+        f'<div style="font-size:12px;color:{"#B26A00" if d.startswith("⚠") else "#555"};'
+        f'margin-top:4px">{escape(d)}</div>' for d in drift)
     html = f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>AML 公开名单更新</title></head>
 <body style="margin:0;padding:20px;background:#F7F7F7;font-family:'Helvetica Neue',Arial,'PingFang SC','Microsoft YaHei',sans-serif;color:#222">
@@ -311,7 +367,7 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
       </div>
       <div style="font-size:12px;color:#888;margin-top:6px">{escape(headline)}</div>
       <div style="font-size:12px;color:#888;margin-top:4px">抓取时间（UTC）：{escape(str(manifest.get('updatedAt') or ''))} · {escape(att_note)}</div>
-      <div style="font-size:12px;color:#555;margin-top:6px;padding:8px 10px;background:#FAFAFA;border:1px solid #EEE;border-radius:6px">{base_line}</div>
+      <div style="font-size:12px;color:#555;margin-top:6px;padding:8px 10px;background:#FAFAFA;border:1px solid #EEE;border-radius:6px">{base_line}{drift_html}</div>
     </div>
     {''.join(blocks)}
     <div style="border-top:1px solid #EEE;margin-top:22px;padding-top:12px;font-size:11px;color:#999;text-align:center">

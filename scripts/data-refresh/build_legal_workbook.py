@@ -33,6 +33,22 @@ OUTPUT_DIR = REPO_ROOT / "public" / "downloads"
 SNAPSHOT_DIR = OUTPUT_DIR / "_snapshots"
 MANIFEST_FILE = OUTPUT_DIR / "_manifest.json"
 SEED_DIR = Path(__file__).resolve().parent / "seeds"
+# Legal-confirmed overrides written by the upload page. When one exists it is what the
+# attachment shows, per Legal's decision that their版本 is authoritative — but
+# verify/notify keep reporting where the fetched data disagrees, so a stale override
+# cannot quietly freeze the list.
+CPI_OVERRIDE = SEED_DIR / "cpi-override.json"
+OFFSHORE_OVERRIDE = SEED_DIR / "offshore-override.json"
+
+
+def _load_override(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError:
+        print(f"::warning::{path.name} 无法解析，忽略该覆盖，改用抓取数据")
+        return None
 
 TZ_SHANGHAI = timezone(timedelta(hours=8))
 
@@ -156,6 +172,17 @@ def build(out_path: Path) -> dict:
     ws.title = f"CPI {year}".strip()
     cpi = _load_snapshot("ti-cpi")
     entry = src.get("ti-cpi") or {}
+    ov = _load_override(CPI_OVERRIDE)
+    cpi_source = "抓取"
+    if ov and ov.get("scores"):
+        # Rebuild rows from the confirmed scores, ranking by score so the sheet still
+        # reads like the fetched one.
+        rows_ov = sorted(({"country": k, "score": v} for k, v in ov["scores"].items()),
+                         key=lambda r: (-(r["score"] or 0), r["country"]))
+        for i, r in enumerate(rows_ov, 1):
+            r["rank"] = i
+        cpi, cpi_source = rows_ov, f"法务确认（{ov.get('confirmedBy')} · {ov.get('confirmedAt')}）"
+        year = ov.get("edition") or year
     if cpi:
         cpi = sorted(cpi, key=lambda r: (r.get("rank") or 9999, str(r.get("country") or "")))
         rows, hi = [], set()
@@ -173,8 +200,9 @@ def build(out_path: Path) -> dict:
         note = (f"来源: Transparency International — Corruption Perceptions Index {year} "
                 f"(https://www.transparency.org/en/cpi/{year}) · 0-100，分数越低越腐败 · "
                 f"红底 = CPI ≤ {CPI_THRESHOLD} 判为高风险（法务确认口径，0803 需求表） · "
-                f"抓取: {fetched_bj}")
-        report["cpi"] = {"ok": True, "records": len(rows), "flagged": len(hi), "year": year}
+                f"数据来源: {cpi_source} · {fetched_bj}")
+        report["cpi"] = {"ok": True, "records": len(rows), "flagged": len(hi),
+                         "year": year, "source": cpi_source}
     else:
         rows, hi = [["—", "抓取失败，无数据", "—", "—"]], set()
         note = (f"来源: Transparency International CPI · ⚠ 本次抓取失败"
@@ -189,13 +217,18 @@ def build(out_path: Path) -> dict:
     ws = wb.create_sheet("Offshore Centres 离岸中心")
     off = _load_snapshot("eu-offshore-centres")
     entry = src.get("eu-offshore-centres") or {}
+    ov = _load_override(OFFSHORE_OVERRIDE)
+    off_source = "抓取"
+    if ov and ov.get("jurisdictions"):
+        off = [{"jurisdiction": n} for n in ov["jurisdictions"]]
+        off_source = f"法务确认（{ov.get('confirmedBy')} · {ov.get('confirmedAt')}）"
     if off:
         names = sorted({str(r.get("jurisdiction") or "").strip() for r in off} - {""})
         rows = [[i, n] for i, n in enumerate(names, 1)]
         note = ("来源: Eurostat Glossary — List of offshore financial centres "
                 f"(Balance of Payments Vademecum, Appendix 7) · 共 {len(names)} 个辖区 · "
-                f"抓取: {fetched_bj}")
-        report["offshore"] = {"ok": True, "records": len(rows)}
+                f"数据来源: {off_source} · {fetched_bj}")
+        report["offshore"] = {"ok": True, "records": len(rows), "source": off_source}
     else:
         rows = [["—", "抓取失败，无数据"]]
         note = ("来源: Eurostat Glossary — List of offshore financial centres · ⚠ 本次抓取失败"
