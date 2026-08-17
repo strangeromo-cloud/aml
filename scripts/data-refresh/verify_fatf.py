@@ -60,6 +60,10 @@ ALIASES = {
     "democratic republic of congo": "democratic republic of the congo",
     "drc": "democratic republic of the congo",
     "lao peoples democratic republic": "laos",
+    "lao pdr": "laos",
+    # FATF's own Country facet writes "Democratic Republic of Korea", dropping the
+    # "People's" that appears in its prose and in Legal's baseline.
+    "democratic republic of korea": "north korea",
     "syrian arab republic": "syria",
     "united republic of tanzania": "tanzania",
     "viet nam": "vietnam",

@@ -133,6 +133,39 @@ def _dump_html(status: str, url: str, html: str) -> None:
         pass
 
 
+# Each statement page carries a "Country" facet in its publication details: a single
+# <p> of <a href="/en/countries/detail/<Name>.html"> links that IS the list. Read that.
+#
+# Scanning the whole page instead is what produced the wrong black list: every FATF
+# page footer carries the 38-strong FATF *member* nations list using the same link
+# pattern, so South Africa and Türkiye — members, not listed jurisdictions — were
+# collected as if the statement had named them. On the June 2026 grey-list page the
+# facet holds 22 links while the page holds 60.
+COUNTRY_LINK_RE = re.compile(
+    r'<a[^>]+href="[^"]*/countries/detail/[^"]*"[^>]*>(.*?)</a>', re.S | re.I)
+
+
+def _countries_from_facet(html: str) -> list[str]:
+    """Jurisdictions from the Country facet only. [] if the facet is not found."""
+    soup = BeautifulSoup(html, "html.parser")
+    for para in soup.find_all("p"):
+        links = [a for a in para.find_all("a", href=True)
+                 if "/countries/detail/" in a["href"]]
+        if len(links) < 2:
+            continue                      # a lone in-prose link is not the facet
+        names, seen = [], set()
+        for a in links:
+            name = a.get_text(strip=True)
+            if not name:
+                # Fall back to the href slug when the anchor text is empty.
+                name = a["href"].rsplit("/", 1)[-1].removesuffix(".html").replace("-", " ")
+            if name not in seen:
+                seen.add(name)
+                names.append(name)
+        return names
+    return []
+
+
 def _extract_pub_date(url: str, html_head: str) -> str:
     """Pull a "<Month> <Year>" label from a publication URL or head matter."""
     m = re.search(
@@ -241,6 +274,7 @@ class FatfFetcher(Fetcher):
 
     # Set during fetch() so they appear on the About sheet
     _strategy: str = ""
+    _extraction: str = ""
     _index_snapshot_date: str = ""
     _index_snapshot_url: str = ""
 
@@ -253,7 +287,8 @@ class FatfFetcher(Fetcher):
         ]
 
     def extra_about_rows(self):
-        rows = [("Fetch strategy", self._strategy or "n/a")]
+        rows = [("Fetch strategy", self._strategy or "n/a"),
+                ("Extraction", self._extraction or "n/a")]
         if self._strategy == "wayback":
             rows.extend([
                 ("Wayback snapshot taken", self._index_snapshot_date or "n/a"),
@@ -315,7 +350,14 @@ class FatfFetcher(Fetcher):
             except FetchError:
                 continue
             _dump_html(status, raw_url, html)
-            countries = _extract_countries(html)
+            countries = _countries_from_facet(html)
+            if countries:
+                self._extraction = "country-facet"
+            else:
+                # Last resort. Known to over-collect from page furniture, so the
+                # consumers validate before trusting it (see verify_fatf.validate_rows).
+                countries = _extract_countries(html)
+                self._extraction = "prose-fallback"
             pub_date = _extract_pub_date(raw_url, html)
             for c in countries:
                 rows.append({
