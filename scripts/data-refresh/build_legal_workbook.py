@@ -274,6 +274,22 @@ def build(out_path: Path) -> dict:
                  centered_cols=(1,))
 
     # ── Sheet 3: FATF ───────────────────────────────────────────────────
+    def _same_lists(a, b, classify) -> bool:
+        """Do two row sets carry the same jurisdictions in the same buckets?"""
+        try:
+            from .verify_fatf import norm
+        except Exception:
+            def norm(x):  # type: ignore[misc]
+                return str(x or "").strip().lower()
+
+        def key(rows):
+            out: dict[str, set[str]] = {}
+            for r in rows or []:
+                out.setdefault(classify(str(r.get("status") or "")), set()).add(
+                    norm(r.get("country")))
+            return {k: v - {""} for k, v in out.items()}
+        return key(a) == key(b)
+
     ws = wb.create_sheet("FATF 黑灰名单")
     fatf = _load_snapshot("fatf-jurisdictions")
     entry = src.get("fatf-jurisdictions") or {}
@@ -290,6 +306,45 @@ def build(out_path: Path) -> dict:
             fetch_rejected = None
         if fetch_rejected:
             fatf = None
+
+    # The Legal-maintained baseline is two things at once: the fallback when the
+    # fetch fails, and the authority when it is *newer* than what the fetch
+    # returned — the same recency rule the CPI/offshore overrides follow. Without
+    # the date comparison a successful-but-stale fetch would silently roll Legal's
+    # newer list back.
+    try:
+        from .verify_fatf import load_baseline, parse_date
+        seed = load_baseline() or {}
+    except Exception:
+        seed = {}
+
+        def parse_date(_):  # type: ignore[misc]
+            return None
+    seed_rows = seed.get("rows") or None
+    seed_date = str(seed.get("listDate") or "")
+
+    fetch_date = ""
+    for r in fatf or []:
+        d = parse_date(r.get("publication_date"))
+        if d and d > fetch_date:
+            fetch_date = d
+
+    # Compare at plenary granularity (YYYY-MM): FATF publishes in Feb/Jun/Oct, the
+    # baseline carries the statement day while the page often only says "June 2026",
+    # so day-level comparison would call a same-plenary fetch "older" every time.
+    # The fetch takes over only on a strictly newer plenary — which is exactly the
+    # case Legal has not confirmed yet. Within the same plenary the human-confirmed
+    # list wins; when the two disagree there, verify_fatf has already alerted.
+    fetched_rows = fatf
+    prefer_baseline = ""      # "" = use the fetch; otherwise why the baseline won
+    if fatf and seed_rows and seed_date and fetch_date:
+        if seed_date[:7] > fetch_date[:7]:
+            prefer_baseline = "older"
+        elif seed_date[:7] == fetch_date[:7]:
+            prefer_baseline = "same"
+        if prefer_baseline:
+            fatf = None
+
     BLACK = "黑名单 Black"
     GREY = "灰名单 Grey"
     MEANING = {
@@ -306,17 +361,11 @@ def build(out_path: Path) -> dict:
     seeded = False
     list_date = ""
     if not fatf:
-        # Falls through to the baseline below, whether the fetch failed outright
-        # or its result was rejected as implausible.
-        # Fetch failed and no snapshot exists — fall back to the Legal-provided
-        # baseline, labelled as such so nobody reads it as a fresh fetch.
-        try:
-            from .verify_fatf import load_baseline
-            seed = load_baseline() or {}
-        except Exception:
-            seed = {}
-        fatf = seed.get("rows") or None
-        list_date = seed.get("listDate", "")
+        # Falls through to the baseline, whether the fetch failed outright, was
+        # rejected as implausible, or came back older than Legal's list. Labelled
+        # as the baseline so nobody reads it as a fresh fetch.
+        fatf = seed_rows
+        list_date = seed_date
         seeded = bool(fatf)
 
     if fatf:
@@ -333,19 +382,36 @@ def build(out_path: Path) -> dict:
         base = ("来源: FATF — High-Risk Jurisdictions subject to a Call for Action(黑) / "
                 "Jurisdictions under Increased Monitoring(灰)")
         if seeded:
-            why = (f"本次抓取结果不可信已忽略（{fetch_rejected}）" if fetch_rejected
-                   else f"本次抓取失败（{entry.get('error', 'Cloudflare 拦截')}）")
-            note = (f"{base} · ⚠ {why}，"
-                    f"以下为法务参考文件的基线名单，名单日期 {list_date}，非本次抓取结果 · "
-                    f"抓取尝试: {fetched_bj}")
-            report["fatf"] = {"ok": False, "seeded": True, "records": len(rows),
-                              "listDate": list_date,
-                              "error": fetch_rejected or entry.get("error")}
+            agrees = None
+            if prefer_baseline == "same":
+                agrees = _same_lists(fetched_rows, seed_rows, _classify)
+                why = ("与本次官方抓取一致（同一期 " + fetch_date[:7] + "），采用法务确认口径"
+                       if agrees else
+                       "与本次官方抓取不一致（同一期 " + fetch_date[:7] +
+                       "，已触发核验告警），按法务确认口径出表")
+            elif prefer_baseline == "older":
+                why = (f"本次抓取到的是更早一期（{fetch_date[:7]}），"
+                       f"按「以新为准」采用法务基线")
+            elif fetch_rejected:
+                why = f"本次抓取结果不可信已忽略（{fetch_rejected}）"
+            else:
+                why = f"本次抓取失败（{entry.get('error', 'Cloudflare 拦截')}）"
+            mark = "·" if agrees else "· ⚠"
+            note = (f"{base} {mark} {why}，"
+                    f"名单日期 {list_date}（法务维护的基线） · 抓取尝试: {fetched_bj}")
+            report["fatf"] = {
+                "ok": bool(agrees), "seeded": True, "records": len(rows),
+                "listDate": list_date, "source": "baseline",
+                "preferBaseline": prefer_baseline or None, "agreesWithFetch": agrees,
+                "fetchDate": fetch_date or None, "reason": why,
+                "error": fetch_rejected or entry.get("error")}
         else:
             note = (f"{base} · 名单日期: {list_date}（每年 2/6/10 月更新，需定期刷新） · "
                     f"抓取: {fetched_bj}")
             report["fatf"] = {"ok": True, "seeded": False, "records": len(rows),
-                              "listDate": list_date}
+                              "listDate": list_date, "source": "fetch",
+                              "reason": "本次官方抓取，且是比法务基线更新的一期"
+                                        if seed_date else "本次官方抓取"}
     else:
         rows = [["—", "抓取失败，无数据", "—"]]
         note = (f"来源: FATF 黑/灰名单 · ⚠ 本次抓取失败（{entry.get('error', '未知错误')}），"

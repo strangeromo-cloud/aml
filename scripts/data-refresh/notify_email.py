@@ -332,7 +332,11 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
     legal_path = default_out_path()
     legal_report = build_legal(legal_path)
     attachments.append(legal_path)
-    seeded = legal_report.get("fatf", {}).get("seeded")
+    _fatf = legal_report.get("fatf", {})
+    # Only warn when the baseline and the fetch actually disagree (or the fetch is
+    # unusable). "Baseline used, and it matches today's official fetch" is the
+    # healthy steady state — flagging it as a warning trains people to ignore ⚠.
+    seeded = bool(_fatf.get("seeded")) and not _fatf.get("agreesWithFetch")
     att_note = (f'附件：{legal_path.name}（CPI / 离岸 / FATF 三个 sheet，'
                 f'格式与法务参考文件一致）'
                 + ('　⚠ FATF 为基线名单，非本次抓取' if seeded else ''))
@@ -353,8 +357,8 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
     # than a blunt one.
     fr = legal_report.get("fatf", {})
     if fr.get("seeded"):
-        base_line += (f'　|　附件 FATF 页使用：<strong>基线</strong>'
-                      f'（本次抓取不可用）')
+        base_line += (f'　|　附件 FATF 页使用：<strong>法务基线</strong>'
+                      f'（{escape(str(fr.get("reason") or "本次抓取不可用"))}）')
     elif fr.get("records"):
         base_line += (f'　|　附件 FATF 页使用：<strong>本次官方抓取</strong>'
                       f'（名单日期 {escape(str(fr.get("listDate") or "未知"))}）')
