@@ -83,20 +83,58 @@ class TiCpiFetcher(Fetcher):
             ("score", "CPI Score (0-100, higher = cleaner)", 22),
         ]
 
-    def _try_year(self, year: int) -> bytes | None:
-        url = f"https://images.transparencycdn.org/images/CPI{year}-Results-and-trends.xlsx"
+    # TI renames the results workbook between editions — 2024 shipped as
+    # "CPI2024-Results-and-trends.xlsx" and 2025 as "CPI2025_Results.xlsx". Guessing
+    # filenames therefore silently falls back to an older edition, which looks like
+    # healthy data while being a year stale. Discover the link from the edition page
+    # instead, and only guess as a last resort.
+    EDITION_PAGE = "https://www.transparency.org/en/cpi/{year}"
+    _edition_year: int = 0
+
+    def _xlsx_url_from_page(self, year: int) -> str | None:
         try:
-            data = http_get(url, timeout=60, retries=2)
-            self.url = url
-            return data
+            html = http_get(self.EDITION_PAGE.format(year=year), timeout=45,
+                            retries=2).decode("utf-8", errors="replace")
         except FetchError:
             return None
+        # Prefer a results workbook for this edition over methodology/map bundles.
+        cands = re.findall(r"https://[^\"'\s)]+\.xlsx", html)
+        scored = [c for c in cands if str(year) in c and "ethodolog" not in c.lower()]
+        for c in scored:
+            if "result" in c.lower():
+                return c
+        return scored[0] if scored else (cands[0] if cands else None)
+
+    def _try_year(self, year: int) -> bytes | None:
+        urls = [u for u in (self._xlsx_url_from_page(year),
+                            f"https://images.transparencycdn.org/images/CPI{year}-Results-and-trends.xlsx",
+                            f"https://images.transparencycdn.org/images/CPI{year}_Results.xlsx")
+                if u]
+        for url in urls:
+            try:
+                data = http_get(url, timeout=60, retries=2)
+                self.url = url
+                self._edition_year = year
+                return data
+            except FetchError:
+                continue
+        return None
 
     def fetch(self) -> list[dict[str, Any]]:
         data: bytes | None = None
-        for year in range(date.today().year, date.today().year - 5, -1):
+        # CPI for year N publishes early in N+1, so the newest possible edition is
+        # last year's until this year's lands.
+        newest = date.today().year
+        for year in range(newest, newest - 5, -1):
             data = self._try_year(year)
             if data:
+                if year < newest - 1:
+                    # Two or more editions behind means the download moved again.
+                    raise FetchError(
+                        f"newest CPI edition found is {year}, expected {newest - 1} or "
+                        f"{newest} — TI likely renamed the workbook again; check "
+                        f"{self.EDITION_PAGE.format(year=newest - 1)}"
+                    )
                 break
         if not data:
             raise FetchError("Could not locate any recent TI CPI Excel")
