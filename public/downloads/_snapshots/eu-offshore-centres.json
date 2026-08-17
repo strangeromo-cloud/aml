@@ -1,0 +1,202 @@
+[
+ {
+  "iso2": "AD",
+  "jurisdiction": "Andorra",
+  "matched": "yes"
+ },
+ {
+  "iso2": "AG",
+  "jurisdiction": "Antigua and Barbuda",
+  "matched": "yes"
+ },
+ {
+  "iso2": "AI",
+  "jurisdiction": "Anguilla",
+  "matched": "yes"
+ },
+ {
+  "iso2": "AW",
+  "jurisdiction": "Aruba",
+  "matched": "yes"
+ },
+ {
+  "iso2": "BB",
+  "jurisdiction": "Barbados",
+  "matched": "yes"
+ },
+ {
+  "iso2": "BH",
+  "jurisdiction": "Bahrain",
+  "matched": "yes"
+ },
+ {
+  "iso2": "BM",
+  "jurisdiction": "Bermuda",
+  "matched": "yes"
+ },
+ {
+  "iso2": "BS",
+  "jurisdiction": "Bahamas",
+  "matched": "yes"
+ },
+ {
+  "iso2": "BZ",
+  "jurisdiction": "Belize",
+  "matched": "yes"
+ },
+ {
+  "iso2": "CK",
+  "jurisdiction": "Cook Islands",
+  "matched": "yes"
+ },
+ {
+  "iso2": "CW",
+  "jurisdiction": "Curaçao",
+  "matched": "yes"
+ },
+ {
+  "iso2": "KY",
+  "jurisdiction": "Cayman Islands",
+  "matched": "yes"
+ },
+ {
+  "iso2": "DM",
+  "jurisdiction": "Dominica",
+  "matched": "yes"
+ },
+ {
+  "iso2": "GD",
+  "jurisdiction": "Grenada",
+  "matched": "yes"
+ },
+ {
+  "iso2": "GG",
+  "jurisdiction": "Guernsey",
+  "matched": "yes"
+ },
+ {
+  "iso2": "GI",
+  "jurisdiction": "Gibraltar",
+  "matched": "yes"
+ },
+ {
+  "iso2": "HK",
+  "jurisdiction": "Hong Kong",
+  "matched": "yes"
+ },
+ {
+  "iso2": "IM",
+  "jurisdiction": "Isle of Man",
+  "matched": "yes"
+ },
+ {
+  "iso2": "JE",
+  "jurisdiction": "Jersey",
+  "matched": "yes"
+ },
+ {
+  "iso2": "KN",
+  "jurisdiction": "St Kitts and Nevis",
+  "matched": "yes"
+ },
+ {
+  "iso2": "LB",
+  "jurisdiction": "Lebanon",
+  "matched": "yes"
+ },
+ {
+  "iso2": "LC",
+  "jurisdiction": "Saint Lucia",
+  "matched": "yes"
+ },
+ {
+  "iso2": "LI",
+  "jurisdiction": "Liechtenstein",
+  "matched": "yes"
+ },
+ {
+  "iso2": "LR",
+  "jurisdiction": "Liberia",
+  "matched": "yes"
+ },
+ {
+  "iso2": "MH",
+  "jurisdiction": "Marshall Islands",
+  "matched": "yes"
+ },
+ {
+  "iso2": "MS",
+  "jurisdiction": "Montserrat",
+  "matched": "yes"
+ },
+ {
+  "iso2": "MU",
+  "jurisdiction": "Mauritius",
+  "matched": "yes"
+ },
+ {
+  "iso2": "NR",
+  "jurisdiction": "Nauru",
+  "matched": "yes"
+ },
+ {
+  "iso2": "NU",
+  "jurisdiction": "Niue",
+  "matched": "yes"
+ },
+ {
+  "iso2": "PA",
+  "jurisdiction": "Panama",
+  "matched": "yes"
+ },
+ {
+  "iso2": "PH",
+  "jurisdiction": "Philippines",
+  "matched": "yes"
+ },
+ {
+  "iso2": "SC",
+  "jurisdiction": "Seychelles",
+  "matched": "yes"
+ },
+ {
+  "iso2": "SG",
+  "jurisdiction": "Singapore",
+  "matched": "yes"
+ },
+ {
+  "iso2": "SX",
+  "jurisdiction": "Sint Maarten",
+  "matched": "yes"
+ },
+ {
+  "iso2": "TC",
+  "jurisdiction": "Turks and Caicos Islands",
+  "matched": "yes"
+ },
+ {
+  "iso2": "VC",
+  "jurisdiction": "Saint Vincent and the Grenadines",
+  "matched": "yes"
+ },
+ {
+  "iso2": "VG",
+  "jurisdiction": "Virgin Islands (British)",
+  "matched": "yes"
+ },
+ {
+  "iso2": "VI",
+  "jurisdiction": "Virgin Islands (U.S.)",
+  "matched": "yes"
+ },
+ {
+  "iso2": "VU",
+  "jurisdiction": "Vanuatu",
+  "matched": "yes"
+ },
+ {
+  "iso2": "WS",
+  "jurisdiction": "Samoa",
+  "matched": "yes"
+ }
+]
