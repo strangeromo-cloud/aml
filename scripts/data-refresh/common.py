@@ -8,6 +8,7 @@ Each fetcher should:
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
@@ -143,6 +144,44 @@ def write_excel(
     wb.save(out_path)
 
 
+# ---------- Change detection ----------
+# Every workbook stamps "Fetched at (UTC)" on its About sheet, so the .xlsx bytes
+# differ on every run even when the upstream list is identical. File-level diffing
+# is therefore useless for "did the list actually change?" — we hash the DATA rows
+# only, and keep a row snapshot so a change can be reported as added/removed.
+SNAPSHOT_DIR = OUTPUT_DIR / "_snapshots"
+# Snapshot only reasonably small sources; the UN/EU sanctions lists have
+# thousands of rows and we do not diff them row-by-row.
+SNAPSHOT_MAX_ROWS = 500
+
+
+def content_hash(rows: list[dict[str, Any]]) -> str:
+    """Order-insensitive SHA-256 over the data rows."""
+    canon = sorted(json.dumps(r, sort_keys=True, ensure_ascii=False) for r in rows)
+    return hashlib.sha256(json.dumps(canon, ensure_ascii=False).encode()).hexdigest()
+
+
+def snapshot_path(fetcher_id: str) -> Path:
+    return SNAPSHOT_DIR / f"{fetcher_id}.json"
+
+
+def load_snapshot(fetcher_id: str) -> list[dict[str, Any]] | None:
+    p = snapshot_path(fetcher_id)
+    if not p.exists():
+        return None
+    try:
+        return json.loads(p.read_text())
+    except json.JSONDecodeError:
+        return None
+
+
+def save_snapshot(fetcher_id: str, rows: list[dict[str, Any]]) -> None:
+    SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
+    snapshot_path(fetcher_id).write_text(
+        json.dumps(rows, ensure_ascii=False, indent=1, sort_keys=True)
+    )
+
+
 # ---------- Manifest ----------
 
 def load_manifest() -> dict[str, Any]:
@@ -193,8 +232,13 @@ class Fetcher:
 def run_fetcher(
     fetcher: Fetcher,
     logger: logging.Logger,
+    prev_entry: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Run a fetcher, write its Excel, and return a manifest entry."""
+    """Run a fetcher, write its Excel, and return a manifest entry.
+
+    `prev_entry` is the previous manifest entry for this fetcher; it supplies the
+    prior contentHash so the entry can report whether the list actually changed.
+    """
     started = datetime.now(timezone.utc)
     out_path = OUTPUT_DIR / fetcher.out_filename
     entry: dict[str, Any] = {
@@ -207,6 +251,13 @@ def run_fetcher(
         rows = fetcher.fetch()
         if not rows:
             raise FetchError("fetcher returned 0 rows")
+        new_hash = content_hash(rows)
+        prev_hash = (prev_entry or {}).get("contentHash")
+        # First ever run has no baseline: record the hash but do not call it a change,
+        # otherwise every source would look "updated" on day one.
+        changed = bool(prev_hash) and prev_hash != new_hash
+        if len(rows) <= SNAPSHOT_MAX_ROWS:
+            save_snapshot(fetcher.id, rows)
         write_excel(
             out_path,
             title=fetcher.name,
@@ -219,13 +270,20 @@ def run_fetcher(
         entry.update({
             "status": "success",
             "records": len(rows),
+            "contentHash": new_hash,
+            "previousHash": prev_hash,
+            "changed": changed,
+            "previousRecords": (prev_entry or {}).get("records"),
             "finishedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         })
-        logger.info(f"  ✓ {fetcher.id} — {len(rows)} records → {out_path.name}")
+        flag = " [CHANGED]" if changed else ""
+        logger.info(f"  ✓ {fetcher.id} — {len(rows)} records → {out_path.name}{flag}")
     except Exception as e:
         entry.update({
             "status": "error",
             "error": f"{type(e).__name__}: {e}",
+            "contentHash": (prev_entry or {}).get("contentHash"),
+            "changed": False,
             "finishedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         })
         logger.error(f"  ✗ {fetcher.id} — {type(e).__name__}: {e}")

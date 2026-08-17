@@ -10,6 +10,10 @@ on:
         description: "Exit non-zero on any failure (forces this run to fail)"
         type: boolean
         default: false
+      force_email:
+        description: "Email the watched lists even if nothing changed (use once for the baseline)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -88,6 +92,25 @@ jobs:
                   failed_ids = ",".join(k for k, _ in fails)
                   f.write(f"failed_ids={failed_ids}\n")
           PY
+
+      # Runs BEFORE the commit step on purpose: notify_email diffs the freshly
+      # written snapshot against the one still in HEAD, so it must see the old
+      # commit. Sends only when a watched list's row content actually changed
+      # (or a watched fetcher failed, or force_email was requested).
+      - name: Email watched lists on change
+        if: always()
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          LIST_ALERT_RECIPIENT: ${{ vars.LIST_ALERT_RECIPIENT || 'ecoafm@lenovo.com' }}
+        run: |
+          if [ -z "$SMTP_USER" ] || [ -z "$SMTP_PASSWORD" ]; then
+            echo "::warning::SMTP_USER / SMTP_PASSWORD secrets not set — skipping the list-change email."
+            echo "Add them under Settings → Secrets and variables → Actions → Secrets."
+            exit 0
+          fi
+          python -m scripts.data-refresh.notify_email \
+            ${{ github.event.inputs.force_email == 'true' && '--force' || '' }}
 
       - name: Commit refreshed data
         if: always()

@@ -53,7 +53,7 @@ def main() -> int:
     logger.info(f"Running {len(fetchers)} fetchers")
     fail_count = 0
     for f in fetchers:
-        entry = run_fetcher(f, logger)
+        entry = run_fetcher(f, logger, prev_entry=sources.get(f.id))
         sources[f.id] = entry
         if entry.get("status") != "success":
             fail_count += 1

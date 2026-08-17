@@ -9,3 +9,4 @@ dist/
 .env.local
 .claude/
 scripts/.cache/
+tsconfig.tsbuildinfo
