@@ -105,6 +105,7 @@ jobs:
         if: always()
         env:
           LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
+          LARK_KEYWORD: ${{ secrets.LARK_KEYWORD }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           FATF_REVIEW_RECIPIENT: ${{ vars.FATF_REVIEW_RECIPIENT || 'xujz4@lenovo.com' }}
@@ -145,7 +146,18 @@ jobs:
             git commit -m "chore(data): daily refresh of list-source downloads
 
           ${{ steps.manifest.outputs.summary }}"
-            git push
+            # A human pushing to main while this runs would otherwise fail the job
+            # on a rejected push. Rebase onto whatever landed and retry.
+            for attempt in 1 2 3; do
+              if git push; then
+                echo "pushed on attempt $attempt"
+                exit 0
+              fi
+              echo "push rejected — rebasing onto origin/main (attempt $attempt)"
+              git pull --rebase --autostash origin main || exit 1
+            done
+            echo "::error::could not push refreshed data after 3 attempts"
+            exit 1
           fi
 
       - name: Open issue on failure

@@ -424,10 +424,16 @@ def _diff_lines(report: dict) -> list[str]:
 
 
 def send_lark(webhook: str, report: dict) -> dict:
-    """Post an interactive card to a Lark incoming webhook (cct lark_client pattern)."""
+    """Post an interactive card to a Lark incoming webhook (cct lark_client pattern).
+
+    A Lark custom bot can be configured with 自定义关键词 validation, which rejects
+    any message not containing one of its keywords with code 19024. Set
+    LARK_KEYWORD to that word and it is appended to the card so the check passes.
+    """
     if not webhook:
         return {"sent": False, "error": "LARK_WEBHOOK not configured"}
     now = datetime.now(TZ_SHANGHAI).strftime("%Y-%m-%d %H:%M")
+    keyword = os.getenv("LARK_KEYWORD", "").strip()
     reason = report.get("reason")
     if reason == "mismatch":
         title, colour = "⚠ FATF 名单与基线不一致，需人工核查", "orange"
@@ -454,7 +460,8 @@ def send_lark(webhook: str, report: dict) -> dict:
                 {"tag": "hr"},
                 {"tag": "div", "text": {"tag": "lark_md", "content":
                     f"请人工核对官网后手工更新基线文件：\n[{FATF_PAGE}]({FATF_PAGE})\n"
-                    f"检测时间 {now} · 自动流程不会修改基线"}},
+                    f"检测时间 {now} · 自动流程不会修改基线"
+                    + (f"\n{keyword}" if keyword else "")}},
             ],
         },
     }
@@ -464,6 +471,10 @@ def send_lark(webhook: str, report: dict) -> dict:
             headers={"Content-Type": "application/json"}, method="POST")
         with urllib.request.urlopen(req, timeout=25) as r:
             resp = json.loads(r.read() or b"{}")
+        if resp.get("code") == 19024:
+            return {"sent": False, "error": (
+                "Lark 自定义关键词校验未通过（19024）。把机器人改为无校验/签名校验，"
+                "或把关键词设进 LARK_KEYWORD secret。")}
         if resp.get("code") not in (0, None):
             return {"sent": False, "error": f"Lark returned {resp}"}
         return {"sent": True, "error": None}
