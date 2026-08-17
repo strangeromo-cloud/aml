@@ -36,9 +36,11 @@ SEED_DIR = Path(__file__).resolve().parent / "seeds"
 
 TZ_SHANGHAI = timezone(timedelta(hours=8))
 
-# CPI score strictly below this is flagged. The reference file marks 30 but not
-# 31, and its note calls the threshold "建议阈值 31（待法务确认）".
-CPI_THRESHOLD = 31
+# Legal-confirmed threshold from Payment Monitoring Scenarios-0803, Updated-BSR:
+# "Check vendor registration country, invoice-issuing country, or receiving-bank
+# country's CPI <= 40". Inclusive, and 40 rather than the 31 the earlier reference
+# workbook carried as "建议阈值 31（待法务确认）". Matches CPI_THRESHOLD in the demo.
+CPI_THRESHOLD = 40
 
 ARIAL = "Arial"
 NOTE_FONT = Font(name=ARIAL, size=8.5, color="595959")
@@ -163,14 +165,15 @@ def build(out_path: Path) -> dict:
                 score_num = int(round(float(score)))
             except (TypeError, ValueError):
                 score_num = score
-            flagged = isinstance(score_num, int) and score_num < CPI_THRESHOLD
+            flagged = isinstance(score_num, int) and score_num <= CPI_THRESHOLD
             rows.append([r.get("rank"), r.get("country"), score_num,
                          "高风险 High-risk" if flagged else None])
             if flagged:
                 hi.add(i)
         note = (f"来源: Transparency International — Corruption Perceptions Index {year} "
                 f"(https://www.transparency.org/en/cpi/{year}) · 0-100，分数越低越腐败 · "
-                f"红底 = 低于建议阈值 {CPI_THRESHOLD}（待法务确认） · 抓取: {fetched_bj}")
+                f"红底 = CPI ≤ {CPI_THRESHOLD} 判为高风险（法务确认口径，0803 需求表） · "
+                f"抓取: {fetched_bj}")
         report["cpi"] = {"ok": True, "records": len(rows), "flagged": len(hi), "year": year}
     else:
         rows, hi = [["—", "抓取失败，无数据", "—", "—"]], set()
@@ -179,7 +182,7 @@ def build(out_path: Path) -> dict:
         report["cpi"] = {"ok": False, "records": 0, "error": entry.get("error"), "year": year}
     _write_sheet(ws, note,
                  [("排名 Rank", 10), ("国家/地区 Country", 32), ("分数 Score", 10),
-                  (f"≥/< 阈值{CPI_THRESHOLD}", 16)],
+                  (f"≤/> 阈值{CPI_THRESHOLD}", 16)],
                  rows, hi, centered_cols=(1, 3))
 
     # ── Sheet 2: Offshore ───────────────────────────────────────────────
