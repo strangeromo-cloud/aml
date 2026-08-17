@@ -97,6 +97,19 @@ jobs:
                   f.write(f"failed_ids={failed_ids}\n")
           PY
 
+      # The FATF pages are only reachable from CI (Cloudflare blocks plain fetches
+      # and the Wayback replay server is flaky), so keep what was actually fetched.
+      # This is how the prose-scanning country extractor gets rewritten against the
+      # real markup instead of guesswork.
+      - name: Upload fetched FATF HTML for parser work
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fatf-pages
+          path: /tmp/data-refresh-debug/
+          retention-days: 7
+          if-no-files-found: ignore
+
       # FATF sits behind Cloudflare, so its list is cross-checked against the
       # Legal-approved baseline instead of being trusted blindly. Identical → pass
       # silently; different or unverifiable → Lark card + email for manual review.
@@ -121,7 +134,10 @@ jobs:
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          LIST_ALERT_RECIPIENT: ${{ github.event.inputs.email_to != '' && github.event.inputs.email_to || vars.LIST_ALERT_RECIPIENT || 'ecoafm@lenovo.com' }}
+          # TESTING PHASE: the daily cron mails the test address only. Flip this
+          # default back to ecoafm@lenovo.com (or set the LIST_ALERT_RECIPIENT repo
+          # variable) once Legal has signed off on the format and the FATF parser.
+          LIST_ALERT_RECIPIENT: ${{ github.event.inputs.email_to != '' && github.event.inputs.email_to || vars.LIST_ALERT_RECIPIENT || 'xujz4@lenovo.com' }}
         run: |
           if [ -z "$SMTP_USER" ] || [ -z "$SMTP_PASSWORD" ]; then
             echo "::warning::SMTP_USER / SMTP_PASSWORD secrets not set — skipping the list-change email."

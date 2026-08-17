@@ -112,6 +112,27 @@ def _extract_countries(html: str) -> list[str]:
     return out
 
 
+# The country extractor scans prose, so a jurisdiction merely mentioned (typically
+# one being removed) can be collected into the wrong list. Fixing it properly needs
+# the real page markup, which is unreachable outside CI — the live site is behind
+# Cloudflare and the Wayback replay server is intermittently down. Dump what CI
+# actually fetched so the parser can be rewritten against real structure.
+DEBUG_DIR = "/tmp/data-refresh-debug"
+
+
+def _dump_html(status: str, url: str, html: str) -> None:
+    try:
+        from pathlib import Path
+        Path(DEBUG_DIR).mkdir(parents=True, exist_ok=True)
+        slug = "blacklist-cfa" if "Call for Action" in status else "greylist-im"
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+        out = Path(DEBUG_DIR) / f"fatf-{slug}-{stamp}.html"
+        out.write_text(f"<!-- source: {url} -->\n{html}", encoding="utf-8")
+    except Exception:
+        # Diagnostics must never break the fetch.
+        pass
+
+
 def _extract_pub_date(url: str, html_head: str) -> str:
     """Pull a "<Month> <Year>" label from a publication URL or head matter."""
     m = re.search(
@@ -293,6 +314,7 @@ class FatfFetcher(Fetcher):
                 html = self._fetch_publication_html(raw_url)
             except FetchError:
                 continue
+            _dump_html(status, raw_url, html)
             countries = _extract_countries(html)
             pub_date = _extract_pub_date(raw_url, html)
             for c in countries:
