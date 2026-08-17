@@ -205,6 +205,19 @@ def build(out_path: Path) -> dict:
     ws = wb.create_sheet("FATF 黑灰名单")
     fatf = _load_snapshot("fatf-jurisdictions")
     entry = src.get("fatf-jurisdictions") or {}
+    # The fetcher matches country names across the whole statement page, so a
+    # jurisdiction merely *mentioned* (typically one being removed) can land in the
+    # wrong list. Validate before this reaches Legal — an implausible list in the
+    # attachment is far worse than falling back to the signed-off baseline.
+    fetch_rejected: str | None = None
+    if fatf:
+        try:
+            from .verify_fatf import validate_rows
+            fetch_rejected = validate_rows(fatf)
+        except Exception:
+            fetch_rejected = None
+        if fetch_rejected:
+            fatf = None
     BLACK = "黑名单 Black"
     GREY = "灰名单 Grey"
     MEANING = {
@@ -221,6 +234,8 @@ def build(out_path: Path) -> dict:
     seeded = False
     list_date = ""
     if not fatf:
+        # Falls through to the baseline below, whether the fetch failed outright
+        # or its result was rejected as implausible.
         # Fetch failed and no snapshot exists — fall back to the Legal-provided
         # baseline, labelled as such so nobody reads it as a fresh fetch.
         seed_file = SEED_DIR / "fatf-baseline.json"
@@ -244,11 +259,14 @@ def build(out_path: Path) -> dict:
         base = ("来源: FATF — High-Risk Jurisdictions subject to a Call for Action(黑) / "
                 "Jurisdictions under Increased Monitoring(灰)")
         if seeded:
-            note = (f"{base} · ⚠ 本次抓取失败（{entry.get('error', 'Cloudflare 拦截')}），"
+            why = (f"本次抓取结果不可信已忽略（{fetch_rejected}）" if fetch_rejected
+                   else f"本次抓取失败（{entry.get('error', 'Cloudflare 拦截')}）")
+            note = (f"{base} · ⚠ {why}，"
                     f"以下为法务参考文件的基线名单，名单日期 {list_date}，非本次抓取结果 · "
                     f"抓取尝试: {fetched_bj}")
             report["fatf"] = {"ok": False, "seeded": True, "records": len(rows),
-                              "listDate": list_date, "error": entry.get("error")}
+                              "listDate": list_date,
+                              "error": fetch_rejected or entry.get("error")}
         else:
             note = (f"{base} · 名单日期: {list_date}（每年 2/6/10 月更新，需定期刷新） · "
                     f"抓取: {fetched_bj}")
