@@ -241,12 +241,14 @@ def build(out_path: Path) -> dict:
         # or its result was rejected as implausible.
         # Fetch failed and no snapshot exists — fall back to the Legal-provided
         # baseline, labelled as such so nobody reads it as a fresh fetch.
-        seed_file = SEED_DIR / "fatf-baseline.json"
-        if seed_file.exists():
-            seed = json.loads(seed_file.read_text())
-            fatf = seed.get("rows") or None
-            list_date = seed.get("listDate", "")
-            seeded = bool(fatf)
+        try:
+            from .verify_fatf import load_baseline
+            seed = load_baseline() or {}
+        except Exception:
+            seed = {}
+        fatf = seed.get("rows") or None
+        list_date = seed.get("listDate", "")
+        seeded = bool(fatf)
 
     if fatf:
         buckets: dict[str, list[str]] = {BLACK: [], GREY: []}

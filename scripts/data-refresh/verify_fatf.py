@@ -39,7 +39,39 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_DIR = REPO_ROOT / "public" / "downloads"
 SNAPSHOT_DIR = OUTPUT_DIR / "_snapshots"
 SEED_DIR = Path(__file__).resolve().parent / "seeds"
+# The baseline is what a human maintains. Legal already works in this workbook
+# format, so the editable copy is an .xlsx with the same "FATF 黑灰名单" sheet they
+# know; the .json stays as a fallback. Edit the xlsx, commit, and the next daily run
+# picks it up — including the emailed attachment, which reads the same baseline.
+BASELINE_XLSX = SEED_DIR / "fatf-baseline.xlsx"
 BASELINE_FILE = SEED_DIR / "fatf-baseline.json"
+
+
+def load_baseline() -> dict | None:
+    """Read the human-maintained baseline, preferring the editable workbook."""
+    if BASELINE_XLSX.exists():
+        try:
+            from openpyxl import load_workbook
+            ws = load_workbook(BASELINE_XLSX, data_only=True)["FATF 黑灰名单"]
+            note = str(ws.cell(1, 1).value or "")
+            m = re.search(r"(\d{4}-\d{2}-\d{2})", note)
+            rows = []
+            for r in range(3, ws.max_row + 1):
+                lst, juris = ws.cell(r, 1).value, ws.cell(r, 2).value
+                if not juris:
+                    continue
+                status = ("Call for Action" if "Black" in str(lst) or "黑" in str(lst)
+                          else "Increased Monitoring")
+                rows.append({"status": status, "country": str(juris).strip()})
+            if rows and m:
+                return {"listDate": m.group(1), "rows": rows,
+                        "provenance": f"法务人工维护的基线工作簿 {BASELINE_XLSX.name}"}
+            print(f"::warning::{BASELINE_XLSX.name} 缺少名单日期或没有数据行，回退到 JSON 基线")
+        except Exception as e:
+            print(f"::warning::读取 {BASELINE_XLSX.name} 失败（{type(e).__name__}: {e}），回退到 JSON 基线")
+    if BASELINE_FILE.exists():
+        return json.loads(BASELINE_FILE.read_text())
+    return None
 
 TZ_SHANGHAI = timezone(timedelta(hours=8))
 DEFAULT_REVIEWER = "xujz4@lenovo.com"
@@ -452,6 +484,68 @@ def source_fincen() -> tuple[str, dict | None, str | None]:
 SOURCES = [source_fresh_fetch, source_wikipedia, source_fincen, source_wayback]
 
 
+# ── Plenary schedule: "is the baseline due for a human refresh?" ────────
+# Nothing on fatf-gafi.org can be probed — robots.txt, sitemap.xml and every
+# statement page all return 403, and an existing page returns the SAME 403 as a
+# non-existent one, so URL probing cannot detect a new publication. Detection
+# therefore rests on date arithmetic, which needs no network and so cannot fail
+# quietly; the mirrors only ever confirm what the calendar already said.
+#
+# FATF publishes after each plenary, in February, June and October. Observed
+# statement dates: 2024-02-23, 2024-10-25, 2025-02-21, 2025-06-13, 2025-10-24,
+# 2026-02-13, 2026-06-19 — always between the 13th and the 25th. Waiting until the
+# month has ended plus a grace period avoids nagging mid-plenary while still
+# surfacing a missed update within about two weeks.
+PLENARY_MONTHS_SCHEDULE = (2, 6, 10)
+GRACE_DAYS = 7
+
+STATEMENT_URLS = (
+    "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-"
+    "jurisdictions/call-for-action-{month}-{year}.html",
+    "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-"
+    "jurisdictions/increased-monitoring-{month}-{year}.html",
+)
+_MONTH_NAMES = {2: "february", 6: "june", 10: "october"}
+
+
+def _month_end(year: int, month: int) -> datetime:
+    nxt = datetime(year + (month == 12), (month % 12) + 1, 1, tzinfo=TZ_SHANGHAI)
+    return nxt - timedelta(days=1)
+
+
+def latest_due_plenary(today: datetime | None = None) -> tuple[int, int]:
+    """Most recent plenary whose statements should already be published."""
+    now = today or datetime.now(TZ_SHANGHAI)
+    candidates = []
+    for year in (now.year, now.year - 1):
+        for month in PLENARY_MONTHS_SCHEDULE:
+            if _month_end(year, month) + timedelta(days=GRACE_DAYS) <= now:
+                candidates.append((year, month))
+    return max(candidates) if candidates else (now.year - 1, 10)
+
+
+def baseline_due_check(baseline_date: str | None,
+                       today: datetime | None = None) -> dict:
+    """Is the baseline older than the newest plenary that should have published?"""
+    year, month = latest_due_plenary(today)
+    expected_from = f"{year}-{month:02d}-01"
+    urls = [u.format(month=_MONTH_NAMES[month], year=year) for u in STATEMENT_URLS]
+    info = {"latestDuePlenary": f"{year}-{month:02d}", "expectedFrom": expected_from,
+            "statementUrls": urls, "baselineDate": baseline_date}
+    if not baseline_date:
+        info["due"] = True
+        info["why"] = "基线没有名单日期，无法判断是否最新"
+        return info
+    if baseline_date < expected_from:
+        info["due"] = True
+        info["why"] = (f"基线名单日期 {baseline_date} 早于 {year} 年 {month} 月全会，"
+                       f"该次全会的声明应已发布 —— 基线需要人工更新")
+        return info
+    info["due"] = False
+    info["why"] = f"基线名单日期 {baseline_date} 已覆盖最近一次应发布的全会（{year}-{month:02d}）"
+    return info
+
+
 # ── Comparison ──────────────────────────────────────────────────────────
 
 def compare(baseline: dict[str, set[str]], candidate: dict[str, set[str]],
@@ -476,10 +570,10 @@ def compare(baseline: dict[str, set[str]], candidate: dict[str, set[str]],
 
 
 def verify() -> dict:
-    if not BASELINE_FILE.exists():
+    seed = load_baseline()
+    if not seed:
         return {"ok": False, "reason": "baseline_missing",
-                "detail": f"基线文件不存在: {BASELINE_FILE}"}
-    seed = json.loads(BASELINE_FILE.read_text())
+                "detail": f"基线文件不存在: {BASELINE_XLSX} / {BASELINE_FILE}"}
     baseline = as_sets(seed.get("rows") or [])
     report = {
         "baselineDate": seed.get("listDate"),
@@ -489,6 +583,7 @@ def verify() -> dict:
     }
     base_date = parse_date(seed.get("listDate"))
     report["baselineDate"] = seed.get("listDate")
+    report["due"] = baseline_due_check(base_date)
     for fn in SOURCES:
         label, payload, err = fn()
         if payload is None:
@@ -522,6 +617,13 @@ def verify() -> dict:
             "scope": list(scope), "listDate": list_date, "staleness": staleness,
             "identical": diff["identical"], "diff": diff,
         })
+
+    # Calendar first: this needs no network, so it is the one check that cannot fail
+    # quietly, and it outranks anything the mirrors say.
+    if report["due"]["due"]:
+        report["ok"] = False
+        report["reason"] = "baseline_due"
+        return report
 
     reachable = [x for x in report["sources"] if x["reachable"]]
     if not reachable:
@@ -566,6 +668,14 @@ STALENESS_CN = {
 
 def _diff_lines(report: dict) -> list[str]:
     lines: list[str] = []
+    due = report.get("due") or {}
+    if due:
+        flag = "需要更新" if due.get("due") else "无需更新"
+        lines.append(f"· 全会日程检查：{flag} —— {due.get('why')}")
+        if due.get("due"):
+            lines.append(f"    最近一次应发布的全会：{due.get('latestDuePlenary')}")
+            for u in due.get("statementUrls", []):
+                lines.append(f"    请核对：{u}")
     for s in report.get("sources", []):
         if not s["reachable"]:
             lines.append(f"· {s['label']}：取不到 —— {s.get('error')}")
@@ -604,6 +714,7 @@ def send_lark(webhook: str, report: dict) -> dict:
     keyword = os.getenv("LARK_KEYWORD", "").strip()
     reason = report.get("reason")
     TITLES = {
+        "baseline_due": ("⏰ FATF 全会已过，基线需要人工更新", "orange"),
         "same_date_conflict": ("🚨 FATF 名单同日期内容冲突，需立即人工核查", "red"),
         "baseline_behind": ("⚠ 有数据源比基线更新 —— 基线可能已过期", "orange"),
         "mismatch": ("⚠ FATF 名单与基线不一致（名单日期未知），需人工核查", "orange"),
@@ -670,6 +781,7 @@ def send_mail(report: dict, recipients: list[str]) -> dict:
     date_label = now_bj.strftime("%Y-%m-%d")
     reason = report.get("reason")
     SUBJ = {
+        "baseline_due": "FATF 全会已过，基线需人工更新",
         "same_date_conflict": "FATF 名单同日期内容冲突",
         "baseline_behind": "有数据源比基线更新，基线可能过期",
         "mismatch": "FATF 名单与基线不一致（名单日期未知）",
@@ -752,7 +864,17 @@ def main() -> int:
     mail = send_mail(report, recipients)
     print(f"lark: {lark}")
     print(f"mail: {mail} → {recipients}")
-    # Alerting failures must not fail the data refresh itself.
+
+    # An alert nobody receives is the same as no alert. For the cases that need a
+    # human — the baseline being due, or a same-date content conflict — losing every
+    # channel fails the step on purpose, so the run goes red and GitHub's own
+    # failure notification becomes the channel of last resort. Lower-severity
+    # reasons stay non-fatal so a flaky webhook cannot block the data refresh.
+    MUST_REACH = {"baseline_due", "same_date_conflict", "baseline_behind"}
+    if report.get("reason") in MUST_REACH and not (lark["sent"] or mail["sent"]):
+        print(f"::error::需人工处理的告警（{report.get('reason')}）"
+              f"在 Lark 和邮件上都投递失败 —— 本步骤置为失败以触发 GitHub 通知")
+        return 1
     return 0
 
 
