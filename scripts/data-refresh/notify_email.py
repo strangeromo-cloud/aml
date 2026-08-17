@@ -67,7 +67,7 @@ OVERRIDES = [
 ]
 
 
-def override_drift() -> list[str]:
+def override_drift(legal_report: dict | None = None) -> list[str]:
     lines: list[str] = []
     seeds = Path(__file__).resolve().parent / "seeds"
     try:
@@ -95,16 +95,24 @@ def override_drift() -> list[str]:
         names_f = {norm(str(r.get(field) or "")) for r in fetched} - {""}
         extra, missing = sorted(names_f - names_ov), sorted(names_ov - names_f)
         who = f"{ov.get('confirmedBy', '?')} · {ov.get('confirmedAt', '?')}"
+        # Which side actually won is decided in build_legal_workbook by recency; read
+        # it rather than restating a rule that could drift out of step.
+        key = "cpi" if source_id == "ti-cpi" else "offshore"
+        effective = ((legal_report or {}).get(key) or {}).get("source") or "未知"
+        legal_won = "法务确认" in effective
+        who_note = f"法务确认版本（{who}）" if legal_won else f"本次抓取（法务确认版本 {who} 已被更新的抓取数据取代）"
         if not extra and not missing:
-            lines.append(f"{label}：以法务确认版本为准（{who}），与本次抓取一致")
+            lines.append(f"{label}：本次生效 = {who_note}，两者内容一致")
         else:
             bits = []
             if extra:
                 bits.append(f"抓取多出 {len(extra)} 项：{', '.join(extra[:12])}")
             if missing:
                 bits.append(f"法务版多出 {len(missing)} 项：{', '.join(missing[:12])}")
-            lines.append(f"⚠ {label}：以法务确认版本为准（{who}），但与本次抓取不一致 —— "
-                         + "；".join(bits) + "。请复核是否需要更新法务版本。")
+            tail = ("请复核是否需要更新法务版本。" if legal_won
+                    else "抓取数据更新，已自动生效，法务版本仅供比对。")
+            lines.append(f"⚠ {label}：本次生效 = {who_note}，两者不一致 —— "
+                         + "；".join(bits) + "。" + tail)
     return lines
 
 
@@ -351,7 +359,7 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
         base_line += (f'　|　附件 FATF 页使用：<strong>本次官方抓取</strong>'
                       f'（名单日期 {escape(str(fr.get("listDate") or "未知"))}）')
     text_lines.insert(3, f"[基线] {re.sub(r'<[^>]+>', '', base_line)}")
-    drift = override_drift()
+    drift = override_drift(legal_report)
     for i, d in enumerate(drift):
         text_lines.insert(4 + i, f"[覆盖] {d}")
     drift_html = "".join(

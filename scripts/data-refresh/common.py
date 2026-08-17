@@ -256,6 +256,15 @@ def run_fetcher(
         # First ever run has no baseline: record the hash but do not call it a change,
         # otherwise every source would look "updated" on day one.
         changed = bool(prev_hash) and prev_hash != new_hash
+        # When the upstream content last actually changed — not when we last fetched.
+        # "Is the fetch newer than what a human confirmed?" cannot be answered by the
+        # fetch timestamp, which is always now; it needs the last real change.
+        now_iso = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        prev_changed_at = (prev_entry or {}).get("contentChangedAt")
+        # Backfilled the first time the field is missing, so the comparison works from
+        # the next run rather than waiting for the upstream to happen to change once.
+        content_changed_at = (now_iso if (changed or not prev_changed_at)
+                              else prev_changed_at)
         if len(rows) <= SNAPSHOT_MAX_ROWS:
             save_snapshot(fetcher.id, rows)
         write_excel(
@@ -271,6 +280,7 @@ def run_fetcher(
             "status": "success",
             "records": len(rows),
             "contentHash": new_hash,
+            "contentChangedAt": content_changed_at,
             "previousHash": prev_hash,
             "changed": changed,
             "previousRecords": (prev_entry or {}).get("records"),
@@ -283,6 +293,7 @@ def run_fetcher(
             "status": "error",
             "error": f"{type(e).__name__}: {e}",
             "contentHash": (prev_entry or {}).get("contentHash"),
+            "contentChangedAt": (prev_entry or {}).get("contentChangedAt"),
             "changed": False,
             "finishedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         })

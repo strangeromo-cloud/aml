@@ -33,12 +33,48 @@ OUTPUT_DIR = REPO_ROOT / "public" / "downloads"
 SNAPSHOT_DIR = OUTPUT_DIR / "_snapshots"
 MANIFEST_FILE = OUTPUT_DIR / "_manifest.json"
 SEED_DIR = Path(__file__).resolve().parent / "seeds"
-# Legal-confirmed overrides written by the upload page. When one exists it is what the
-# attachment shows, per Legal's decision that their版本 is authoritative — but
-# verify/notify keep reporting where the fetched data disagrees, so a stale override
-# cannot quietly freeze the list.
+# Legal-confirmed overrides written by the upload page. Precedence is by RECENCY, not
+# by who produced it: whichever of the two is newer wins, so a confirmed version cannot
+# freeze the list and a routine re-fetch cannot discard a deliberate correction.
+#   CPI      — compare edition years; a newer TI edition wins, the same edition means
+#              Legal corrected it and theirs wins.
+#   Offshore — the list carries no version, so compare when the upstream content last
+#              actually CHANGED (manifest contentChangedAt) against confirmedAt. Using
+#              the fetch time instead would defeat every override, since that is always
+#              now.
 CPI_OVERRIDE = SEED_DIR / "cpi-override.json"
 OFFSHORE_OVERRIDE = SEED_DIR / "offshore-override.json"
+
+
+def _cpi_override_wins(ov: dict[str, Any], fetched_year: str) -> bool:
+    """A newer TI edition supersedes a confirmed one; the same edition does not."""
+    ov_year = str(ov.get("edition") or "")
+    if not ov_year.isdigit() or not str(fetched_year).isdigit():
+        return True          # cannot compare — keep the human's version
+    if int(fetched_year) > int(ov_year):
+        print(f"::notice::抓取到更新的 CPI 版本 {fetched_year}（法务确认版本为 {ov_year}），"
+              f"以抓取为准")
+        return False
+    return True
+
+
+def _override_newer_than_content(ov: dict[str, Any], entry: dict[str, Any]) -> bool:
+    """True when the confirmation is later than the upstream's last real change."""
+    changed_at = entry.get("contentChangedAt")
+    confirmed = str(ov.get("confirmedAt") or "").strip()
+    if not changed_at or not confirmed:
+        return True
+    # confirmedAt is Beijing "YYYY-MM-DD HH:MM"; contentChangedAt is UTC ISO.
+    try:
+        c = datetime.strptime(confirmed[:16], "%Y-%m-%d %H:%M").replace(tzinfo=TZ_SHANGHAI)
+        u = datetime.fromisoformat(str(changed_at))
+    except ValueError:
+        return True
+    if u > c:
+        print(f"::notice::上游离岸名单在法务确认（{confirmed}）之后发生过变化"
+              f"（{changed_at}），以抓取为准")
+        return False
+    return True
 
 
 def _load_override(path: Path) -> dict[str, Any] | None:
@@ -174,7 +210,7 @@ def build(out_path: Path) -> dict:
     entry = src.get("ti-cpi") or {}
     ov = _load_override(CPI_OVERRIDE)
     cpi_source = "抓取"
-    if ov and ov.get("scores"):
+    if ov and ov.get("scores") and _cpi_override_wins(ov, year):
         # Rebuild rows from the confirmed scores, ranking by score so the sheet still
         # reads like the fetched one.
         rows_ov = sorted(({"country": k, "score": v} for k, v in ov["scores"].items()),
@@ -219,7 +255,7 @@ def build(out_path: Path) -> dict:
     entry = src.get("eu-offshore-centres") or {}
     ov = _load_override(OFFSHORE_OVERRIDE)
     off_source = "抓取"
-    if ov and ov.get("jurisdictions"):
+    if ov and ov.get("jurisdictions") and _override_newer_than_content(ov, entry):
         off = [{"jurisdiction": n} for n in ov["jurisdictions"]]
         off_source = f"法务确认（{ov.get('confirmedBy')} · {ov.get('confirmedAt')}）"
     if off:
