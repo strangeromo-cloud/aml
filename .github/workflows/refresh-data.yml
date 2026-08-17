@@ -18,6 +18,10 @@ on:
         description: "Override the recipient for this run only (e.g. a test address)"
         type: string
         default: ""
+      selftest:
+        description: "Send a labelled test message to Lark + email to prove the alert channels work"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -114,6 +118,27 @@ jobs:
       # Legal-approved baseline instead of being trusted blindly. Identical → pass
       # silently; different or unverifiable → Lark card + email for manual review.
       # Never fails the run: a verification problem must not block the data refresh.
+      # A channel is only used when something is wrong, which is the worst moment to
+      # find out it is broken. Self-test on demand, and automatically on the 1st of
+      # each month so a dead webhook or a rotated password surfaces on a calm day.
+      - name: Self-test the alert channels
+        if: always()
+        env:
+          LARK_WEBHOOK: ${{ secrets.LARK_WEBHOOK }}
+          LARK_KEYWORD: ${{ secrets.LARK_KEYWORD }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          FATF_REVIEW_RECIPIENT: ${{ vars.FATF_REVIEW_RECIPIENT || 'xujz4@lenovo.com' }}
+          REQUESTED: ${{ github.event.inputs.selftest }}
+        run: |
+          # Beijing time: the schedule runs at 00:00 UTC = 08:00 CST same day.
+          DAY=$(TZ=Asia/Shanghai date +%d)
+          if [ "$REQUESTED" = "true" ] || [ "$DAY" = "01" ]; then
+            python -m scripts.data-refresh.verify_fatf --selftest
+          else
+            echo "Not the 1st (day=$DAY) and selftest not requested — skipping channel self-test."
+          fi
+
       - name: Verify FATF list against the Legal baseline
         if: always()
         env:

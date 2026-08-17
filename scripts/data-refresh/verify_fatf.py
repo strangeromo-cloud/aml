@@ -838,10 +838,80 @@ def send_mail(report: dict, recipients: list[str]) -> dict:
         return {"sent": False, "error": f"{type(e).__name__}: {e}"}
 
 
+def selftest() -> int:
+    """Prove the alert channels are alive, without inventing an alert.
+
+    A channel is only exercised when something is wrong, which is the worst time to
+    discover it is broken — a dead webhook or a rotated app password would sit
+    undetected until the one run that needed it. This sends a clearly-labelled test
+    to each channel and fails when none of them lands.
+    """
+    now = datetime.now(TZ_SHANGHAI).strftime("%Y-%m-%d %H:%M")
+    keyword = os.getenv("LARK_KEYWORD", "").strip()
+    card = {
+        "msg_type": "interactive",
+        "card": {
+            "config": {"wide_screen_mode": True},
+            "header": {"title": {"tag": "plain_text",
+                                 "content": "✅ AML 名单监控 · 通道自检（非告警）"},
+                       "template": "blue"},
+            "elements": [{"tag": "div", "text": {"tag": "lark_md", "content":
+                f"这是一条自检消息，用于确认 FATF 告警能送达本群。\n"
+                f"**收到即表示 Lark 通道正常。**\n检测时间 {now}"
+                + (f"\n{keyword}" if keyword else "")}}],
+        },
+    }
+    webhook = os.getenv("LARK_WEBHOOK", "")
+    if not webhook:
+        lark = {"sent": False, "error": "LARK_WEBHOOK not configured"}
+    else:
+        try:
+            req = urllib.request.Request(
+                webhook, data=json.dumps(card).encode("utf-8"),
+                headers={"Content-Type": "application/json"}, method="POST")
+            with urllib.request.urlopen(req, timeout=25) as r:
+                resp = json.loads(r.read() or b"{}")
+            if resp.get("code") in (0, None):
+                lark = {"sent": True, "error": None}
+            elif resp.get("code") == 19024:
+                lark = {"sent": False, "error": "Lark 自定义关键词校验未通过（19024）"}
+            else:
+                lark = {"sent": False, "error": f"Lark returned {resp}"}
+        except Exception as e:
+            lark = {"sent": False, "error": f"{type(e).__name__}: {e}"}
+
+    recipients = [a.strip() for a in
+                  os.getenv("FATF_REVIEW_RECIPIENT", DEFAULT_REVIEWER)
+                  .replace(";", ",").split(",") if a.strip()]
+    mail = send_mail({"reason": "selftest", "baselineDate": "—",
+                      "baselineProvenance": "通道自检", "baselineCounts": {},
+                      "sources": [{"label": "通道自检（非告警）", "reachable": True,
+                                   "identical": True, "counts": {"black": 0, "grey": 0},
+                                   "scope": ["black", "grey"], "listDate": None,
+                                   "staleness": "unknown_date",
+                                   "diff": {"black": {"added": [], "removed": []},
+                                            "grey": {"added": [], "removed": []}}}]},
+                     recipients)
+    print(f"selftest lark: {lark}")
+    print(f"selftest mail: {mail} → {recipients}")
+    if not (lark["sent"] or mail["sent"]):
+        print("::error::告警通道自检失败 —— Lark 与邮件均不可用，真实告警将无法送达")
+        return 1
+    if not lark["sent"]:
+        print(f"::warning::Lark 通道不可用（{lark['error']}），仅邮件可用")
+    if not mail["sent"]:
+        print(f"::warning::邮件通道不可用（{mail['error']}），仅 Lark 可用")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="Report only; never send")
+    ap.add_argument("--selftest", action="store_true",
+                    help="Send a labelled test to every alert channel and exit")
     args = ap.parse_args()
+    if args.selftest:
+        return selftest()
 
     report = verify()
     print(json.dumps(report, ensure_ascii=False, indent=1))
