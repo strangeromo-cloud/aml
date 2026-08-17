@@ -140,6 +140,12 @@ def parse_date(text: str | None) -> str | None:
     m = re.search(r"\b([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})\b", t)
     if m and m.group(1).lower() in _MONTHS:
         return f"{m.group(3)}-{_MONTHS[m.group(1).lower()]:02d}-{int(m.group(2)):02d}"
+    # Month and year only: anchor to the 1st so it is still comparable. Statements
+    # land mid-month, so this can only ever understate a source's date — it will
+    # never make a source look newer than it is.
+    m = re.search(r"\b([A-Za-z]+)\s+(\d{4})\b", t)
+    if m and m.group(1).lower() in _MONTHS:
+        return f"{m.group(2)}-{_MONTHS[m.group(1).lower()]:02d}-01"
     return None
 
 

@@ -4,6 +4,12 @@ on:
   schedule:
     # Daily at 00:00 UTC = 08:00 Beijing
     - cron: "0 0 * * *"
+    # FATF publishes after its February, June and October plenaries, always between
+    # the 13th and the 25th. The official page is the only source that can report a
+    # new list the same day, and it gets through Cloudflare roughly 4 runs in 5, so
+    # during those windows run every 4 hours: same-day detection becomes near-certain
+    # instead of a coin flip, and it costs 6 runs a day for three weeks a year.
+    - cron: "0 */4 10-30 2,6,10 *"
   workflow_dispatch:
     inputs:
       strict:

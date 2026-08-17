@@ -181,11 +181,24 @@ def _countries_from_facet(html: str) -> list[str]:
 
 
 def _extract_pub_date(url: str, html_head: str) -> str:
-    """Pull a "<Month> <Year>" label from a publication URL or head matter."""
-    m = re.search(
-        r"(january|february|march|april|may|june|july|august|september|october|november|december)[-\s]+(20\d{2})",
-        (url + " " + html_head[:1000]).lower(),
-    )
+    """Exact statement date when the page states one, else "<Month> <Year>".
+
+    A day-precision date matters downstream: the verifier compares a source's list
+    date against the baseline's to tell "this mirror is older" from "the baseline has
+    gone stale", and a month-only label cannot be compared. The title carries it
+    ("... Call for Action - 19 June 2026") and so does the dateline ("Paris, 19 June,
+    2026"), so prefer those over the month in the URL slug.
+    """
+    MONTHS = ("january|february|march|april|may|june|july|august|september|"
+              "october|november|december")
+    for pattern in (rf"(\d{{1,2}})\s+({MONTHS}),?\s+(20\d{{2}})",
+                    rf"({MONTHS})\s+(\d{{1,2}}),?\s+(20\d{{2}})"):
+        m = re.search(pattern, html_head[:4000], re.I)
+        if m:
+            g = list(m.groups())
+            day, month, year = (g if g[0].isdigit() else [g[1], g[0], g[2]])
+            return f"{int(day)} {month.title()} {year}"
+    m = re.search(rf"({MONTHS})[-\s]+(20\d{{2}})", (url + " " + html_head[:1000]).lower())
     return " ".join(m.groups()).title() if m else ""
 
 
