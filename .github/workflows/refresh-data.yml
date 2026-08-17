@@ -14,6 +14,10 @@ on:
         description: "Email the watched lists even if nothing changed (use once for the baseline)"
         type: boolean
         default: false
+      email_to:
+        description: "Override the recipient for this run only (e.g. a test address)"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -102,7 +106,7 @@ jobs:
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          LIST_ALERT_RECIPIENT: ${{ vars.LIST_ALERT_RECIPIENT || 'ecoafm@lenovo.com' }}
+          LIST_ALERT_RECIPIENT: ${{ github.event.inputs.email_to != '' && github.event.inputs.email_to || vars.LIST_ALERT_RECIPIENT || 'ecoafm@lenovo.com' }}
         run: |
           if [ -z "$SMTP_USER" ] || [ -z "$SMTP_PASSWORD" ]; then
             echo "::warning::SMTP_USER / SMTP_PASSWORD secrets not set — skipping the list-change email."

@@ -167,13 +167,6 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool) -> tuple[s
         records = entry.get("records")
         prev_records = entry.get("previousRecords")
         is_changed = sid in changed_ids
-        # Attach the workbook for changed sources, or all three on a forced baseline.
-        if is_changed or (forced and not changed_ids):
-            out = entry.get("outputFile")
-            if out:
-                p = REPO_ROOT / out
-                if p.exists():
-                    attachments.append(p)
 
         if status != "success":
             badge = ('<span style="padding:2px 8px;border-radius:3px;background:#FDEEEE;'
@@ -224,8 +217,16 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool) -> tuple[s
   {detail}
 </div>""")
 
-    att_note = (f'附件：{len(attachments)} 个 Excel（About + Data 双表）'
-                if attachments else '无附件（本次没有名单发生变化）')
+    # One attachment only: the Legal-facing workbook in the exact shape of
+    # docs/公开名单-CPI-离岸-FATF.xlsx (three sheets, always all three).
+    from .build_legal_workbook import build as build_legal, default_out_path
+    legal_path = default_out_path()
+    legal_report = build_legal(legal_path)
+    attachments.append(legal_path)
+    seeded = legal_report.get("fatf", {}).get("seeded")
+    att_note = (f'附件：{legal_path.name}（CPI / 离岸 / FATF 三个 sheet，'
+                f'格式与法务参考文件一致）'
+                + ('　⚠ FATF 为基线名单，非本次抓取' if seeded else ''))
     html = f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>AML 公开名单更新</title></head>
 <body style="margin:0;padding:20px;background:#F7F7F7;font-family:'Helvetica Neue',Arial,'PingFang SC','Microsoft YaHei',sans-serif;color:#222">
