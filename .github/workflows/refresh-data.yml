@@ -2,14 +2,16 @@ name: Refresh list-source data
 
 on:
   schedule:
-    # Daily at 00:00 UTC = 08:00 Beijing
-    - cron: "0 0 * * *"
+    # Daily at 23:00 UTC = 07:00 Beijing the following day
+    - cron: "0 23 * * *"
     # FATF publishes after its February, June and October plenaries, always between
     # the 13th and the 25th. The official page is the only source that can report a
     # new list the same day, and it gets through Cloudflare roughly 4 runs in 5, so
     # during those windows run every 4 hours: same-day detection becomes near-certain
     # instead of a coin flip, and it costs 6 runs a day for three weeks a year.
-    - cron: "0 */4 10-30 2,6,10 *"
+    # Hours chosen so the window runs align with the 07:00 Beijing daily slot:
+    # 23,03,07,11,15,19 UTC = 07,11,15,19,23,03 Beijing.
+    - cron: "0 23,3,7,11,15,19 10-30 2,6,10 *"
   workflow_dispatch:
     inputs:
       strict:
@@ -137,7 +139,8 @@ jobs:
           FATF_REVIEW_RECIPIENT: ${{ vars.FATF_REVIEW_RECIPIENT || 'xujz4@lenovo.com' }}
           REQUESTED: ${{ github.event.inputs.selftest }}
         run: |
-          # Beijing time: the schedule runs at 00:00 UTC = 08:00 CST same day.
+          # Beijing time: the schedule runs at 23:00 UTC, which is 07:00 CST the NEXT
+          # day, so the Beijing date is what "the 1st" must be judged against.
           DAY=$(TZ=Asia/Shanghai date +%d)
           if [ "$REQUESTED" = "true" ] || [ "$DAY" = "01" ]; then
             python -m scripts.data-refresh.verify_fatf --selftest

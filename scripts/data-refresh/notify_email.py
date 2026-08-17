@@ -316,7 +316,7 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
     {''.join(blocks)}
     <div style="border-top:1px solid #EEE;margin-top:22px;padding-top:12px;font-size:11px;color:#999;text-align:center">
       变更判定基于数据行内容哈希，不看文件字节 —— 工作簿每天都会重写「Fetched at」时间戳，字节必变。<br>
-      内容无变化时不发送本邮件。仓库：strangeromo-cloud/aml · GitHub Actions 每日 08:00（北京）
+      内容无变化时不发送本邮件。仓库：strangeromo-cloud/aml · GitHub Actions 每日 07:00（北京）
     </div>
   </div>
 </body></html>"""

@@ -99,6 +99,9 @@ ALIASES = {
     "syrian arab republic": "syria",
     "united republic of tanzania": "tanzania",
     "viet nam": "vietnam",
+    "korea north": "north korea",
+    "korea south": "south korea",
+    "republic of korea": "south korea",
 }
 
 
@@ -108,6 +111,9 @@ def norm(name: str) -> str:
     import unicodedata
     decomposed = unicodedata.normalize("NFKD", name or "")
     ascii_only = "".join(c for c in decomposed if not unicodedata.combining(c))
+    # Hyphens to spaces before stripping, or "Guinea-Bissau" collapses to
+    # "guineabissau" while "Guinea Bissau" keeps its space — one country, two keys.
+    ascii_only = re.sub(r"[-\u2013\u2014/]", " ", ascii_only)
     s = re.sub(r"[^a-z\s]", "", ascii_only.lower()).strip()
     s = re.sub(r"\s+", " ", s)
     # Sources vary on the leading article ("the Democratic People's Republic of
