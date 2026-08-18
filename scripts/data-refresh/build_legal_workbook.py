@@ -46,16 +46,34 @@ CPI_OVERRIDE = SEED_DIR / "cpi-override.json"
 OFFSHORE_OVERRIDE = SEED_DIR / "offshore-override.json"
 
 
-def _cpi_override_wins(ov: dict[str, Any], fetched_year: str) -> bool:
-    """A newer TI edition supersedes a confirmed one; the same edition does not."""
+def _cpi_override_wins(ov: dict[str, Any], fetched_year: str, *,
+                       fetch_usable: bool) -> bool:
+    """Who wins for CPI — the confirmed override, or this run's fetch?
+
+    CPI is the one source where "is the fetch newer?" is answerable every run rather
+    than by timestamp: the fetcher reads Transparency International's own
+    CPI<year>_Results.xlsx after resolving the current edition page. So a usable
+    fetch IS the published edition, and Legal's override is a transcription of that
+    same file. A same-edition disagreement is therefore a transcription slip, not
+    newer data — as Denmark 90-vs-89 turned out to be.
+
+    The override wins when it is genuinely ahead or when we have nothing to compare:
+    a newer edition than we could fetch, an unusable fetch, or an uncomparable year.
+    """
     ov_year = str(ov.get("edition") or "")
+    if not fetch_usable:
+        return True          # nothing fetched this run — the override is the fallback
     if not ov_year.isdigit() or not str(fetched_year).isdigit():
-        return True          # cannot compare — keep the human's version
+        return True          # cannot compare editions — keep the human's version
+    if int(ov_year) > int(fetched_year):
+        return True          # Legal has an edition we cannot fetch yet
     if int(fetched_year) > int(ov_year):
         print(f"::notice::抓取到更新的 CPI 版本 {fetched_year}（法务确认版本为 {ov_year}），"
               f"以抓取为准")
         return False
-    return True
+    print(f"::notice::CPI 版本相同（{fetched_year}），本次抓取直接读自 TI 发布文件，"
+          f"以抓取为准；法务确认版本仅用于比对")
+    return False
 
 
 def _override_newer_than_content(ov: dict[str, Any], entry: dict[str, Any]) -> bool:
@@ -209,8 +227,10 @@ def build(out_path: Path) -> dict:
     cpi = _load_snapshot("ti-cpi")
     entry = src.get("ti-cpi") or {}
     ov = _load_override(CPI_OVERRIDE)
+    cpi_fetched = bool(cpi)
     cpi_source = "抓取"
-    if ov and ov.get("scores") and _cpi_override_wins(ov, year):
+    cpi_reason = "直读 TI 发布文件"
+    if ov and ov.get("scores") and _cpi_override_wins(ov, year, fetch_usable=bool(cpi)):
         # Rebuild rows from the confirmed scores, ranking by score so the sheet still
         # reads like the fetched one.
         rows_ov = sorted(({"country": k, "score": v} for k, v in ov["scores"].items()),
@@ -218,6 +238,8 @@ def build(out_path: Path) -> dict:
         for i, r in enumerate(rows_ov, 1):
             r["rank"] = i
         cpi, cpi_source = rows_ov, f"法务确认（{ov.get('confirmedBy')} · {ov.get('confirmedAt')}）"
+        cpi_reason = ("本次抓取不可用，回退到法务确认版本" if not cpi_fetched
+                      else "法务确认版本的版次更新")
         year = ov.get("edition") or year
     if cpi:
         cpi = sorted(cpi, key=lambda r: (r.get("rank") or 9999, str(r.get("country") or "")))
@@ -238,7 +260,7 @@ def build(out_path: Path) -> dict:
                 f"红底 = CPI ≤ {CPI_THRESHOLD} 判为高风险（法务确认口径，0803 需求表） · "
                 f"数据来源: {cpi_source} · {fetched_bj}")
         report["cpi"] = {"ok": True, "records": len(rows), "flagged": len(hi),
-                         "year": year, "source": cpi_source}
+                         "year": year, "source": cpi_source, "reason": cpi_reason}
     else:
         rows, hi = [["—", "抓取失败，无数据", "—", "—"]], set()
         note = (f"来源: Transparency International CPI · ⚠ 本次抓取失败"

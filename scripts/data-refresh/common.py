@@ -261,10 +261,12 @@ def run_fetcher(
         # fetch timestamp, which is always now; it needs the last real change.
         now_iso = datetime.now(timezone.utc).isoformat(timespec="seconds")
         prev_changed_at = (prev_entry or {}).get("contentChangedAt")
-        # Backfilled the first time the field is missing, so the comparison works from
-        # the next run rather than waiting for the upstream to happen to change once.
-        content_changed_at = (now_iso if (changed or not prev_changed_at)
-                              else prev_changed_at)
+        # Only a real change stamps this. Backfilling "now" onto an unchanged source
+        # (which this used to do when the field was missing) invents evidence that the
+        # upstream just moved, and precedence rules read this field to decide whether a
+        # fetch is newer than what a human confirmed. Unknown must stay unknown —
+        # "cannot confirm the fetch is newer" is a valid, and safer, answer.
+        content_changed_at = now_iso if changed else prev_changed_at
         if len(rows) <= SNAPSHOT_MAX_ROWS:
             save_snapshot(fetcher.id, rows)
         write_excel(

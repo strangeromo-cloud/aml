@@ -121,7 +121,13 @@ def override_drift(legal_report: dict | None = None) -> list[str]:
         key = "cpi" if source_id == "ti-cpi" else "offshore"
         effective = ((legal_report or {}).get(key) or {}).get("source") or "未知"
         legal_won = "法务确认" in effective
-        who_note = f"法务确认版本（{who}）" if legal_won else f"本次抓取（法务确认版本 {who} 已被更新的抓取数据取代）"
+        # Say *why* this side won rather than assuming "the fetch won" means "the fetch
+        # is newer": for CPI it wins because it is read straight from TI's published
+        # file, which is a different claim from a recency comparison.
+        why = ((legal_report or {}).get(key) or {}).get("reason") or ""
+        who_note = (f"法务确认版本（{who}）" if legal_won
+                    else f"本次抓取（{why}）；法务确认版本 {who} 仅供比对"
+                    if why else f"本次抓取（法务确认版本 {who} 已被更新的抓取数据取代）")
         if not extra and not missing and not value_diffs:
             lines.append(f"{label}：本次生效 = {who_note}，两者内容一致")
         else:
@@ -133,7 +139,7 @@ def override_drift(legal_report: dict | None = None) -> list[str]:
             if value_diffs:
                 bits.append(f"{len(value_diffs)} 项取值不同：{'；'.join(value_diffs[:8])}")
             tail = ("请复核是否需要更新法务版本。" if legal_won
-                    else "抓取数据更新，已自动生效，法务版本仅供比对。")
+                    else "已以抓取为准；差异处请复核法务版本是否需要修正。")
             lines.append(f"⚠ {label}：本次生效 = {who_note}，两者不一致 —— "
                          + "；".join(bits) + "。" + tail)
     return lines
