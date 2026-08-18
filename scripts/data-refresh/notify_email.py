@@ -61,9 +61,12 @@ BASELINE_LABEL = "FATF 基线（法务人工维护）"
 # Legal's confirmed CPI / offshore lists take precedence in the attachment, so the
 # fetched data can drift away unseen. Report the gap on every email: "以法务为准" must
 # not become "从此不再更新".
+# (file, source id, label, key inside the override, name field in the snapshot,
+#  value field in the snapshot — None when the list carries names only)
 OVERRIDES = [
-    ("cpi-override.json", "ti-cpi", "CPI", "scores", "country"),
-    ("offshore-override.json", "eu-offshore-centres", "离岸中心", "jurisdictions", "jurisdiction"),
+    ("cpi-override.json", "ti-cpi", "CPI", "scores", "country", "score"),
+    ("offshore-override.json", "eu-offshore-centres", "离岸中心", "jurisdictions",
+     "jurisdiction", None),
 ]
 
 
@@ -74,7 +77,7 @@ def override_drift(legal_report: dict | None = None) -> list[str]:
         from .verify_fatf import norm
     except Exception:
         return lines
-    for fname, source_id, label, key, field in OVERRIDES:
+    for fname, source_id, label, key, field, value_field in OVERRIDES:
         p = seeds / fname
         if not p.exists():
             continue
@@ -94,6 +97,24 @@ def override_drift(legal_report: dict | None = None) -> list[str]:
             continue
         names_f = {norm(str(r.get(field) or "")) for r in fetched} - {""}
         extra, missing = sorted(names_f - names_ov), sorted(names_ov - names_f)
+        # Same jurisdictions is not the same list: CPI is a score per country, and a
+        # name-only comparison called a 90-vs-89 Denmark "identical". Compare the
+        # values too wherever the source carries one.
+        value_diffs: list[str] = []
+        if value_field and isinstance(confirmed, dict):
+            def _num(v):
+                try:
+                    return int(round(float(v)))
+                except (TypeError, ValueError):
+                    return None
+            vals_f = {norm(str(r.get(field) or "")): _num(r.get(value_field))
+                      for r in fetched}
+            for k, v in confirmed.items():
+                nk, nv = norm(k), _num(v)
+                if nk in vals_f and nv is not None and vals_f[nk] is not None \
+                        and vals_f[nk] != nv:
+                    value_diffs.append(f"{nk} 法务版 {nv} / 抓取 {vals_f[nk]}")
+            value_diffs.sort()
         who = f"{ov.get('confirmedBy', '?')} · {ov.get('confirmedAt', '?')}"
         # Which side actually won is decided in build_legal_workbook by recency; read
         # it rather than restating a rule that could drift out of step.
@@ -101,7 +122,7 @@ def override_drift(legal_report: dict | None = None) -> list[str]:
         effective = ((legal_report or {}).get(key) or {}).get("source") or "未知"
         legal_won = "法务确认" in effective
         who_note = f"法务确认版本（{who}）" if legal_won else f"本次抓取（法务确认版本 {who} 已被更新的抓取数据取代）"
-        if not extra and not missing:
+        if not extra and not missing and not value_diffs:
             lines.append(f"{label}：本次生效 = {who_note}，两者内容一致")
         else:
             bits = []
@@ -109,6 +130,8 @@ def override_drift(legal_report: dict | None = None) -> list[str]:
                 bits.append(f"抓取多出 {len(extra)} 项：{', '.join(extra[:12])}")
             if missing:
                 bits.append(f"法务版多出 {len(missing)} 项：{', '.join(missing[:12])}")
+            if value_diffs:
+                bits.append(f"{len(value_diffs)} 项取值不同：{'；'.join(value_diffs[:8])}")
             tail = ("请复核是否需要更新法务版本。" if legal_won
                     else "抓取数据更新，已自动生效，法务版本仅供比对。")
             lines.append(f"⚠ {label}：本次生效 = {who_note}，两者不一致 —— "
