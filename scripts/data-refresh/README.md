@@ -88,6 +88,27 @@ python -m scripts.data-refresh.refresh_all --strict
 Every run rewrites `public/downloads/_manifest.json` with per-source status,
 record count, and timestamps.
 
+## Who gets the daily list email
+
+Resolved in the workflow's "Email watched lists on change" step, most specific first:
+
+| 来源 | 作用范围 | 取值 |
+|---|---|---|
+| `email_to` 输入 | 仅本次手动运行 | 任意地址，覆盖下面两者 |
+| `send_to` 输入 | 仅本次手动运行 | 测试邮箱 / 正式邮箱 / 测试+正式 |
+| `LIST_ALERT_MODE` 仓库变量 | **定时任务** | `test`（默认）/ `prod` / `both` |
+
+地址本身也是仓库变量，改地址不用改代码：
+
+- `LIST_ALERT_RECIPIENT_TEST` — 默认 `xujz4@lenovo.com`
+- `LIST_ALERT_RECIPIENT_PROD` — 默认 `ecoafm@lenovo.com`
+
+定时运行只看 `LIST_ALERT_MODE`，所以法务签字后把每日邮件切到正式，只需在
+Settings → Secrets and variables → Actions → Variables 里把 `LIST_ALERT_MODE`
+设成 `prod`，本文件和工作流都不用动。`both` 会同时发两个地址（收件人字段支持逗号分隔）。
+
+`LIST_ALERT_MODE` 填成别的值会让这一步直接失败，而不是悄悄发到某个默认地址。
+
 ## Adding a new fetcher
 
 1. Create `fetchers/<name>.py` with a class that inherits `common.Fetcher`,

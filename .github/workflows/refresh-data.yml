@@ -22,8 +22,13 @@ on:
         description: "Email the watched lists even if nothing changed (use once for the baseline)"
         type: boolean
         default: false
+      send_to:
+        description: "Who gets the list email this run"
+        type: choice
+        options: ["按仓库变量 LIST_ALERT_MODE", "测试邮箱", "正式邮箱", "测试+正式"]
+        default: "按仓库变量 LIST_ALERT_MODE"
       email_to:
-        description: "Override the recipient for this run only (e.g. a test address)"
+        description: "Send to a specific address instead (overrides the choice above)"
         type: string
         default: ""
       selftest:
@@ -168,11 +173,35 @@ jobs:
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          # TESTING PHASE: the daily cron mails the test address only. Flip this
-          # default back to ecoafm@lenovo.com (or set the LIST_ALERT_RECIPIENT repo
-          # variable) once Legal has signed off on the format and the FATF parser.
-          LIST_ALERT_RECIPIENT: ${{ github.event.inputs.email_to != '' && github.event.inputs.email_to || vars.LIST_ALERT_RECIPIENT || 'xujz4@lenovo.com' }}
+          # Recipient resolution, most specific first:
+          #   1. email_to input        — an explicit address, this run only
+          #   2. send_to input         — 测试 / 正式 / 两者, this run only
+          #   3. LIST_ALERT_MODE var   — what the daily cron does (test|prod|both)
+          # Scheduled runs only ever see 3, so moving the daily mail to Legal is a
+          # one-variable change (LIST_ALERT_MODE=prod) with no edit to this file.
+          MAIL_TEST: ${{ vars.LIST_ALERT_RECIPIENT_TEST || 'xujz4@lenovo.com' }}
+          MAIL_PROD: ${{ vars.LIST_ALERT_RECIPIENT_PROD || 'ecoafm@lenovo.com' }}
+          MAIL_MODE: ${{ vars.LIST_ALERT_MODE || 'test' }}
+          SEND_TO: ${{ github.event.inputs.send_to }}
+          EMAIL_TO: ${{ github.event.inputs.email_to }}
         run: |
+          case "$SEND_TO" in
+            "测试邮箱")   MODE=test ;;
+            "正式邮箱")   MODE=prod ;;
+            "测试+正式")  MODE=both ;;
+            *)            MODE="$MAIL_MODE" ;;
+          esac
+          case "$MODE" in
+            prod) RCPT="$MAIL_PROD" ;;
+            both) RCPT="$MAIL_TEST,$MAIL_PROD" ;;
+            test) RCPT="$MAIL_TEST" ;;
+            *)    echo "::error::LIST_ALERT_MODE 只能是 test / prod / both，当前为 '$MODE'"; exit 1 ;;
+          esac
+          if [ -n "$EMAIL_TO" ]; then
+            RCPT="$EMAIL_TO"; MODE="指定地址"
+          fi
+          export LIST_ALERT_RECIPIENT="$RCPT"
+          echo "收件模式: $MODE → $RCPT"
           if [ -z "$SMTP_USER" ] || [ -z "$SMTP_PASSWORD" ]; then
             echo "::warning::SMTP_USER / SMTP_PASSWORD secrets not set — skipping the list-change email."
             echo "Add them under Settings → Secrets and variables → Actions → Secrets."
