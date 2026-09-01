@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-31T01:02:20+00:00",
+  "updatedAt": "2026-09-01T01:32:48+00:00",
   "totalFetchers": 9,
   "successCount": 8,
   "failureCount": 1,
@@ -8,21 +8,21 @@
       "name": "FATF High-Risk & Other Monitored Jurisdictions",
       "url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html",
       "outputFile": "public/downloads/fatf-jurisdictions.xlsx",
-      "startedAt": "2026-08-31T01:00:46+00:00",
+      "startedAt": "2026-09-01T01:31:25+00:00",
       "status": "success",
       "records": 25,
       "contentHash": "1a67f236c40d91ea8b50f64f8684ac56ddb5b2fdd7d4152538116651cb20b2ef",
       "contentChangedAt": "2026-08-31T01:00:49+00:00",
-      "previousHash": "23ab34c4411d71be3ec3b3edf65dc6c48e0ab5e65f930c5a2d144e2cdc3e810d",
-      "changed": true,
-      "previousRecords": 22,
-      "finishedAt": "2026-08-31T01:00:49+00:00"
+      "previousHash": "1a67f236c40d91ea8b50f64f8684ac56ddb5b2fdd7d4152538116651cb20b2ef",
+      "changed": false,
+      "previousRecords": 25,
+      "finishedAt": "2026-09-01T01:31:28+00:00"
     },
     "ofac-country-programs": {
       "name": "OFAC Sanctions Programs by Country",
       "url": "https://ofac.treasury.gov/sanctions-programs-and-country-information",
       "outputFile": "public/downloads/ofac-country-programs.xlsx",
-      "startedAt": "2026-08-31T01:00:49+00:00",
+      "startedAt": "2026-09-01T01:31:28+00:00",
       "status": "success",
       "records": 43,
       "contentHash": "2e36938ba66384799b6966e7381c21738e4a46f156023ebb80ec919947ad8390",
@@ -30,13 +30,13 @@
       "previousHash": "2e36938ba66384799b6966e7381c21738e4a46f156023ebb80ec919947ad8390",
       "changed": false,
       "previousRecords": 43,
-      "finishedAt": "2026-08-31T01:00:49+00:00"
+      "finishedAt": "2026-09-01T01:31:28+00:00"
     },
     "un-consolidated": {
       "name": "UN Security Council Consolidated Sanctions List",
       "url": "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
       "outputFile": "public/downloads/un-consolidated.xlsx",
-      "startedAt": "2026-08-31T01:00:49+00:00",
+      "startedAt": "2026-09-01T01:31:28+00:00",
       "status": "success",
       "records": 1011,
       "contentHash": "a02cf32a64e0297f64bb5f7098011344800a29cdd83937ba18b226a58ae9ca11",
@@ -44,13 +44,13 @@
       "previousHash": "a02cf32a64e0297f64bb5f7098011344800a29cdd83937ba18b226a58ae9ca11",
       "changed": false,
       "previousRecords": 1011,
-      "finishedAt": "2026-08-31T01:00:50+00:00"
+      "finishedAt": "2026-09-01T01:31:29+00:00"
     },
     "eu-consolidated": {
       "name": "EU Consolidated Financial Sanctions List",
       "url": "https://webgate.ec.europa.eu/fsd/fsf/public/files/xmlFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
       "outputFile": "public/downloads/eu-consolidated.xlsx",
-      "startedAt": "2026-08-31T01:00:50+00:00",
+      "startedAt": "2026-09-01T01:31:29+00:00",
       "status": "success",
       "records": 6234,
       "contentHash": "5343d4e7ffecc456a2024fd183a8ce3a371b519b46a53b0685b70638f33e68ac",
@@ -58,13 +58,13 @@
       "previousHash": "5343d4e7ffecc456a2024fd183a8ce3a371b519b46a53b0685b70638f33e68ac",
       "changed": false,
       "previousRecords": 6234,
-      "finishedAt": "2026-08-31T01:01:22+00:00"
+      "finishedAt": "2026-09-01T01:31:52+00:00"
     },
     "basel-aml-index": {
       "name": "Basel AML Index",
       "url": "https://index.baselgovernance.org/ranking",
       "outputFile": "public/downloads/basel-aml-index.xlsx",
-      "startedAt": "2026-08-31T01:01:22+00:00",
+      "startedAt": "2026-09-01T01:31:52+00:00",
       "status": "success",
       "records": 177,
       "contentHash": "c1d52628b54ded1222d46909ceb910fe9882da7d33f491282cc590cb113d9044",
@@ -72,13 +72,13 @@
       "previousHash": "c1d52628b54ded1222d46909ceb910fe9882da7d33f491282cc590cb113d9044",
       "changed": false,
       "previousRecords": 177,
-      "finishedAt": "2026-08-31T01:01:25+00:00"
+      "finishedAt": "2026-09-01T01:31:55+00:00"
     },
     "ti-cpi": {
       "name": "Transparency International CPI",
       "url": "",
       "outputFile": "public/downloads/ti-cpi.xlsx",
-      "startedAt": "2026-08-31T01:01:25+00:00",
+      "startedAt": "2026-09-01T01:31:55+00:00",
       "status": "success",
       "records": 182,
       "contentHash": "68cc69d33d298dedd4bc755c0f600752daf6f7b75ea64ec482efcc6b0e917b66",
@@ -86,13 +86,13 @@
       "previousHash": "68cc69d33d298dedd4bc755c0f600752daf6f7b75ea64ec482efcc6b0e917b66",
       "changed": false,
       "previousRecords": 182,
-      "finishedAt": "2026-08-31T01:01:37+00:00"
+      "finishedAt": "2026-09-01T01:32:07+00:00"
     },
     "wjp-rule-of-law": {
       "name": "WJP Rule of Law Index",
       "url": "",
       "outputFile": "public/downloads/wjp-rule-of-law.xlsx",
-      "startedAt": "2026-08-31T01:01:37+00:00",
+      "startedAt": "2026-09-01T01:32:07+00:00",
       "status": "success",
       "records": 143,
       "contentHash": "dc8bbe39650ba476cb613c99351ebdde85f50cb618b6f12b5f6c66fdb4f876a3",
@@ -100,25 +100,25 @@
       "previousHash": "dc8bbe39650ba476cb613c99351ebdde85f50cb618b6f12b5f6c66fdb4f876a3",
       "changed": false,
       "previousRecords": 143,
-      "finishedAt": "2026-08-31T01:01:38+00:00"
+      "finishedAt": "2026-09-01T01:32:08+00:00"
     },
     "tjn-fsi": {
       "name": "Tax Justice Network Financial Secrecy Index",
       "url": "https://fsi.taxjustice.net/",
       "outputFile": "public/downloads/tjn-fsi.xlsx",
-      "startedAt": "2026-08-31T01:01:38+00:00",
+      "startedAt": "2026-09-01T01:32:08+00:00",
       "status": "error",
       "error": "FetchError: TJN page rendered but no fsi_jurisdictions response captured. Endpoint or auth flow may have changed.",
       "contentHash": null,
       "contentChangedAt": null,
       "changed": false,
-      "finishedAt": "2026-08-31T01:02:17+00:00"
+      "finishedAt": "2026-09-01T01:32:47+00:00"
     },
     "eu-offshore-centres": {
       "name": "EU / Eurostat List of Offshore Financial Centres",
       "url": "https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:List_of_offshore_financial_centres",
       "outputFile": "public/downloads/eu-offshore-centres.xlsx",
-      "startedAt": "2026-08-31T01:02:17+00:00",
+      "startedAt": "2026-09-01T01:32:47+00:00",
       "status": "success",
       "records": 40,
       "contentHash": "78861d248b3a289072a58c32fa54e4c952f9bf14506a45233bbbd34afea89c9c",
@@ -126,7 +126,7 @@
       "previousHash": "78861d248b3a289072a58c32fa54e4c952f9bf14506a45233bbbd34afea89c9c",
       "changed": false,
       "previousRecords": 40,
-      "finishedAt": "2026-08-31T01:02:20+00:00"
+      "finishedAt": "2026-09-01T01:32:48+00:00"
     }
   }
 }
