@@ -40,7 +40,7 @@ OUTPUT_DIR = REPO_ROOT / "public" / "downloads"
 SNAPSHOT_DIR = OUTPUT_DIR / "_snapshots"
 SEED_DIR = Path(__file__).resolve().parent / "seeds"
 # The baseline is what a human maintains. Legal already works in this workbook
-# format, so the editable copy is an .xlsx with the same "FATF 黑灰名单" sheet they
+# format, so the editable copy is an .xlsx whose FATF sheet is the same one they
 # know; the .json stays as a fallback. Edit the xlsx, commit, and the next daily run
 # picks it up — including the emailed attachment, which reads the same baseline.
 BASELINE_XLSX = SEED_DIR / "fatf-baseline.xlsx"
@@ -75,7 +75,14 @@ def load_baseline() -> dict | None:
     if BASELINE_XLSX.exists():
         try:
             from openpyxl import load_workbook
-            ws = load_workbook(BASELINE_XLSX, data_only=True)["FATF 黑灰名单"]
+            wb = load_workbook(BASELINE_XLSX, data_only=True)
+            # Sheet renamed "FATF 黑灰名单" → "FATF"; accept either, since the file
+            # Legal edits may still be an older vintage.
+            title = next((t for t in wb.sheetnames
+                          if t.strip().upper().startswith("FATF")), None)
+            if not title:
+                raise KeyError("找不到以「FATF」开头的工作表")
+            ws = wb[title]
             note = str(ws.cell(1, 1).value or "")
             m = note_list_date(note)
             rows = []

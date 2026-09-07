@@ -4,9 +4,15 @@
 That reference file is the format Legal already reads, so the emailed attachment
 reproduces it exactly rather than shipping our three internal workbooks:
 
-  Sheet 1  "CPI <year>"                 A1:D1 merged source note · 排名/国家/分数/阈值标记
-  Sheet 2  "Offshore Centres 离岸中心"   A1:B1 merged source note · #/辖区
-  Sheet 3  "FATF 黑灰名单"               A1:C1 merged source note · 名单/辖区/含义
+  Sheet 1  "CPI"        A1:D1 merged source note · 排名 / 国家‑地区 / 分数 / 阈值标记
+  Sheet 2  "Offshore"   A1:B1 merged source note · # / 国家‑地区
+  Sheet 3  "FATF"       A1:C1 merged source note · 名单 / 国家‑地区 / 含义
+
+Sheet names and the country column header are deliberately uniform across the three
+(they were "CPI <year>" / "Offshore Centres 离岸中心" / "FATF 黑灰名单" with a
+「辖区 Jurisdiction」 column). Anything parsing this workbook must therefore match
+sheets loosely — see parse_cpi_sheet / parse_workbook in the upload backend — and the
+CPI edition year now comes from the note row rather than the sheet title.
 
 Styling matched to the reference: note row Arial 8.5 #595959 on #EFEFEF, header
 row Arial 10 bold white on #1F4E5F with a thin bottom rule, body Arial 9.5
@@ -223,7 +229,7 @@ def build(out_path: Path) -> dict:
     # ── Sheet 1: CPI ────────────────────────────────────────────────────
     year = _cpi_year()
     ws = wb.active
-    ws.title = f"CPI {year}".strip()
+    ws.title = "CPI"
     cpi = _load_snapshot("ti-cpi")
     entry = src.get("ti-cpi") or {}
     ov = _load_override(CPI_OVERRIDE)
@@ -272,7 +278,7 @@ def build(out_path: Path) -> dict:
                  rows, hi, centered_cols=(1, 3))
 
     # ── Sheet 2: Offshore ───────────────────────────────────────────────
-    ws = wb.create_sheet("Offshore Centres 离岸中心")
+    ws = wb.create_sheet("Offshore")
     off = _load_snapshot("eu-offshore-centres")
     entry = src.get("eu-offshore-centres") or {}
     ov = _load_override(OFFSHORE_OVERRIDE)
@@ -292,7 +298,7 @@ def build(out_path: Path) -> dict:
         note = ("来源: Eurostat Glossary — List of offshore financial centres · ⚠ 本次抓取失败"
                 f"（{entry.get('error', '未知错误')}） · 抓取尝试: {fetched_bj}")
         report["offshore"] = {"ok": False, "records": 0, "error": entry.get("error")}
-    _write_sheet(ws, note, [("#", 6), ("辖区 Jurisdiction", 36)], rows,
+    _write_sheet(ws, note, [("#", 6), ("国家/地区 Country", 36)], rows,
                  centered_cols=(1,))
 
     # ── Sheet 3: FATF ───────────────────────────────────────────────────
@@ -312,7 +318,7 @@ def build(out_path: Path) -> dict:
             return {k: v - {""} for k, v in out.items()}
         return key(a) == key(b)
 
-    ws = wb.create_sheet("FATF 黑灰名单")
+    ws = wb.create_sheet("FATF")
     fatf = _load_snapshot("fatf-jurisdictions")
     entry = src.get("fatf-jurisdictions") or {}
     # The fetcher matches country names across the whole statement page, so a
@@ -445,7 +451,7 @@ def build(out_path: Path) -> dict:
         for i, r in enumerate(rows) if r[0] in (BLACK, GREY)
     }
     _write_sheet(ws, note,
-                 [("名单 List", 14), ("辖区 Jurisdiction", 34), ("含义", 44)], rows,
+                 [("名单 List", 14), ("国家/地区 Country", 34), ("含义", 44)], rows,
                  row_style=fatf_style)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)

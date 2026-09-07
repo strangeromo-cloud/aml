@@ -366,8 +366,7 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
     # unusable). "Baseline used, and it matches today's official fetch" is the
     # healthy steady state — flagging it as a warning trains people to ignore ⚠.
     seeded = bool(_fatf.get("seeded")) and not _fatf.get("agreesWithFetch")
-    att_note = (f'附件：{legal_path.name}（CPI / 离岸 / FATF 三个 sheet，'
-                f'格式与法务参考文件一致）'
+    att_note = (f'附件：{legal_path.name}（三个 sheet：CPI / Offshore / FATF）'
                 + ('　⚠ FATF 为基线名单，非本次抓取' if seeded else ''))
     # A receipt Legal can check at a glance: which baseline version this attachment
     # was built from, and whether it changed since the last email.
