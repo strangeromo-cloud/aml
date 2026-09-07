@@ -270,28 +270,25 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
     now_bj = datetime.now(TZ_SHANGHAI)
     weekday = "一二三四五六日"[now_bj.weekday()]
     date_label = f"{now_bj.strftime('%Y-%m-%d')}（周{weekday}）"
+    # Legal asked for one fixed subject line, so what the run found (updated /
+    # unchanged / fetch failed) is carried by the headline and body instead.
+    subject = f"AML公开名单-CPI-离岸-FATF-{now_bj.strftime('%Y%m%d')}"
 
     base_changed, base_cur, base_prev = baseline
     failed_ids = [i for i, _ in WATCHED
                   if (sources.get(i) or {}).get("status") not in ("success", None)]
     if base_changed:
-        subject = (f"[AML 公开名单] {date_label} · FATF 基线已更新至 "
-                   f"{(base_cur or {}).get('listDate')}")
         headline = (f"法务维护的 FATF 基线已更新："
                     f"{(base_prev or {}).get('listDate')} → {(base_cur or {}).get('listDate')}。"
                     f"本邮件附件已使用新基线。")
     elif changed_ids:
         names = [n for i, n in WATCHED if i in changed_ids]
-        suffix = f" · {len(failed_ids)} 个抓取失败" if failed_ids else ""
-        subject = f"[AML 公开名单] {date_label} · {len(changed_ids)} 个名单有更新{suffix}"
         headline = "以下公开名单相比上次抓取发生了变化：" + "、".join(names)
     elif forced:
-        subject = f"[AML 公开名单] {date_label} · 基线快照"
         headline = "基线快照（本次为手动触发，非变更通知）"
     else:
         # Only reached when a watched fetcher failed — no content change to report.
         names = [n for i, n in WATCHED if i in failed_ids]
-        subject = f"[AML 公开名单] {date_label} · 抓取失败告警（{len(failed_ids)}）"
         headline = ("本次没有名单内容变化，但以下名单抓取失败，"
                     "因此无法确认其是否更新：" + "、".join(names))
 

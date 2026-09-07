@@ -502,7 +502,7 @@ def build(out_path: Path) -> dict:
 
 def default_out_path() -> Path:
     stamp = datetime.now(TZ_SHANGHAI).strftime("%Y%m%d")
-    return OUTPUT_DIR / f"公开名单-CPI-离岸-FATF-{stamp}.xlsx"
+    return OUTPUT_DIR / f"公开名单-CPI-离岸-FATF_{stamp}.xlsx"
 
 
 if __name__ == "__main__":
