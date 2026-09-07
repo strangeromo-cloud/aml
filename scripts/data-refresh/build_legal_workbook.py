@@ -4,9 +4,13 @@
 That reference file is the format Legal already reads, so the emailed attachment
 reproduces it exactly rather than shipping our three internal workbooks:
 
-  Sheet 1  "CPI"        A1:D1 merged source note · 排名 / 国家‑地区 / 分数 / 阈值标记
-  Sheet 2  "Offshore"   A1:B1 merged source note · # / 国家‑地区
-  Sheet 3  "FATF"       A1:C1 merged source note · 名单 / 国家‑地区 / 含义
+  Sheet 1  "CPI"        排名 / 国家‑地区 / 代码 / 分数 / 阈值标记
+  Sheet 2  "Offshore"   # / 国家‑地区 / 代码
+  Sheet 3  "FATF"       名单 / 国家‑地区 / 代码 / 含义
+
+Every sheet carries an ISO 3166-1 alpha-2 code beside the country name (see
+country_code) — the same code SAP's land1 and D&B's countryISOAlpha2Code use, so
+these lists join onto our own data without name matching.
 
 Sheet names and the country column header are deliberately uniform across the three
 (they were "CPI <year>" / "Offshore Centres 离岸中心" / "FATF 黑灰名单" with a
@@ -136,6 +140,37 @@ FATF_BLACK_FONT = Font(name=ARIAL, size=9.5, color="FFFFFF")
 FATF_GREY_FILL = PatternFill("solid", fgColor="D9D9D9")
 
 
+ISO3166_SEED = SEED_DIR / "iso3166.json"
+_ISO_CACHE: dict[str, str] | None = None
+
+
+def country_code(name: str) -> str:
+    """ISO 3166-1 alpha-2 for a country / territory name, or "" when unknown.
+
+    Alpha-2 because that is what the rest of the pipeline speaks: SAP's
+    vendor_master.land1 is a 2-char country key and D&B returns
+    countryISOAlpha2Code, so the sheet joins straight onto our own data.
+    Regenerate the table with scripts/data-refresh/build_iso3166_seed.py.
+    """
+    global _ISO_CACHE
+    if _ISO_CACHE is None:
+        try:
+            _ISO_CACHE = json.loads(ISO3166_SEED.read_text())
+        except Exception as e:
+            print(f"::warning::读取 {ISO3166_SEED.name} 失败（{type(e).__name__}），国家代码列留空")
+            _ISO_CACHE = {}
+    if not _ISO_CACHE:
+        return ""
+    try:
+        from .verify_fatf import norm
+    except Exception:
+        return ""
+    code = _ISO_CACHE.get(norm(name))
+    if not code and str(name).strip() not in ("", "—"):
+        print(f"::warning::没有匹配到 ISO 代码：{name!r}")
+    return code or ""
+
+
 def _load_snapshot(source_id: str) -> list[dict[str, Any]] | None:
     p = SNAPSHOT_DIR / f"{source_id}.json"
     if not p.exists():
@@ -257,7 +292,8 @@ def build(out_path: Path) -> dict:
             except (TypeError, ValueError):
                 score_num = score
             flagged = isinstance(score_num, int) and score_num <= CPI_THRESHOLD
-            rows.append([r.get("rank"), r.get("country"), score_num,
+            cname = r.get("country")
+            rows.append([r.get("rank"), cname, country_code(cname), score_num,
                          "高风险 High-risk" if flagged else None])
             if flagged:
                 hi.add(i)
@@ -268,14 +304,14 @@ def build(out_path: Path) -> dict:
         report["cpi"] = {"ok": True, "records": len(rows), "flagged": len(hi),
                          "year": year, "source": cpi_source, "reason": cpi_reason}
     else:
-        rows, hi = [["—", "抓取失败，无数据", "—", "—"]], set()
+        rows, hi = [["—", "抓取失败，无数据", "—", "—", "—"]], set()
         note = (f"来源: Transparency International CPI · ⚠ 本次抓取失败"
                 f"（{entry.get('error', '未知错误')}），无可用数据 · 抓取尝试: {fetched_bj}")
         report["cpi"] = {"ok": False, "records": 0, "error": entry.get("error"), "year": year}
     _write_sheet(ws, note,
-                 [("排名 Rank", 10), ("国家/地区 Country", 32), ("分数 Score", 10),
-                  (f"≤/> 阈值{CPI_THRESHOLD}", 16)],
-                 rows, hi, centered_cols=(1, 3))
+                 [("排名 Rank", 10), ("国家/地区 Country", 32), ("代码 Code", 9),
+                  ("分数 Score", 10), (f"≤/> 阈值{CPI_THRESHOLD}", 16)],
+                 rows, hi, centered_cols=(1, 3, 4))
 
     # ── Sheet 2: Offshore ───────────────────────────────────────────────
     ws = wb.create_sheet("Offshore")
@@ -288,18 +324,22 @@ def build(out_path: Path) -> dict:
         off_source = f"法务确认（{ov.get('confirmedBy')} · {ov.get('confirmedAt')}）"
     if off:
         names = sorted({str(r.get("jurisdiction") or "").strip() for r in off} - {""})
-        rows = [[i, n] for i, n in enumerate(names, 1)]
+        # The fetcher resolves its own ISO codes; prefer those over a name lookup.
+        fetched_codes = {str(r.get("jurisdiction") or "").strip(): str(r.get("iso2") or "")
+                         for r in off}
+        rows = [[i, n, fetched_codes.get(n) or country_code(n)]
+                for i, n in enumerate(names, 1)]
         note = ("来源: Eurostat Glossary — List of offshore financial centres "
                 f"(Balance of Payments Vademecum, Appendix 7) · 共 {len(names)} 个辖区 · "
                 f"数据来源: {off_source} · {fetched_bj}")
         report["offshore"] = {"ok": True, "records": len(rows), "source": off_source}
     else:
-        rows = [["—", "抓取失败，无数据"]]
+        rows = [["—", "抓取失败，无数据", "—"]]
         note = ("来源: Eurostat Glossary — List of offshore financial centres · ⚠ 本次抓取失败"
                 f"（{entry.get('error', '未知错误')}） · 抓取尝试: {fetched_bj}")
         report["offshore"] = {"ok": False, "records": 0, "error": entry.get("error")}
-    _write_sheet(ws, note, [("#", 6), ("国家/地区 Country", 36)], rows,
-                 centered_cols=(1,))
+    _write_sheet(ws, note, [("#", 6), ("国家/地区 Country", 36), ("代码 Code", 9)],
+                 rows, centered_cols=(1, 3))
 
     # ── Sheet 3: FATF ───────────────────────────────────────────────────
     def _same_lists(a, b, classify) -> bool:
@@ -406,7 +446,7 @@ def build(out_path: Path) -> dict:
         rows = []
         for key in (BLACK, GREY):
             for n in sorted(set(buckets[key]) - {""}):
-                rows.append([key, n, MEANING[key]])
+                rows.append([key, n, country_code(n), MEANING[key]])
         base = ("来源: FATF — High-Risk Jurisdictions subject to a Call for Action(黑) / "
                 "Jurisdictions under Increased Monitoring(灰)")
         if seeded:
@@ -441,7 +481,7 @@ def build(out_path: Path) -> dict:
                               "reason": "本次官方抓取，且是比法务基线更新的一期"
                                         if seed_date else "本次官方抓取"}
     else:
-        rows = [["—", "抓取失败，无数据", "—"]]
+        rows = [["—", "抓取失败，无数据", "—", "—"]]
         note = (f"来源: FATF 黑/灰名单 · ⚠ 本次抓取失败（{entry.get('error', '未知错误')}），"
                 f"且无历史基线 · 抓取尝试: {fetched_bj}")
         report["fatf"] = {"ok": False, "seeded": False, "records": 0,
@@ -451,8 +491,8 @@ def build(out_path: Path) -> dict:
         for i, r in enumerate(rows) if r[0] in (BLACK, GREY)
     }
     _write_sheet(ws, note,
-                 [("名单 List", 14), ("国家/地区 Country", 34), ("含义", 44)], rows,
-                 row_style=fatf_style)
+                 [("名单 List", 14), ("国家/地区 Country", 34), ("代码 Code", 9),
+                  ("含义", 44)], rows, centered_cols=(3,), row_style=fatf_style)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(out_path)
