@@ -25,7 +25,7 @@ on:
       send_to:
         description: "Who gets the list email this run"
         type: choice
-        options: ["按仓库变量 LIST_ALERT_MODE", "测试邮箱", "正式邮箱", "测试+正式"]
+        options: ["按仓库变量 LIST_ALERT_MODE", "测试邮箱", "正式邮箱（含测试抄送）", "测试+正式"]
         default: "按仓库变量 LIST_ALERT_MODE"
       email_to:
         description: "Send to a specific address instead (overrides the choice above)"
@@ -177,6 +177,7 @@ jobs:
           #   1. email_to input        — an explicit address, this run only
           #   2. send_to input         — 测试 / 正式 / 两者, this run only
           #   3. LIST_ALERT_MODE var   — what the daily cron does (test|prod|both)
+          # prod and both are the same recipients: 正式 + 测试.
           # Scheduled runs only ever see 3, so moving the daily mail to Legal is a
           # one-variable change (LIST_ALERT_MODE=prod) with no edit to this file.
           MAIL_TEST: ${{ vars.LIST_ALERT_RECIPIENT_TEST || 'xujz4@lenovo.com' }}
@@ -187,15 +188,17 @@ jobs:
         run: |
           case "$SEND_TO" in
             "测试邮箱")   MODE=test ;;
+            "正式邮箱（含测试抄送）") MODE=prod ;;
             "正式邮箱")   MODE=prod ;;
             "测试+正式")  MODE=both ;;
             *)            MODE="$MAIL_MODE" ;;
           esac
+          # prod always carries the test address too: without a copy landing somewhere
+          # we can see, "did Legal actually get it?" can only be answered by asking them.
           case "$MODE" in
-            prod) RCPT="$MAIL_PROD" ;;
-            both) RCPT="$MAIL_TEST,$MAIL_PROD" ;;
-            test) RCPT="$MAIL_TEST" ;;
-            *)    echo "::error::LIST_ALERT_MODE 只能是 test / prod / both，当前为 '$MODE'"; exit 1 ;;
+            prod|both) RCPT="$MAIL_PROD,$MAIL_TEST" ;;
+            test)      RCPT="$MAIL_TEST" ;;
+            *)         echo "::error::LIST_ALERT_MODE 只能是 test / prod / both，当前为 '$MODE'"; exit 1 ;;
           esac
           if [ -n "$EMAIL_TO" ]; then
             RCPT="$EMAIL_TO"; MODE="指定地址"
