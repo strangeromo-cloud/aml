@@ -507,7 +507,11 @@ def main() -> int:
         print("::error::LIST_ALERT_RECIPIENT not set — cannot send")
         return 1
 
-    res = send(subject, html, text, attachments, smtp_user, smtp_password, recipients)
+    # Legal asked for the attachment only, so the composed body is deliberately NOT
+    # sent — it is still built, written to the --dry-run preview and printed into the
+    # run log, which is where the baseline receipt, the override drift and the
+    # per-list summary now live.
+    res = send(subject, "", "", attachments, smtp_user, smtp_password, recipients)
     if res["sent"]:
         print(f"Sent to {', '.join(res['recipients'])}")
         return 0
