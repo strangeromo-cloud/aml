@@ -476,9 +476,13 @@ def main() -> int:
         print(f"baseline in this run: {base_cur.get('listDate')} "
               f"({len(base_cur.get('rows') or [])} 条) · {base_cur.get('provenance')}")
 
-    # A failed watched fetcher is worth an email even without a content change —
-    # silence would otherwise be indistinguishable from "no update".
-    should_send = bool(changed_ids) or bool(failed_ids) or base_changed or args.force
+    # Only a real change sends. A failed fetcher used to send too, but the email now
+    # carries no body, so it arrived as an unexplained copy of an unchanged list.
+    # Failures stay visible in the run log (the "failed=" line above) and the FATF
+    # verification step still raises its own Lark + email alert.
+    should_send = bool(changed_ids) or base_changed or args.force
+    if failed_ids and not should_send:
+        print(f"::warning::抓取失败但名单无变化，不发送：{', '.join(failed_ids)}")
     if not should_send:
         print("No change in any watched list — not sending.")
         return 0

@@ -396,4 +396,14 @@ class FatfFetcher(Fetcher):
 
         if not rows:
             raise FetchError("FATF index loaded but no countries could be extracted from the linked publications")
+        # The two publications are fetched separately and Cloudflare regularly lets one
+        # through and blocks the other. Returning the half that arrived used to be
+        # recorded as a successful fetch: the snapshot dropped to 22 grey-only rows, the
+        # content hash flipped, and the next full fetch flipped it back — two false
+        # "list changed" emails per blocked day. A partial list is a failed fetch.
+        from ..verify_fatf import validate_rows
+        rejected = validate_rows(rows)
+        if rejected:
+            got = sorted({r["status"] for r in rows})
+            raise FetchError(f"FATF 抓取结果不完整，按失败处理（{rejected}；本次只拿到：{', '.join(got)}）")
         return rows
