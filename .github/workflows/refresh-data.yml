@@ -220,14 +220,18 @@ jobs:
           GIT_AUTHOR_EMAIL: aml-bot@noreply.github.com
           GIT_COMMITTER_NAME: aml-data-refresh-bot
           GIT_COMMITTER_EMAIL: aml-bot@noreply.github.com
+          # Passed as an env var, never interpolated into the script: the summary
+          # carries fetcher error text, and a double quote in it (Playwright prints
+          # locators like "tbody tr") used to close the -m string and turn the rest
+          # of the message into git pathspecs, failing the commit.
+          RUN_SUMMARY: ${{ steps.manifest.outputs.summary }}
         run: |
           git add public/downloads/
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore(data): daily refresh of list-source downloads
-
-          ${{ steps.manifest.outputs.summary }}"
+            printf 'chore(data): daily refresh of list-source downloads\n\n%s\n' "$RUN_SUMMARY" > "$RUNNER_TEMP/commit-msg.txt"
+            git commit -F "$RUNNER_TEMP/commit-msg.txt"
             # A human pushing to main while this runs would otherwise fail the job
             # on a rejected push. Rebase onto whatever landed and retry.
             for attempt in 1 2 3; do
