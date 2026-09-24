@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-23T01:07:42+00:00",
+  "updatedAt": "2026-09-24T01:03:34+00:00",
   "totalFetchers": 9,
   "successCount": 7,
   "failureCount": 2,
@@ -8,21 +8,19 @@
       "name": "FATF High-Risk & Other Monitored Jurisdictions",
       "url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html",
       "outputFile": "public/downloads/fatf-jurisdictions.xlsx",
-      "startedAt": "2026-09-23T01:04:34+00:00",
-      "status": "success",
-      "records": 25,
+      "startedAt": "2026-09-24T00:58:47+00:00",
+      "status": "error",
+      "error": "FetchError: Playwright failed and the Wayback snapshot is 76 days old (threshold 45). Manual review required.",
       "contentHash": "1a67f236c40d91ea8b50f64f8684ac56ddb5b2fdd7d4152538116651cb20b2ef",
       "contentChangedAt": "2026-09-17T02:23:20+00:00",
-      "previousHash": "1a67f236c40d91ea8b50f64f8684ac56ddb5b2fdd7d4152538116651cb20b2ef",
       "changed": false,
-      "previousRecords": null,
-      "finishedAt": "2026-09-23T01:04:38+00:00"
+      "finishedAt": "2026-09-24T00:59:27+00:00"
     },
     "ofac-country-programs": {
       "name": "OFAC Sanctions Programs by Country",
       "url": "https://ofac.treasury.gov/sanctions-programs-and-country-information",
       "outputFile": "public/downloads/ofac-country-programs.xlsx",
-      "startedAt": "2026-09-23T01:04:38+00:00",
+      "startedAt": "2026-09-24T00:59:27+00:00",
       "status": "success",
       "records": 42,
       "contentHash": "ffc60bca60f0e3fcfe713b1ab428eeb87bffd48fd9c66183193585b81286c676",
@@ -30,13 +28,13 @@
       "previousHash": "ffc60bca60f0e3fcfe713b1ab428eeb87bffd48fd9c66183193585b81286c676",
       "changed": false,
       "previousRecords": 42,
-      "finishedAt": "2026-09-23T01:04:39+00:00"
+      "finishedAt": "2026-09-24T00:59:27+00:00"
     },
     "un-consolidated": {
       "name": "UN Security Council Consolidated Sanctions List",
       "url": "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
       "outputFile": "public/downloads/un-consolidated.xlsx",
-      "startedAt": "2026-09-23T01:04:39+00:00",
+      "startedAt": "2026-09-24T00:59:27+00:00",
       "status": "success",
       "records": 1011,
       "contentHash": "14539b4e1be114065968e2bc2b1283d1b70aa31b0ac8865b77d4354c27957771",
@@ -44,39 +42,41 @@
       "previousHash": "14539b4e1be114065968e2bc2b1283d1b70aa31b0ac8865b77d4354c27957771",
       "changed": false,
       "previousRecords": 1011,
-      "finishedAt": "2026-09-23T01:04:40+00:00"
+      "finishedAt": "2026-09-24T00:59:29+00:00"
     },
     "eu-consolidated": {
       "name": "EU Consolidated Financial Sanctions List",
       "url": "https://webgate.ec.europa.eu/fsd/fsf/public/files/xmlFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
       "outputFile": "public/downloads/eu-consolidated.xlsx",
-      "startedAt": "2026-09-23T01:04:40+00:00",
+      "startedAt": "2026-09-24T00:59:29+00:00",
       "status": "success",
       "records": 6241,
       "contentHash": "b799e7ed2871c89a5be9b1893acc27dbb699bea21a06d3e3109d04d6f801aef1",
       "contentChangedAt": "2026-09-23T01:05:40+00:00",
-      "previousHash": "5343d4e7ffecc456a2024fd183a8ce3a371b519b46a53b0685b70638f33e68ac",
-      "changed": true,
-      "previousRecords": 6234,
-      "finishedAt": "2026-09-23T01:05:43+00:00"
+      "previousHash": "b799e7ed2871c89a5be9b1893acc27dbb699bea21a06d3e3109d04d6f801aef1",
+      "changed": false,
+      "previousRecords": 6241,
+      "finishedAt": "2026-09-24T01:01:40+00:00"
     },
     "basel-aml-index": {
       "name": "Basel AML Index",
       "url": "https://index.baselgovernance.org/ranking",
       "outputFile": "public/downloads/basel-aml-index.xlsx",
-      "startedAt": "2026-09-23T01:05:43+00:00",
-      "status": "error",
-      "error": "FetchError: Timeout rendering https://index.baselgovernance.org/ranking: Page.wait_for_selector: Timeout 60000ms exceeded.\nCall log:\n  - waiting for locator(\"table tbody tr\") to be visible\n",
+      "startedAt": "2026-09-24T01:01:40+00:00",
+      "status": "success",
+      "records": 177,
       "contentHash": "c1d52628b54ded1222d46909ceb910fe9882da7d33f491282cc590cb113d9044",
       "contentChangedAt": "2026-08-17T06:46:28Z",
+      "previousHash": "c1d52628b54ded1222d46909ceb910fe9882da7d33f491282cc590cb113d9044",
       "changed": false,
-      "finishedAt": "2026-09-23T01:06:45+00:00"
+      "previousRecords": null,
+      "finishedAt": "2026-09-24T01:01:44+00:00"
     },
     "ti-cpi": {
       "name": "Transparency International CPI",
       "url": "",
       "outputFile": "public/downloads/ti-cpi.xlsx",
-      "startedAt": "2026-09-23T01:06:45+00:00",
+      "startedAt": "2026-09-24T01:01:44+00:00",
       "status": "success",
       "records": 182,
       "contentHash": "68cc69d33d298dedd4bc755c0f600752daf6f7b75ea64ec482efcc6b0e917b66",
@@ -84,13 +84,13 @@
       "previousHash": "68cc69d33d298dedd4bc755c0f600752daf6f7b75ea64ec482efcc6b0e917b66",
       "changed": false,
       "previousRecords": 182,
-      "finishedAt": "2026-09-23T01:06:58+00:00"
+      "finishedAt": "2026-09-24T01:01:59+00:00"
     },
     "wjp-rule-of-law": {
       "name": "WJP Rule of Law Index",
       "url": "",
       "outputFile": "public/downloads/wjp-rule-of-law.xlsx",
-      "startedAt": "2026-09-23T01:06:58+00:00",
+      "startedAt": "2026-09-24T01:01:59+00:00",
       "status": "success",
       "records": 143,
       "contentHash": "dc8bbe39650ba476cb613c99351ebdde85f50cb618b6f12b5f6c66fdb4f876a3",
@@ -98,25 +98,25 @@
       "previousHash": "dc8bbe39650ba476cb613c99351ebdde85f50cb618b6f12b5f6c66fdb4f876a3",
       "changed": false,
       "previousRecords": 143,
-      "finishedAt": "2026-09-23T01:06:59+00:00"
+      "finishedAt": "2026-09-24T01:02:00+00:00"
     },
     "tjn-fsi": {
       "name": "Tax Justice Network Financial Secrecy Index",
       "url": "https://fsi.taxjustice.net/",
       "outputFile": "public/downloads/tjn-fsi.xlsx",
-      "startedAt": "2026-09-23T01:06:59+00:00",
+      "startedAt": "2026-09-24T01:02:00+00:00",
       "status": "error",
       "error": "FetchError: TJN page rendered but no fsi_jurisdictions response captured. Endpoint or auth flow may have changed.",
       "contentHash": null,
       "contentChangedAt": null,
       "changed": false,
-      "finishedAt": "2026-09-23T01:07:41+00:00"
+      "finishedAt": "2026-09-24T01:03:32+00:00"
     },
     "eu-offshore-centres": {
       "name": "EU / Eurostat List of Offshore Financial Centres",
       "url": "https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:List_of_offshore_financial_centres",
       "outputFile": "public/downloads/eu-offshore-centres.xlsx",
-      "startedAt": "2026-09-23T01:07:41+00:00",
+      "startedAt": "2026-09-24T01:03:32+00:00",
       "status": "success",
       "records": 40,
       "contentHash": "78861d248b3a289072a58c32fa54e4c952f9bf14506a45233bbbd34afea89c9c",
@@ -124,7 +124,7 @@
       "previousHash": "78861d248b3a289072a58c32fa54e4c952f9bf14506a45233bbbd34afea89c9c",
       "changed": false,
       "previousRecords": 40,
-      "finishedAt": "2026-09-23T01:07:42+00:00"
+      "finishedAt": "2026-09-24T01:03:34+00:00"
     }
   }
 }
