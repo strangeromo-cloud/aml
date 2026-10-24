@@ -15,6 +15,8 @@ from unittest.mock import MagicMock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 fatf = importlib.import_module("scripts.data-refresh.fetchers.fatf")
+verifier = importlib.import_module("scripts.data-refresh.verify_fatf")
+NOW = datetime(2026, 10, 24, 9, tzinfo=timezone.utc)
 
 BLACK_URL = ("https://www.fatf-gafi.org/en/publications/"
              "High-risk-and-other-monitored-jurisdictions/call-for-action-june-2026.html")
@@ -43,6 +45,13 @@ PAGES = {fatf.FATF_INDEX: INDEX, fatf.FATF_CURRENT: INDEX,
 class FatfRegressionTests(unittest.TestCase):
     def setUp(self):
         self.dump = patch.object(fatf, "_dump_html").start()
+        patch.object(fatf, "fetch_fiau", side_effect=fatf.FetchError("FIAU unavailable in transport test")).start()
+        self.clock = patch.object(fatf, "datetime", wraps=datetime).start()
+        self.clock.now.return_value = NOW
+        self.calendar_clock = patch.object(verifier, "datetime", wraps=datetime).start()
+        self.calendar_clock.now.return_value = NOW
+        self.baseline = patch.object(verifier, "load_baseline",
+                                     return_value={"listDate": "2026-06-19"}).start()
         self.addCleanup(patch.stopall)
 
     def test_lowercase_blacklist_slug_and_archive_rewrites(self):
@@ -101,7 +110,7 @@ class FatfRegressionTests(unittest.TestCase):
     def test_both_live_transports_failed_does_not_accept_106_day_archive(self):
         patch.object(fatf, "_http_fetch", side_effect=fatf.FetchError("HTTP blocked")).start()
         patch.object(fatf, "_playwright_session", side_effect=fatf.FetchError("browser blocked")).start()
-        old = (datetime.now(timezone.utc) - timedelta(days=106)).isoformat()
+        old = (NOW - timedelta(days=106)).isoformat()
         patch.object(fatf, "_wayback_latest", return_value=("https://web.archive.org/old", old)).start()
         get = patch.object(fatf, "http_get").start()
         with self.assertRaises(fatf.FetchError) as err:
@@ -116,7 +125,7 @@ class FatfRegressionTests(unittest.TestCase):
     def test_recent_archive_index_does_not_hide_old_statement_capture(self):
         patch.object(fatf, "_http_fetch", side_effect=fatf.FetchError("blocked")).start()
         patch.object(fatf, "_playwright_session", side_effect=fatf.FetchError("blocked")).start()
-        now = datetime.now(timezone.utc)
+        now = NOW
         def capture(url):
             age = 1 if url == fatf.FATF_INDEX else 106
             return "https://web.archive.org/capture", (now - timedelta(days=age)).isoformat()
@@ -129,7 +138,7 @@ class FatfRegressionTests(unittest.TestCase):
     def test_recent_complete_archive_remains_a_valid_final_fallback(self):
         patch.object(fatf, "_http_fetch", side_effect=fatf.FetchError("blocked")).start()
         patch.object(fatf, "_playwright_session", side_effect=fatf.FetchError("blocked")).start()
-        stamp = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
+        stamp = (NOW - timedelta(days=1)).isoformat()
         patch.object(fatf, "_wayback_latest",
                      side_effect=lambda url: ("https://web.archive.org/web/20261023000000/" + url, stamp)).start()
         patch.object(fatf, "http_get",
@@ -138,6 +147,43 @@ class FatfRegressionTests(unittest.TestCase):
         self.assertEqual(len(fetcher.fetch()), 11)
         self.assertEqual(fetcher._strategy, "wayback")
         self.assertEqual(fetcher._index_snapshot_date, stamp)
+
+    def test_recent_wayback_capture_cannot_revive_an_expired_fiau_edition(self):
+        now = datetime(2026, 11, 8, 9, tzinfo=timezone.utc)
+        self.clock.now.return_value = self.calendar_clock.now.return_value = now
+        patch.object(fatf, "_http_fetch", side_effect=fatf.FetchError("HTTP blocked")).start()
+        rows = [{"status": status, "country": country, "publication_date": "2026-06-19"}
+                for status, names in [("Call for Action", BLACK), ("Increased Monitoring", GREY)]
+                for country in names]
+        patch.object(fatf, "fetch_fiau", return_value=rows).start()
+        patch.object(fatf, "_playwright_session", side_effect=fatf.FetchError("browser blocked")).start()
+        stamp = (now - timedelta(days=1)).isoformat()
+        patch.object(fatf, "_wayback_latest",
+                     side_effect=lambda url: ("https://web.archive.org/web/20261107000000/" + url, stamp)).start()
+        patch.object(fatf, "http_get",
+                     side_effect=lambda url, **kw: PAGES[url.split("/20261107000000/", 1)[1]].encode()).start()
+        fetcher = fatf.FatfFetcher()
+        with self.assertRaises(fatf.FetchError) as err:
+            fetcher.fetch()
+        self.assertIn("FIAU republication", str(err.exception))
+        self.assertIn("FIAU 转载 FATF 声明 2026-06-19 尚未覆盖应更新期 2026-10", str(err.exception))
+        self.assertIn("FATF 官网存档（Wayback） 声明 2026-06-19 尚未覆盖应更新期 2026-10", str(err.exception))
+        self.assertEqual(fetcher._strategy, "")
+
+    def test_all_transports_reject_an_edition_older_than_the_legal_baseline(self):
+        self.baseline.return_value = {"listDate": "2026-10-20"}
+        patch.object(fatf, "http_get", side_effect=lambda url, **kw: PAGES[url.rsplit("/20261023000000/", 1)[-1]].encode()).start()
+        patch.object(fatf, "_playwright_session").start()
+        patch.object(fatf, "_playwright_fetch", side_effect=lambda url, **kw: PAGES[url]).start()
+        patch.object(fatf, "_wayback_latest", side_effect=lambda url: (
+            "https://web.archive.org/web/20261023000000/" + url, (NOW - timedelta(days=1)).isoformat())).start()
+        fetcher = fatf.FatfFetcher()
+        with self.assertRaises(fatf.FetchError) as err:
+            fetcher.fetch()
+        message = str(err.exception)
+        for provider in ["FATF 官网", "FATF 官网存档（Wayback）"]:
+            self.assertIn(provider + " 声明 2026-06-19 早于法务基线 2026-10-20", message)
+        self.assertEqual(fetcher._strategy, "")
 
     def test_grey_only_result_is_rejected_before_transport_is_selected(self):
         def get(url, **kw):

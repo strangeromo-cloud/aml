@@ -229,6 +229,12 @@ def as_sets(rows: list[dict]) -> dict[str, set[str]]:
 
 # ── Sources ─────────────────────────────────────────────────────────────
 
+def fatf_source_name(rows: list[dict]) -> str:
+    """The snapshot's provider, distinct from FATF as the original issuer."""
+    providers = {str(row.get("source_provider") or "FATF 官网") for row in rows}
+    return " / ".join(sorted(providers)) or "FATF 官网"
+
+
 def source_fresh_fetch() -> tuple[str, list[dict] | None, str | None]:
     """Whatever the daily fetcher managed to write this run."""
     label = "官方页面（本次抓取）"
@@ -255,9 +261,12 @@ def source_fresh_fetch() -> tuple[str, list[dict] | None, str | None]:
         return label, None, f"名单完整性校验失败（{type(exc).__name__}）"
     if bad:
         return label, None, f"抓取结果不可信，已忽略: {bad}"
+    label = f"{fatf_source_name(rows)}（本次抓取）"
     pub = next((r.get("publication_date") for r in rows if r.get("publication_date")), None)
     return label, {"rows": rows, "list_date": parse_date(pub),
-                   "scope": ("black", "grey")}, None
+                   "scope": ("black", "grey"),
+                   "source_provider": fatf_source_name(rows),
+                   "source_urls": sorted({r["source_url"] for r in rows if r.get("source_url")})}, None
 
 
 # FATF publishes after each plenary — February, June and October. archive.org is
@@ -548,10 +557,9 @@ SOURCES = [source_fresh_fetch, source_wikipedia, source_fincen, source_wayback]
 # quietly; the mirrors only ever confirm what the calendar already said.
 #
 # FATF publishes after each plenary, in February, June and October. Observed
-# statement dates: 2024-02-23, 2024-10-25, 2025-02-21, 2025-06-13, 2025-10-24,
-# 2026-02-13, 2026-06-19 — always between the 13th and the 25th. Waiting until the
-# month has ended plus a grace period avoids nagging mid-plenary while still
-# surfacing a missed update within about two weeks.
+# statement dates vary. For example, the October 2026 meetings run from the 26th
+# to the 30th. Waiting until month-end plus a grace period accommodates the
+# plenary and short republication delays without treating a mirror as always fresh.
 PLENARY_MONTHS_SCHEDULE = (2, 6, 10)
 GRACE_DAYS = 7
 

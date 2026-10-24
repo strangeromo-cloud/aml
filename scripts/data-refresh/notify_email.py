@@ -34,6 +34,8 @@ import re
 from html import escape
 from pathlib import Path
 
+from .common import content_rows
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_DIR = REPO_ROOT / "public" / "downloads"
 MANIFEST_FILE = OUTPUT_DIR / "_manifest.json"
@@ -197,6 +199,8 @@ def _parse_recipients(raw: str) -> list[str]:
 
 def _row_key(source_id: str, row: dict) -> str:
     """Best-effort stable label for a row, for the added/removed diff."""
+    if source_id == "fatf-jurisdictions":
+        return content_rows(source_id, [row])[0]["country"]
     field = KEY_FIELD.get(source_id)
     if field and row.get(field):
         return str(row[field])
@@ -235,8 +239,13 @@ def diff_source(source_id: str) -> dict:
     if prev is None:
         return {"added": [], "removed": [], "modified": [], "available": False}
 
-    cur_map = {_row_key(source_id, r): r for r in cur}
-    prev_map = {_row_key(source_id, r): r for r in prev}
+    try:
+        cur_map = {_row_key(source_id, r): r for r in content_rows(source_id, cur)}
+        prev_map = {_row_key(source_id, r): r for r in content_rows(source_id, prev)}
+    except (TypeError, ValueError):
+        if source_id == "fatf-jurisdictions":
+            return {"added": [], "removed": [], "modified": [], "available": False}
+        raise
     added = sorted(set(cur_map) - set(prev_map))
     removed = sorted(set(prev_map) - set(cur_map))
     modified = sorted(
@@ -335,6 +344,12 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
                                  '（无可比对的历史快照，仅报告内容哈希变化）</div>')
                 text_lines.append(f"[有更新] {label} — 内容哈希变化，记录数 {prev_records} → {records}")
             detail = "".join(rows_html)
+        elif entry.get("changeDetection") == "unverified-legacy-hash":
+            badge = ('<span style="padding:2px 8px;border-radius:3px;background:#FFF4E5;'
+                     'color:#B26A00;font-size:12px;font-weight:600">无法比对</span>')
+            detail = ('<div style="font-size:12px;color:#888;margin-top:6px">'
+                      '历史快照与旧哈希无法核对，本次内容是否变化未知。</div>')
+            text_lines.append(f"[无法比对] {label} — 本次内容是否变化未知；记录数 {records}")
         else:
             badge = ('<span style="padding:2px 8px;border-radius:3px;background:#EEF4F0;'
                      'color:#5A7D6A;font-size:12px;font-weight:600">无变化</span>')
@@ -385,7 +400,8 @@ def build_email(manifest: dict, changed_ids: list[str], forced: bool,
         base_line += (f'　|　附件 FATF 页使用：<strong>法务基线</strong>'
                       f'（{escape(str(fr.get("reason") or "本次抓取不可用"))}）')
     elif fr.get("records"):
-        base_line += (f'　|　附件 FATF 页使用：<strong>本次官方抓取</strong>'
+        provider = escape(str(fr.get("fetchProvider") or "FATF 官网"))
+        base_line += (f'　|　附件 FATF 页使用：<strong>本次抓取（{provider}）</strong>'
                       f'（名单日期 {escape(str(fr.get("listDate") or "未知"))}）')
     text_lines.insert(3, f"[基线] {re.sub(r'<[^>]+>', '', base_line)}")
     drift = override_drift(legal_report)

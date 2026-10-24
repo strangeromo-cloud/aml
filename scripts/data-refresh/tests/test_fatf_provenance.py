@@ -139,6 +139,44 @@ class FatfProvenanceTests(unittest.TestCase):
         self.assertFalse(report["seeded"])
         self.assertEqual(report["source"], "fetch")
 
+    def test_fiau_matching_baseline_is_labelled_as_republication(self):
+        rows = copy.deepcopy(ROWS)
+        for row in rows:
+            row.update(source_provider="FIAU 转载 FATF", source_url="https://fiaumalta.org/statement.pdf")
+        self.prepare(status="success", rows=rows)
+        report, sheet = self.build()
+        self.assertEqual(report["source"], "baseline")
+        self.assertTrue(report["agreesWithFetch"])
+        self.assertEqual(report["fetchProvider"], "FIAU 转载 FATF")
+        self.assertIn("FIAU 转载 FATF", sheet["A1"].value)
+        self.assertNotIn("本次官方抓取", sheet["A1"].value)
+        label, payload, error = verifier.source_fresh_fetch()
+        self.assertIsNone(error)
+        self.assertIn("FIAU 转载 FATF", label)
+        self.assertEqual(payload["source_urls"], ["https://fiaumalta.org/statement.pdf"])
+
+    def test_newer_fiau_edition_remains_attributed_to_fiau(self):
+        rows = copy.deepcopy(ROWS)
+        for row in rows:
+            row.update(publication_date="2026-10-30", source_provider="FIAU 转载 FATF",
+                       source_url="https://fiaumalta.org/newer.pdf")
+        self.prepare(status="success", rows=rows)
+        report, sheet = self.build()
+        self.assertEqual(report["source"], "fetch")
+        self.assertEqual(report["fetchProvider"], "FIAU 转载 FATF")
+        self.assertIn("FIAU 转载 FATF", report["reason"])
+        self.assertNotIn("本次官方抓取", sheet["A1"].value)
+
+    def test_failed_fiau_attempt_cannot_reuse_its_previous_provider(self):
+        rows = copy.deepcopy(ROWS)
+        for row in rows:
+            row.update(source_provider="FIAU 转载 FATF", source_url="https://fiaumalta.org/old.pdf")
+        self.prepare(status="error", rows=rows)
+        report, sheet = self.build()
+        self.assert_baseline_failure(report, sheet)
+        self.assertIsNone(report["fetchProvider"])
+        self.assertNotIn("FIAU", sheet["A1"].value)
+
     def test_success_without_snapshot_is_not_verifiable(self):
         self.prepare(status="success", rows=ABSENT)
         report, sheet = self.build()

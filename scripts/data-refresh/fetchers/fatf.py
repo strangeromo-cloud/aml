@@ -1,9 +1,8 @@
 """FATF High-Risk and Other Monitored Jurisdictions.
 
-Try the official site over HTTP, then Chromium with one shared session for the
-index and both statements. Cloudflare can block either transport independently.
-Only a complete, validated pair of lists is accepted. Wayback is the final
-fallback and retains its 45-day staleness limit.
+Try official HTTP, then FIAU's copies of the original FATF PDFs before launching
+Chromium. Only a complete, dated pair is accepted. Record the actual provider;
+Wayback is the final fallback and retains its 45-day staleness limit.
 """
 from __future__ import annotations
 
@@ -11,7 +10,7 @@ import json
 import logging
 import re
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Any
 from urllib.parse import quote, urljoin, urlparse
 
@@ -19,6 +18,7 @@ from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
 from ..common import Fetcher, FetchError, http_get
+from .fiau import FIAU_INDEX, fetch_fiau
 
 
 FATF_INDEX = "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
@@ -346,6 +346,7 @@ class FatfFetcher(Fetcher):
     _extraction: str = ""
     _index_snapshot_date: str = ""
     _index_snapshot_url: str = ""
+    source_provider: str = "FATF 官网"
 
     def columns(self):
         return [
@@ -356,7 +357,8 @@ class FatfFetcher(Fetcher):
         ]
 
     def extra_about_rows(self):
-        rows = [("Fetch strategy", self._strategy or "n/a"),
+        rows = [("Source provider", self.source_provider),
+                ("Fetch strategy", self._strategy or "n/a"),
                 ("Extraction", self._extraction or "n/a")]
         if self._strategy == "wayback":
             rows.extend([
@@ -366,6 +368,44 @@ class FatfFetcher(Fetcher):
                  f"Run fails if Wayback snapshot is older than {WAYBACK_STALE_AFTER_DAYS} days"),
             ])
         return rows
+
+    def _accept(self, rows: list[dict[str, Any]], strategy: str,
+                provider: str, source_url: str) -> list[dict[str, Any]]:
+        # Apply one acceptance contract to every transport. A recent archive
+        # capture must never revive an edition rejected as stale from FIAU.
+        self._validate_statement_rows(rows, provider)
+        self._strategy = strategy
+        self.source_provider = provider
+        self.url = source_url
+        for row in rows:
+            row["source_provider"] = provider
+        return rows
+
+    def _validate_statement_rows(self, rows: list[dict[str, Any]], provider: str) -> None:
+        from ..verify_fatf import baseline_due_check, load_baseline, parse_date, validate_rows
+        rejected = validate_rows(rows)
+        if rejected:
+            raise FetchError(f"{provider} 名单不完整：{rejected}")
+        dates = {parse_date(row.get("publication_date")) for row in rows}
+        if len(dates) != 1 or None in dates:
+            raise FetchError(f"{provider} 黑灰名单缺少同一天的 FATF 声明日期")
+        statement_date = next(iter(dates))
+        try:
+            date.fromisoformat(statement_date)
+        except (TypeError, ValueError) as exc:
+            raise FetchError(f"{provider} FATF 声明日期不是有效日历日期：{statement_date}") from exc
+        if statement_date > datetime.now(timezone.utc).date().isoformat():
+            raise FetchError(f"{provider} 声明日期在未来：{statement_date}")
+        baseline = load_baseline() or {}
+        baseline_date = parse_date(baseline.get("listDate"))
+        if baseline_date and statement_date < baseline_date:
+            raise FetchError(f"{provider} 声明 {statement_date} 早于法务基线 {baseline_date}")
+        # Reuse the existing month-end + 7 day publication grace. Downloading an
+        # old mirror successfully must not hide a missed plenary update.
+        due = baseline_due_check(statement_date)
+        if due["due"]:
+            raise FetchError(f"{provider} 声明 {statement_date} 尚未覆盖应更新期 "
+                             f"{due['latestDuePlenary']}（月底后宽限 7 天）")
 
     def _rows_from_index(self, index_html: str, index_url: str, fetch_page) -> list[dict[str, Any]]:
         cfa_url, im_url = _extract_publication_links(index_html, index_url)
@@ -387,12 +427,7 @@ class FatfFetcher(Fetcher):
             for country in countries:
                 rows.append({"status": status, "country": country,
                              "publication_date": pub_date, "source_url": raw_url})
-        # Validate before selecting a transport. A live index with one blocked or
-        # incomplete statement must still get the next official transport attempt.
-        from ..verify_fatf import validate_rows
-        rejected = validate_rows(rows)
-        if rejected:
-            raise FetchError(f"FATF 抓取结果不完整，按失败处理（{rejected}）")
+        # _accept validates completeness and recency before selecting a transport.
         self._extraction = ", ".join(sorted(extractions))
         return rows
 
@@ -401,6 +436,8 @@ class FatfFetcher(Fetcher):
         failures: list[str] = []
         self._strategy = self._extraction = ""
         self._index_snapshot_date = self._index_snapshot_url = ""
+        self.url = FATF_INDEX
+        self.source_provider = "FATF 官网"
 
         def failed(label: str, exc: Exception) -> None:
             detail = f"{label}: {type(exc).__name__}: {exc}"
@@ -413,10 +450,18 @@ class FatfFetcher(Fetcher):
             try:
                 html = _http_fetch(index_url)
                 rows = self._rows_from_index(html, index_url, _http_fetch)
-                self._strategy = "http"
-                return rows
+                return self._accept(rows, "http", "FATF 官网", index_url)
             except Exception as e:
                 failed(f"official HTTP {index_url}", e)
+
+        # FIAU republishes the original documents. Attribute the successful
+        # download to FIAU, and reject stale editions before using the data.
+        try:
+            rows = fetch_fiau()
+            self._extraction = "fiau-pdf-active-list"
+            return self._accept(rows, "fiau-pdf", "FIAU 转载 FATF", FIAU_INDEX)
+        except Exception as e:
+            failed("FIAU republication", e)
 
         try:
             with _playwright_session() as page:
@@ -426,8 +471,7 @@ class FatfFetcher(Fetcher):
                     try:
                         html = render(index_url)
                         rows = self._rows_from_index(html, index_url, render)
-                        self._strategy = "playwright"
-                        return rows
+                        return self._accept(rows, "playwright", "FATF 官网", index_url)
                     except Exception as e:
                         failed(f"official Playwright {index_url}", e)
         except Exception as e:
@@ -458,8 +502,7 @@ class FatfFetcher(Fetcher):
                 return html
             html = archived(FATF_INDEX)
             rows = self._rows_from_index(html, FATF_INDEX, archived)
-            self._strategy = "wayback"
-            return rows
+            return self._accept(rows, "wayback", "FATF 官网存档（Wayback）", FATF_INDEX)
         except Exception as e:
             failed("Wayback", e)
         raise FetchError("FATF fetch failed; no complete, current source. " + " | ".join(failures))

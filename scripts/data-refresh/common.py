@@ -12,6 +12,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import time
 import urllib.request
 import urllib.error
@@ -161,6 +162,61 @@ def content_hash(rows: list[dict[str, Any]]) -> str:
     return hashlib.sha256(json.dumps(canon, ensure_ascii=False).encode()).hexdigest()
 
 
+FATF_HASH_SCHEMA = "fatf-list-v1"
+
+
+def content_rows(source_id: str, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Business content used for change detection; retain provenance in snapshots.
+
+    Only FATF has interchangeable official/republication transports. Provider and
+    download URLs are evidence of where data came from, not a list amendment.
+    Other sources keep their existing whole-row comparison contract.
+    """
+    if source_id != "fatf-jurisdictions":
+        return rows
+    from .verify_fatf import norm, parse_date
+
+    if not isinstance(rows, list):
+        raise ValueError("FATF snapshot is not a row list")
+    unique: dict[tuple[str, str, str], dict[str, str]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("FATF snapshot contains a non-object row")
+        country = norm(str(row.get("country") or ""))
+        if not country:
+            raise ValueError("FATF snapshot row has no country")
+        status_text = str(row.get("status") or "").strip().casefold()
+        if "black" in status_text or "call for action" in status_text or "黑" in status_text:
+            status = "black"
+        elif any(s in status_text for s in ("grey", "gray", "increased monitoring", "灰")):
+            status = "grey"
+        else:
+            raise ValueError(f"Unknown FATF list status: {status_text!r}")
+
+        raw_date = " ".join(str(row.get("publication_date") or "").split())
+        date_text = re.sub(r"\b(\d{1,2})(?:st|nd|rd|th)\b", r"\1", raw_date, flags=re.I)
+        date_text = date_text.replace(",", "")
+        # Do not turn a month-only label into a fictional first-of-month day.
+        full_date = re.fullmatch(
+            r"(?:\d{4}-\d{2}-\d{2}|\d{1,2}\s+[A-Za-z]+,?\s+\d{4}|"
+            r"[A-Za-z]+\s+\d{1,2},?\s+\d{4})", date_text)
+        date = parse_date(date_text) if full_date else None
+        if date:
+            try:
+                datetime.strptime(date, "%Y-%m-%d")
+            except ValueError:
+                date = None
+        date = date or (raw_date.casefold() if raw_date.casefold().startswith("unparsed:")
+                        else "unparsed:" + raw_date.casefold())
+        key = country, status, date
+        unique[key] = {"country": country, "status": status, "publication_date": date}
+    return list(unique.values())
+
+
+def source_content_hash(source_id: str, rows: list[dict[str, Any]]) -> str:
+    return content_hash(content_rows(source_id, rows))
+
+
 def snapshot_path(fetcher_id: str) -> Path:
     return SNAPSHOT_DIR / f"{fetcher_id}.json"
 
@@ -249,13 +305,44 @@ def run_fetcher(
     }
     try:
         rows = fetcher.fetch()
+        # A fetcher may resolve a different live URL/provider while it runs.
+        entry["url"] = fetcher.url
+        provider = getattr(fetcher, "source_provider", None)
+        if provider:
+            entry["sourceProvider"] = provider
         if not rows:
             raise FetchError("fetcher returned 0 rows")
-        new_hash = content_hash(rows)
+        new_hash = source_content_hash(fetcher.id, rows)
         prev_hash = (prev_entry or {}).get("contentHash")
         # First ever run has no baseline: record the hash but do not call it a change,
         # otherwise every source would look "updated" on day one.
-        changed = bool(prev_hash) and prev_hash != new_hash
+        changed: bool | None = bool(prev_hash) and prev_hash != new_hash
+        if fetcher.id == "fatf-jurisdictions":
+            entry["hashSchema"] = FATF_HASH_SCHEMA
+            previous_schema = (prev_entry or {}).get("hashSchema")
+            if not prev_hash:
+                entry["changeDetection"] = "initial-baseline"
+            elif previous_schema == FATF_HASH_SCHEMA:
+                entry["changeDetection"] = "compared"
+            else:
+                # Upgrade a legacy whole-row hash only when the retained snapshot
+                # is demonstrably the data behind it. Comparing old/new rows before
+                # replacing the snapshot preserves real amendments on migration.
+                previous_rows = None
+                try:
+                    old = load_snapshot(fetcher.id)
+                    if previous_schema in (None, "", "raw-v0") and old is not None and content_hash(old) == prev_hash:
+                        previous_rows = content_rows(fetcher.id, old)
+                except (OSError, TypeError, ValueError):
+                    pass
+                if previous_rows is not None:
+                    changed = content_hash(previous_rows) != new_hash
+                    entry["changeDetection"] = "migrated-legacy-hash"
+                else:
+                    changed = None
+                    entry["changeDetection"] = "unverified-legacy-hash"
+                    logger.warning("FATF prior content hash has no matching snapshot; "
+                                   "list change is unknown, preserving contentChangedAt")
         # When the upstream content last actually changed — not when we last fetched.
         # "Is the fetch newer than what a human confirmed?" cannot be answered by the
         # fetch timestamp, which is always now; it needs the last real change.
@@ -299,6 +386,14 @@ def run_fetcher(
             "changed": False,
             "finishedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         })
+        if fetcher.id == "fatf-jurisdictions":
+            # A failed attempt retains its previous hash and therefore its schema,
+            # including when writing the new Excel fails after hashing succeeded.
+            if (prev_entry or {}).get("hashSchema"):
+                entry["hashSchema"] = prev_entry["hashSchema"]
+            else:
+                entry.pop("hashSchema", None)
+            entry.pop("changeDetection", None)
         logger.error(f"  ✗ {fetcher.id} — {type(e).__name__}: {e}")
     return entry
 

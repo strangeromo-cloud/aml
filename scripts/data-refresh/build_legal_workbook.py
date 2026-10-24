@@ -383,6 +383,15 @@ def build(out_path: Path) -> dict:
     elif fetch_succeeded:
         fetch_rejected = "本次抓取未产出可用快照"
 
+    fetch_provider = None
+    fetch_source_urls = []
+    if fatf:
+        from .verify_fatf import fatf_source_name
+        fetch_provider = fatf_source_name(fatf)
+        fetch_source_urls = sorted({r["source_url"] for r in fatf if r.get("source_url")})
+    fetch_label = ("本次官方抓取" if fetch_provider == "FATF 官网"
+                   else f"本次抓取（{fetch_provider}）")
+
     # The Legal-maintained baseline is two things at once: the fallback when the
     # fetch fails, and the authority when it is *newer* than what the fetch
     # returned — the same recency rule the CPI/offshore overrides follow. Without
@@ -461,9 +470,9 @@ def build(out_path: Path) -> dict:
             agrees = None
             if prefer_baseline == "same":
                 agrees = _same_lists(fetched_rows, seed_rows, _classify)
-                why = ("与本次官方抓取一致（同一期 " + fetch_date[:7] + "），采用法务确认口径"
+                why = (f"与{fetch_label}一致（同一期 " + fetch_date[:7] + "），采用法务确认口径"
                        if agrees else
-                       "与本次官方抓取不一致（同一期 " + fetch_date[:7] +
+                       f"与{fetch_label}不一致（同一期 " + fetch_date[:7] +
                        "，已触发核验告警），按法务确认口径出表")
             elif prefer_baseline == "older":
                 why = (f"本次抓取到的是更早一期（{fetch_date[:7]}），"
@@ -483,14 +492,17 @@ def build(out_path: Path) -> dict:
                 "listDate": list_date, "source": "baseline",
                 "preferBaseline": prefer_baseline or None, "agreesWithFetch": agrees,
                 "fetchDate": fetch_date or None, "reason": why,
+                "fetchProvider": fetch_provider, "fetchSourceUrls": fetch_source_urls,
                 "error": fetch_rejected or entry.get("error")}
         else:
-            note = (f"{base} · 名单日期: {list_date}（每年 2/6/10 月更新，需定期刷新） · "
+            note = (f"采集来源: {fetch_provider} · {base} · "
+                    f"名单日期: {list_date}（每年 2/6/10 月更新，需定期刷新） · "
                     f"抓取: {fetched_bj}")
             report["fatf"] = {"ok": True, "seeded": False, "records": len(rows),
                               "listDate": list_date, "source": "fetch",
-                              "reason": "本次官方抓取，且是比法务基线更新的一期"
-                                        if seed_date else "本次官方抓取"}
+                              "fetchProvider": fetch_provider, "fetchSourceUrls": fetch_source_urls,
+                              "reason": f"{fetch_label}，且是比法务基线更新的一期"
+                                        if seed_date else fetch_label}
     else:
         rows = [["—", "抓取失败，无数据", "—", "—"]]
         note = (f"来源: FATF 黑/灰名单 · ⚠ 本次抓取失败（{entry.get('error', '未知错误')}），"

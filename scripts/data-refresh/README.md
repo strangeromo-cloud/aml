@@ -16,7 +16,7 @@ workflow at `.github/workflows/refresh-data.yml` that:
 
 | ID | Name | Mode | Headless? | Records (last run) |
 |---|---|---|---|---|
-| `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Official HTTP → shared Chromium session → fresh Wayback fallback; requires both complete lists | ✓ | ~25 |
+| `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Official HTTP → FIAU original PDFs → shared Chromium → fresh Wayback; requires complete, dated black/grey lists | ✓ | ~25 |
 | `ofac-country-programs` | OFAC Sanctions Programs by Country | HTML scrape | – | ~43 |
 | `un-consolidated` | UN Security Council Consolidated List | XML parse | – | ~1009 |
 | `eu-consolidated` | EU Consolidated Financial Sanctions | XML parse (token-gated) | – | ~6000 |
@@ -39,7 +39,30 @@ run them.
 ## Wayback freshness guard
 
 FATF's official site is Cloudflare-protected. We try two official entry pages
-over HTTP, then reuse one Chromium session for the index and both statements.
+over HTTP, then use the original statement copies on Malta FIAU's
+`https://fiaumalta.org/country-statements/` page before launching Chromium.
+The newest black and grey PDFs must share a statement date, and their document
+titles and dated final source citations must agree. Country headings are read
+only from the active list; countries discussed in prose or removed from monitoring
+are excluded. Missing, partial, mismatched or changed-layout documents fail closed.
+
+FIAU data carries `source_provider: "FIAU 转载 FATF"` and actual PDF URLs in the
+snapshot. The manifest, workbook About page, Legal workbook and verification
+report retain that attribution. Publication date is distinct from download time.
+Every transport is checked before success is recorded: the black/grey lists must
+be complete, share one valid calendar date, and not be future-dated or older than
+Legal's baseline. An edition that misses the latest plenary after the existing
+month-end + 7 day grace is also rejected, including a recently captured archive
+of an old statement.
+Same-plenary Legal precedence and the manual baseline are retained.
+
+FATF list changes are compared by normalized country, black/grey status and
+statement date. Switching website/PDF URLs or provider alone does not send a
+false list-change email. Legacy hashes migrate only when the prior snapshot can
+be verified; otherwise the comparison is explicitly marked unverified.
+
+If FIAU is unavailable, we reuse one Chromium session for the official index and
+both statements.
 Each statement is checked for its own heading and country facet, rather than
 waiting for a menu link that may be absent. Only a complete black/grey pair is
 accepted. Wayback is the last fallback. **Wayback can lag the live site by days
