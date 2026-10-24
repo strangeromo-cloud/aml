@@ -38,6 +38,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_DIR = REPO_ROOT / "public" / "downloads"
 SNAPSHOT_DIR = OUTPUT_DIR / "_snapshots"
+MANIFEST_FILE = OUTPUT_DIR / "_manifest.json"
 SEED_DIR = Path(__file__).resolve().parent / "seeds"
 # The baseline is what a human maintains. Legal already works in this workbook
 # format, so the editable copy is an .xlsx whose FATF sheet is the same one they
@@ -230,15 +231,28 @@ def as_sets(rows: list[dict]) -> dict[str, set[str]]:
 
 def source_fresh_fetch() -> tuple[str, list[dict] | None, str | None]:
     """Whatever the daily fetcher managed to write this run."""
-    p = SNAPSHOT_DIR / "fatf-jurisdictions.json"
-    if not p.exists():
-        return "官方页面（本次抓取）", None, "本次抓取未产出快照"
     label = "官方页面（本次抓取）"
     try:
+        manifest = json.loads(MANIFEST_FILE.read_text())
+        entry = manifest.get("sources", {}).get("fatf-jurisdictions") or {}
+    except (OSError, ValueError, AttributeError):
+        return label, None, "本次抓取状态不可读，不能把历史快照视为本次官方抓取"
+    if not isinstance(entry, dict):
+        return label, None, "本次抓取状态无效，不能把历史快照视为本次官方抓取"
+    if entry.get("status") != "success":
+        reason = entry.get("error") or "本次没有成功抓取状态"
+        return label, None, f"{reason}；保留的历史快照不代表本次抓取成功"
+    p = SNAPSHOT_DIR / "fatf-jurisdictions.json"
+    if not p.exists():
+        return label, None, "本次抓取未产出快照"
+    try:
         rows = json.loads(p.read_text())
-    except json.JSONDecodeError as e:
+    except (OSError, json.JSONDecodeError) as e:
         return label, None, f"快照解析失败: {e}"
-    bad = validate_rows(rows)
+    try:
+        bad = validate_rows(rows)
+    except Exception as exc:
+        return label, None, f"名单完整性校验失败（{type(exc).__name__}）"
     if bad:
         return label, None, f"抓取结果不可信，已忽略: {bad}"
     pub = next((r.get("publication_date") for r in rows if r.get("publication_date")), None)

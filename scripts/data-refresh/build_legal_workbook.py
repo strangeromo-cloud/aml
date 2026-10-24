@@ -186,8 +186,13 @@ def _manifest() -> dict:
     if not MANIFEST_FILE.exists():
         return {"sources": {}}
     try:
-        return json.loads(MANIFEST_FILE.read_text())
-    except json.JSONDecodeError:
+        manifest = json.loads(MANIFEST_FILE.read_text())
+        if not isinstance(manifest, dict):
+            return {"sources": {}}
+        if not isinstance(manifest.get("sources"), dict):
+            manifest["sources"] = {}
+        return manifest
+    except (OSError, json.JSONDecodeError):
         return {"sources": {}}
 
 
@@ -359,21 +364,24 @@ def build(out_path: Path) -> dict:
         return key(a) == key(b)
 
     ws = wb.create_sheet("FATF")
-    fatf = _load_snapshot("fatf-jurisdictions")
     entry = src.get("fatf-jurisdictions") or {}
-    # The fetcher matches country names across the whole statement page, so a
-    # jurisdiction merely *mentioned* (typically one being removed) can land in the
-    # wrong list. Validate before this reaches Legal — an implausible list in the
-    # attachment is far worse than falling back to the signed-off baseline.
+    if not isinstance(entry, dict):
+        entry = {}
+    fetch_succeeded = entry.get("status") == "success"
+    # Failed runs deliberately keep the previous snapshot. Its existence, date or
+    # agreement with Legal is never proof that this attempt fetched anything.
+    fatf = _load_snapshot("fatf-jurisdictions") if fetch_succeeded else None
     fetch_rejected: str | None = None
     if fatf:
         try:
             from .verify_fatf import validate_rows
             fetch_rejected = validate_rows(fatf)
-        except Exception:
-            fetch_rejected = None
+        except Exception as exc:
+            fetch_rejected = f"名单完整性校验失败（{type(exc).__name__}）"
         if fetch_rejected:
             fatf = None
+    elif fetch_succeeded:
+        fetch_rejected = "本次抓取未产出可用快照"
 
     # The Legal-maintained baseline is two things at once: the fallback when the
     # fetch fails, and the authority when it is *newer* than what the fetch
@@ -461,12 +469,15 @@ def build(out_path: Path) -> dict:
                 why = (f"本次抓取到的是更早一期（{fetch_date[:7]}），"
                        f"按「以新为准」采用法务基线")
             elif fetch_rejected:
-                why = f"本次抓取结果不可信已忽略（{fetch_rejected}）"
+                why = f"本次抓取结果不可用（{fetch_rejected}），使用法务基线（非本次抓取）"
             else:
-                why = f"本次抓取失败（{entry.get('error', 'Cloudflare 拦截')}）"
-            mark = "·" if agrees else "· ⚠"
-            note = (f"{base} {mark} {why}，"
-                    f"名单日期 {list_date}（法务维护的基线） · 抓取尝试: {fetched_bj}")
+                attempt = "本次抓取失败" if entry.get("status") == "error" else "本次未确认抓取成功"
+                why = f"{attempt}，使用法务基线（非本次抓取）"
+            mark = "" if agrees else "⚠ "
+            # Put the actual source first so it remains visible in Excel's note
+            # row; detailed transport errors stay in the report and run log.
+            note = (f"{mark}{why} · 名单日期: {list_date}（法务维护的基线） · "
+                    f"抓取尝试: {fetched_bj} · {base}")
             report["fatf"] = {
                 "ok": bool(agrees), "seeded": True, "records": len(rows),
                 "listDate": list_date, "source": "baseline",
@@ -485,7 +496,7 @@ def build(out_path: Path) -> dict:
         note = (f"来源: FATF 黑/灰名单 · ⚠ 本次抓取失败（{entry.get('error', '未知错误')}），"
                 f"且无历史基线 · 抓取尝试: {fetched_bj}")
         report["fatf"] = {"ok": False, "seeded": False, "records": 0,
-                          "error": entry.get("error")}
+                          "error": fetch_rejected or entry.get("error"), "source": "unavailable"}
     fatf_style = {
         i: ((FATF_BLACK_FILL, FATF_BLACK_FONT) if r[0] == BLACK else (FATF_GREY_FILL, None))
         for i, r in enumerate(rows) if r[0] in (BLACK, GREY)
@@ -493,6 +504,8 @@ def build(out_path: Path) -> dict:
     _write_sheet(ws, note,
                  [("名单 List", 14), ("国家/地区 Country", 34), ("代码 Code", 9),
                   ("含义", 44)], rows, centered_cols=(3,), row_style=fatf_style)
+    ws["A1"].alignment = Alignment(wrap_text=True, vertical="center")
+    ws.row_dimensions[1].height = 54
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(out_path)
