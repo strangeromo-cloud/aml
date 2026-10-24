@@ -76,6 +76,7 @@ jobs:
       - name: Run all fetchers (including headless)
         id: refresh
         run: |
+          python -m unittest discover -s scripts/data-refresh/tests -v
           python -m scripts.data-refresh.refresh_all --include-headless
         continue-on-error: false
 

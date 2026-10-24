@@ -1,37 +1,34 @@
 """FATF High-Risk and Other Monitored Jurisdictions.
 
-The official FATF site sits behind Cloudflare's "Just a moment..." challenge,
-which blocks plain HTTP fetches. With a real Chromium instance the challenge
-typically resolves in under a second, so we go straight to the source via
-Playwright.
-
-If Playwright fails too (Cloudflare upgrades, timeout, etc.), we fall back
-to the Wayback Machine — with a 45-day staleness guard that hard-fails the
-run when the most recent capture is older than the natural FATF publication
-cycle.
+Try the official site over HTTP, then Chromium with one shared session for the
+index and both statements. Cloudflare can block either transport independently.
+Only a complete, validated pair of lists is accepted. Wayback is the final
+fallback and retains its 45-day staleness limit.
 """
 from __future__ import annotations
 
 import json
 import logging
 import re
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from typing import Any
-from urllib.parse import quote, urljoin
+from urllib.parse import quote, urljoin, urlparse
 
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
+from playwright.sync_api import sync_playwright
 
 from ..common import Fetcher, FetchError, http_get
 
 
 FATF_INDEX = "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
+FATF_CURRENT = "https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html"
+OFFICIAL_INDEXES = (FATF_INDEX, FATF_CURRENT)
 CDX_API = "https://web.archive.org/cdx/search/cdx"
 WB_PREFIX = "https://web.archive.org/web/"
 
-# Wayback fallback only kicks in if Playwright fails. The 45-day window is
-# generous: FATF publishes 3× per year (~4 months apart) so this still
-# surfaces "the upstream went silent for too long" cases.
+# Snapshot freshness is independent of the publication cycle. Never relax this
+# guard simply because both live transports are unavailable.
 WAYBACK_STALE_AFTER_DAYS = 45
 
 # Country names FATF has used in its statements over the past few years.
@@ -62,15 +59,21 @@ def _extract_publication_links(html: str, base: str) -> tuple[str | None, str | 
     for a in soup.find_all("a", href=True):
         href = a["href"]
         title = a.get_text(" ", strip=True).lower()
+        # Wayback may rewrite hrefs even though we resolve against the original
+        # official index. Always return the underlying source URL.
+        replay = re.search(r"/web/\d+(?:[a-z_]+)?/(https?://.+)", href)
+        target = replay.group(1) if replay else urljoin(base, href)
+        if urlparse(target).hostname not in {"www.fatf-gafi.org", "fatf-gafi.org"}:
+            continue
         # Score on year + month found in the title or URL
-        haystack = (title + " " + href).lower()
+        haystack = (title + " " + target).lower()
         m_year = re.search(r"(20\d{2})", haystack)
         year = int(m_year.group(1)) if m_year else 0
         month = next((i for i, n in enumerate(months, start=1) if n in haystack), 0)
-        if "Call-for-action" in href or "call for action" in title:
-            cfa_links.append((year, month, urljoin(base, href)))
+        if "call-for-action" in href.lower() or "call for action" in title:
+            cfa_links.append((year, month, target))
         elif "increased-monitoring" in href.lower() or "increased monitoring" in title:
-            im_links.append((year, month, urljoin(base, href)))
+            im_links.append((year, month, target))
 
     def best(items: list[tuple[int, int, str]]) -> str | None:
         if not items:
@@ -112,11 +115,8 @@ def _extract_countries(html: str) -> list[str]:
     return out
 
 
-# The country extractor scans prose, so a jurisdiction merely mentioned (typically
-# one being removed) can be collected into the wrong list. Fixing it properly needs
-# the real page markup, which is unreachable outside CI — the live site is behind
-# Cloudflare and the Wayback replay server is intermittently down. Dump what CI
-# actually fetched so the parser can be rewritten against real structure.
+# Preserve fetched markup for diagnosing challenges and changes to the Country
+# facet. Diagnostics must not turn an unavailable or incomplete list into success.
 DEBUG_DIR = "/tmp/data-refresh-debug"
 
 
@@ -124,7 +124,12 @@ def _dump_html(status: str, url: str, html: str) -> None:
     try:
         from pathlib import Path
         Path(DEBUG_DIR).mkdir(parents=True, exist_ok=True)
-        slug = "blacklist-cfa" if "Call for Action" in status else "greylist-im"
+        if "Call for Action" in status:
+            slug = "blacklist-cfa"
+        elif "Increased Monitoring" in status:
+            slug = "greylist-im"
+        else:
+            slug = "browser-error"
         stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
         out = Path(DEBUG_DIR) / f"fatf-{slug}-{stamp}.html"
         out.write_text(f"<!-- source: {url} -->\n{html}", encoding="utf-8")
@@ -156,6 +161,8 @@ def _countries_from_facet(html: str) -> list[str]:
     3 and 22 in the facet).
     """
     soup = BeautifulSoup(html, "html.parser")
+    for chrome in soup.find_all(["header", "nav", "footer"]):
+        chrome.decompose()
 
     def country_links(tag):
         return [a for a in tag.find_all("a", href=True)
@@ -203,64 +210,99 @@ def _extract_pub_date(url: str, html_head: str) -> str:
 
 
 # -----------------------------------------------------------------------------
-# Strategy 1 — direct Playwright (passes Cloudflare automatically)
+# Live official transports
 # -----------------------------------------------------------------------------
 
-def _playwright_fetch(url: str, *, debug_slug: str = "fatf",
-                      logger: logging.Logger | None = None,
-                      timeout_ms: int = 45_000) -> str:
-    log = logger or logging.getLogger("data-refresh")
+
+def _check_html(html: str, url: str, *, publication: bool) -> None:
+    """A 200 response or a finished navigation can still be a challenge page."""
+    soup = BeautifulSoup(html, "html.parser")
+    title = soup.title.get_text(" ", strip=True).lower() if soup.title else ""
+    if "just a moment" in title or "checking your browser" in title:
+        raise FetchError(f"FATF challenge page at {url} (title={title!r})")
+    if publication:
+        heading = soup.find("h1")
+        heading_text = heading.get_text(" ", strip=True).lower() if heading else ""
+        statement = "call for action" in heading_text or "increased monitoring" in heading_text
+        # A prose scan can collect FATF members or countries being removed and
+        # still pass the numeric range checks. Require the structured country
+        # facet; a layout change must be diagnosed instead of becoming new data.
+        ready = statement and bool(_countries_from_facet(html))
+    else:
+        ready = all(_extract_publication_links(html, url))
+    if not ready:
+        kind = "statement countries" if publication else "both statement links"
+        raise FetchError(f"FATF page missing {kind}: {url} (title={title!r})")
+
+
+def _http_fetch(url: str, *, publication: bool = False) -> str:
+    html = http_get(url, timeout=30, retries=2).decode("utf-8", errors="replace")
+    _check_html(html, url, publication=publication)
+    return html
+
+
+@contextmanager
+def _playwright_session():
+    """Keep clearance cookies across the index and the two publication pages."""
     with sync_playwright() as pw:
         browser = pw.chromium.launch(
             headless=True,
             args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
         )
         try:
-            ctx = browser.new_context(
-                user_agent=(
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.119 Safari/537.36"
-                ),
-                viewport={"width": 1440, "height": 900},
-                locale="en-US",
-            )
-            page = ctx.new_page()
-            page.set_default_timeout(timeout_ms)
-            page.goto(url, wait_until="domcontentloaded")
-
-            # Wait for Cloudflare's "Just a moment..." to clear (max ~15s).
-            for _ in range(30):
-                title = page.title()
-                if title and "moment" not in title.lower() and "checking" not in title.lower():
-                    break
-                page.wait_for_timeout(500)
-
-            # Wait for at least one publication link (attached, not visible —
-            # FATF hides items below the fold via CSS).
-            try:
-                page.wait_for_selector(
-                    "a[href*='Call-for-action'], a[href*='increased-monitoring']",
-                    state="attached",
-                    timeout=20_000,
-                )
-            except PlaywrightTimeout:
-                # Save context for triage and bubble up
-                from pathlib import Path
-                Path("/tmp/data-refresh-debug").mkdir(parents=True, exist_ok=True)
-                ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-                try:
-                    page.screenshot(path=f"/tmp/data-refresh-debug/{debug_slug}-{ts}.png", full_page=True)
-                except Exception:
-                    pass
-                raise FetchError("Playwright loaded FATF but no publication links appeared")
-
-            return page.content()
+            # Use the installed browser's own UA. A fixed Chrome/127 UA drifted
+            # from the bundled Chromium version and made challenge failures opaque.
+            ctx = browser.new_context(viewport={"width": 1440, "height": 900},
+                                      locale="en-US")
+            yield ctx.new_page()
         finally:
             browser.close()
 
 
+def _playwright_fetch(url: str, *, page, publication: bool = False,
+                      timeout_ms: int = 45_000) -> str:
+    """Wait for the requested page's content, not a link in the global menu."""
+    page.set_default_timeout(timeout_ms)
+    page.set_default_navigation_timeout(timeout_ms)
+    try:
+        response = page.goto(url, wait_until="domcontentloaded")
+        # Content may arrive after DOMContentLoaded / a Cloudflare transition.
+        # Checking the HTML also handles case changes in statement URL slugs.
+        for attempt in range(31):
+            html = page.content()
+            try:
+                _check_html(html, url, publication=publication)
+                return html
+            except FetchError:
+                if attempt == 30:
+                    break
+                page.wait_for_timeout(500)
+        status = response.status if response else "no response"
+        title = page.title()
+        raise FetchError(f"FATF browser content unavailable: {url} "
+                         f"(HTTP {status}, title={title!r})")
+    except Exception as e:
+        # HTML is often more useful than a screenshot for diagnosing a changed
+        # layout; neither diagnostic is allowed to hide the original failure.
+        try:
+            _dump_html("browser-error", url, page.content())
+        except Exception:
+            pass
+        try:
+            from pathlib import Path
+            Path(DEBUG_DIR).mkdir(parents=True, exist_ok=True)
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+            page.screenshot(path=f"{DEBUG_DIR}/fatf-browser-{stamp}.png", full_page=True,
+                            timeout=5000)
+        except Exception:
+            pass
+        if isinstance(e, FetchError):
+            raise
+        raise FetchError(f"FATF browser fetch failed at {url}: {type(e).__name__}: {e}") from e
+
+
 # -----------------------------------------------------------------------------
-# Strategy 2 — Wayback Machine (fallback only)
+# Wayback Machine (final fallback only)
 # -----------------------------------------------------------------------------
 
 def _wayback_latest(url: str) -> tuple[str, str]:
@@ -297,7 +339,7 @@ class FatfFetcher(Fetcher):
     name = "FATF High-Risk & Other Monitored Jurisdictions"
     url = FATF_INDEX
     out_filename = "fatf-jurisdictions.xlsx"
-    requires_headless = True  # primary path uses Playwright
+    requires_headless = True  # the live-site fallback still needs Chromium
 
     # Set during fetch() so they appear on the About sheet
     _strategy: str = ""
@@ -325,85 +367,99 @@ class FatfFetcher(Fetcher):
             ])
         return rows
 
-    def _fetch_publication_html(self, url: str) -> str:
-        """Fetch a publication page using whichever strategy succeeded for the index."""
-        if self._strategy == "playwright":
-            return _playwright_fetch(url, debug_slug="fatf-pub")
-        # Wayback path: the URL is already a Wayback URL, just GET it
-        return http_get(url, timeout=45).decode("utf-8", errors="replace")
-
-    def fetch(self) -> list[dict[str, Any]]:
-        index_html: str | None = None
-        index_base = FATF_INDEX
-
-        # Strategy 1 — direct Playwright
-        try:
-            index_html = _playwright_fetch(FATF_INDEX, debug_slug="fatf")
-            self._strategy = "playwright"
-        except (FetchError, PlaywrightTimeout, Exception) as e:
-            logging.getLogger("data-refresh").info(
-                f"  FATF: Playwright path failed ({type(e).__name__}: {e}); falling back to Wayback"
-            )
-
-        # Strategy 2 — Wayback
-        if index_html is None:
-            snap_url, snap_iso = _wayback_latest(FATF_INDEX)
-            self._index_snapshot_url = snap_url
-            self._index_snapshot_date = snap_iso
-            age = _days_ago(snap_iso)
-            if age > WAYBACK_STALE_AFTER_DAYS:
-                raise FetchError(
-                    f"Playwright failed and the Wayback snapshot is {age} days old "
-                    f"(threshold {WAYBACK_STALE_AFTER_DAYS}). Manual review required."
-                )
-            try:
-                index_html = http_get(snap_url, timeout=45).decode("utf-8", errors="replace")
-                self._strategy = "wayback"
-                index_base = snap_url
-            except FetchError as e:
-                raise FetchError(f"Both Playwright and Wayback failed: {e}")
-
-        cfa_url, im_url = _extract_publication_links(index_html, index_base)
-
+    def _rows_from_index(self, index_html: str, index_url: str, fetch_page) -> list[dict[str, Any]]:
+        cfa_url, im_url = _extract_publication_links(index_html, index_url)
+        if not cfa_url or not im_url:
+            raise FetchError(f"FATF index missing black/grey statement links: {index_url}")
         rows: list[dict[str, Any]] = []
+        extractions = set()
         for status, raw_url in [
             ("Blacklist (Call for Action)", cfa_url),
             ("Greylist (Increased Monitoring)", im_url),
         ]:
-            if not raw_url:
-                continue
-            try:
-                html = self._fetch_publication_html(raw_url)
-            except FetchError:
-                continue
+            html = fetch_page(raw_url, publication=True)
             _dump_html(status, raw_url, html)
             countries = _countries_from_facet(html)
-            if countries:
-                self._extraction = "country-facet"
-            else:
-                # Last resort. Known to over-collect from page furniture, so the
-                # consumers validate before trusting it (see verify_fatf.validate_rows).
-                countries = _extract_countries(html)
-                self._extraction = "prose-fallback"
+            if not countries:
+                raise FetchError(f"FATF statement has no country facet: {raw_url}")
+            extractions.add("country-facet")
             pub_date = _extract_pub_date(raw_url, html)
-            for c in countries:
-                rows.append({
-                    "status": status,
-                    "country": c,
-                    "publication_date": pub_date,
-                    "source_url": raw_url,
-                })
-
-        if not rows:
-            raise FetchError("FATF index loaded but no countries could be extracted from the linked publications")
-        # The two publications are fetched separately and Cloudflare regularly lets one
-        # through and blocks the other. Returning the half that arrived used to be
-        # recorded as a successful fetch: the snapshot dropped to 22 grey-only rows, the
-        # content hash flipped, and the next full fetch flipped it back — two false
-        # "list changed" emails per blocked day. A partial list is a failed fetch.
+            for country in countries:
+                rows.append({"status": status, "country": country,
+                             "publication_date": pub_date, "source_url": raw_url})
+        # Validate before selecting a transport. A live index with one blocked or
+        # incomplete statement must still get the next official transport attempt.
         from ..verify_fatf import validate_rows
         rejected = validate_rows(rows)
         if rejected:
-            got = sorted({r["status"] for r in rows})
-            raise FetchError(f"FATF 抓取结果不完整，按失败处理（{rejected}；本次只拿到：{', '.join(got)}）")
+            raise FetchError(f"FATF 抓取结果不完整，按失败处理（{rejected}）")
+        self._extraction = ", ".join(sorted(extractions))
         return rows
+
+    def fetch(self) -> list[dict[str, Any]]:
+        log = logging.getLogger("data-refresh")
+        failures: list[str] = []
+        self._strategy = self._extraction = ""
+        self._index_snapshot_date = self._index_snapshot_url = ""
+
+        def failed(label: str, exc: Exception) -> None:
+            detail = f"{label}: {type(exc).__name__}: {exc}"
+            failures.append(detail)
+            log.info("  FATF: %s", detail)
+
+        # Both URLs are official entrances to the current pair of statements.
+        # Try the inexpensive transport first; challenge responses are failures.
+        for index_url in OFFICIAL_INDEXES:
+            try:
+                html = _http_fetch(index_url)
+                rows = self._rows_from_index(html, index_url, _http_fetch)
+                self._strategy = "http"
+                return rows
+            except Exception as e:
+                failed(f"official HTTP {index_url}", e)
+
+        try:
+            with _playwright_session() as page:
+                def render(url: str, *, publication: bool = False) -> str:
+                    return _playwright_fetch(url, page=page, publication=publication)
+                for index_url in OFFICIAL_INDEXES:
+                    try:
+                        html = render(index_url)
+                        rows = self._rows_from_index(html, index_url, render)
+                        self._strategy = "playwright"
+                        return rows
+                    except Exception as e:
+                        failed(f"official Playwright {index_url}", e)
+        except Exception as e:
+            failed("official Playwright session", e)
+
+        # Last resort: an archive is acceptable only within the existing window.
+        # Check the individual statement captures too: a recent index capture does
+        # not prove its linked statement captures are recent.
+        try:
+            def archived(url: str, *, publication: bool = False) -> str:
+                # Replay HTML can contain Wayback-rewritten relative links. Resolve
+                # them back to the official URL before looking up its newest capture.
+                if urlparse(url).hostname == "web.archive.org":
+                    m = re.search(r"/web/\d+(?:[a-z_]+)?/(https?://.+)", url)
+                    if not m:
+                        raise FetchError(f"Unrecognized FATF archive URL: {url}")
+                    url = m.group(1)
+                snap_url, snap_iso = _wayback_latest(url)
+                age = _days_ago(snap_iso)
+                if age > WAYBACK_STALE_AFTER_DAYS:
+                    raise FetchError(f"Wayback snapshot is {age} days old "
+                                     f"(threshold {WAYBACK_STALE_AFTER_DAYS}): {url}")
+                if not publication:
+                    self._index_snapshot_url = snap_url
+                    self._index_snapshot_date = snap_iso
+                html = http_get(snap_url, timeout=45).decode("utf-8", errors="replace")
+                _check_html(html, url, publication=publication)
+                return html
+            html = archived(FATF_INDEX)
+            rows = self._rows_from_index(html, FATF_INDEX, archived)
+            self._strategy = "wayback"
+            return rows
+        except Exception as e:
+            failed("Wayback", e)
+        raise FetchError("FATF fetch failed; no complete, current source. " + " | ".join(failures))

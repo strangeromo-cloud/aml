@@ -1,30 +1,97 @@
 """Tax Justice Network FSI — captured via headless browser network interception.
 
-The fsi.taxjustice.net page calls a token-protected JSON API at
+The full-list page calls a token-protected JSON API at
 api.data.taxjustice.net. The token is set by JavaScript at runtime, so a plain
 HTTP request returns 401. Instead of reverse-engineering the auth, we let the
 browser do its thing and intercept the JSON responses we care about.
 """
 from __future__ import annotations
 
-import json
 import logging
+import math
 import re
 from typing import Any
+from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 
 from ..common import Fetcher, FetchError
 
 
-SCORINGS_RE = re.compile(r"/v1/query/fsi_scorings(?:\?|$)")
-JURIS_RE = re.compile(r"/v1/query/fsi_jurisdictions")
+JURIS_RE = re.compile(r"/v1/query/(fsi(?:20\d{2})?)_jurisdictions/?$")
+MIN_JURISDICTIONS = 100  # The full index has ~140; one table page is not a snapshot.
+
+
+def _jurisdiction_records(payloads: list[Any]) -> list[dict[str, Any]]:
+    """Merge observed batches without counting duplicate requests as more countries."""
+    merged: dict[str, dict[str, Any]] = {}
+    for payload in payloads:
+        items = payload
+        if isinstance(payload, dict):
+            items = payload.get("data") or payload.get("results") or []
+        if not isinstance(items, list):
+            continue
+        for d in items:
+            if not isinstance(d, dict):
+                continue
+            country = (d.get("jurisdiction_name_en") or d.get("jurisdiction_name")
+                       or d.get("jurisdiction"))
+            if not isinstance(country, str) or not country.strip():
+                continue
+            key = str(d.get("jurisdiction_id") or country).casefold()
+            merged[key] = d
+    return list(merged.values())
+
+
+def _number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def _complete(payloads: list[Any]) -> bool:
+    records = _jurisdiction_records(payloads)
+    if len(records) < MIN_JURISDICTIONS:
+        return False
+    # FSI shares are fractions of the whole index and must add up to one. This
+    # rejects a delayed/missing page even if the first 100 jurisdictions arrived.
+    # The live 2026 API returns one complete 141-row array with this invariant.
+    if not all(_number(d.get("index_share")) and 0 <= d["index_share"] <= 1
+               and _number(d.get("index_score")) and 0 <= d["index_score"] <= 100
+               and _number(d.get("index_value")) and d["index_value"] >= 0
+               for d in records):
+        return False
+    return math.isclose(sum(d["index_share"] for d in records), 1.0, abs_tol=1e-6)
+
+
+def _jurisdiction_rows(payloads: list[Any]) -> list[dict[str, Any]]:
+    rows = []
+    for d in _jurisdiction_records(payloads):
+        country = (d.get("jurisdiction_name_en") or d.get("jurisdiction_name")
+                   or d.get("jurisdiction"))
+        rank = d.get("rank")
+        try:
+            rank = int(rank) if rank not in (None, "") else ""
+        except (TypeError, ValueError):
+            rank = ""
+        iso2 = d.get("jurisdiction_id") or ""
+        rows.append({
+            "rank": rank,
+            "country": country.strip(),
+            "iso2": iso2,
+            "fsi_value": d.get("index_value", ""),
+            "secrecy_score": d.get("index_score", ""),
+            # gsw is the scale-weight fraction. index_share is the distinct
+            # FSI share and must not be labelled as Global Scale Weight.
+            "global_scale": d["gsw"] * 100 if _number(d.get("gsw")) else "",
+        })
+    return sorted(rows, key=lambda r: r["rank"]
+                  if isinstance(r["rank"], int) else 10**9)
 
 
 class TjnFsiFetcher(Fetcher):
     id = "tjn-fsi"
     name = "Tax Justice Network Financial Secrecy Index"
-    url = "https://fsi.taxjustice.net/"
+    # The homepage is now an introduction; it need not request ranking data.
+    url = "https://fsi.taxjustice.net/full-list/"
     out_filename = "tjn-fsi.xlsx"
     requires_headless = True
 
@@ -40,8 +107,11 @@ class TjnFsiFetcher(Fetcher):
 
     def fetch(self) -> list[dict[str, Any]]:
         log = logging.getLogger("data-refresh")
-        scorings_payload: dict | None = None
-        juris_payloads: list[dict] = []
+        payloads_by_edition: dict[str, list[Any]] = {}
+        endpoint_statuses: set[str] = set()
+        parse_errors = 0
+        title = ""
+        navigation_status: int | str = "no response"
 
         with sync_playwright() as pw:
             browser = pw.chromium.launch(
@@ -50,90 +120,65 @@ class TjnFsiFetcher(Fetcher):
             )
             try:
                 ctx = browser.new_context(
-                    user_agent=(
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127 Safari/537.36"
-                    ),
                     viewport={"width": 1440, "height": 900},
+                    locale="en-US",
                 )
                 page = ctx.new_page()
                 page.set_default_timeout(60_000)
 
                 def on_response(r):
-                    nonlocal scorings_payload
+                    nonlocal parse_errors
+                    parts = urlsplit(r.url)
+                    match = JURIS_RE.search(parts.path)
+                    if parts.hostname != "api.data.taxjustice.net" or not match:
+                        return
+                    collection = match.group(1)
+                    payloads = payloads_by_edition.setdefault(collection, [])
+                    # API query strings can contain session tokens; never log them.
+                    endpoint_statuses.add(f"{parts.hostname}{parts.path}: HTTP {r.status}")
+                    if not r.ok:
+                        return
                     try:
-                        if SCORINGS_RE.search(r.url) and r.ok:
-                            scorings_payload = r.json()
-                        elif JURIS_RE.search(r.url) and r.ok:
-                            juris_payloads.append(r.json())
+                        payloads.append(r.json())
                     except Exception:
-                        pass
+                        parse_errors += 1
 
                 page.on("response", on_response)
                 try:
-                    page.goto(self.url, wait_until="networkidle", timeout=60_000)
+                    response = page.goto(self.url, wait_until="domcontentloaded", timeout=60_000)
+                    navigation_status = response.status if response else "no response"
                 except PlaywrightTimeout:
-                    pass  # we don't need full networkidle, just the API responses
+                    log.info("TJN full-list navigation timed out; still waiting for ranking responses")
 
-                # Wait until at least one juris response arrives or 30s elapsed
-                page.wait_for_timeout(2000)
-                deadline = 30_000
-                while not juris_payloads and deadline > 0:
+                # The first response may be a batch. Wait for enough unique rows
+                # and two quiet seconds, rather than stopping at the first batch.
+                previous_count = -1
+                quiet_ms = 0
+                for _ in range(60):
                     page.wait_for_timeout(500)
-                    deadline -= 500
+                    # Never merge two editions, nor use an older edition to mask
+                    # an authorization/response failure on the current one.
+                    current = max(payloads_by_edition, default="")
+                    juris_payloads = payloads_by_edition.get(current, [])
+                    count = sum(len(p) for p in payloads_by_edition.values())
+                    quiet_ms = quiet_ms + 500 if count == previous_count else 0
+                    previous_count = count
+                    if quiet_ms >= 2000 and _complete(juris_payloads):
+                        break
+                title = page.title()[:160]
             finally:
                 browser.close()
 
-        if not juris_payloads:
+        current = max(payloads_by_edition, default="")
+        juris_payloads = payloads_by_edition.get(current, [])
+        rows = _jurisdiction_rows(juris_payloads)
+        if not _complete(juris_payloads):
+            statuses = "; ".join(sorted(endpoint_statuses)) or "no jurisdiction API response"
             raise FetchError(
-                "TJN page rendered but no fsi_jurisdictions response captured. "
-                "Endpoint or auth flow may have changed."
+                f"TJN full-list incomplete: {len(rows)} unique jurisdictions "
+                f"(expected at least {MIN_JURISDICTIONS}); page HTTP {navigation_status}, "
+                f"title={title!r}; {statuses}; JSON parse failures={parse_errors}. "
+                "Check the full-list page, API authorization, schema and pagination "
+                "(FSI shares must sum to 1)."
             )
-
-        # Merge all juris payloads (paginated batches). The TJN API returns a
-        # flat list, not wrapped in {data: ...}.
-        merged: list[dict] = []
-        for p in juris_payloads:
-            if isinstance(p, list):
-                merged.extend(p)
-            elif isinstance(p, dict):
-                inner = p.get("data") or p.get("results") or []
-                if isinstance(inner, list):
-                    merged.extend(inner)
-        if not merged:
-            raise FetchError("TJN juris payloads contained no rows")
-
-        # Schema (FSI 2022 / 8.0):
-        #   jurisdiction_id   "AD"  (ISO-2)
-        #   jurisdiction_name "Andorra"
-        #   index_score       secrecy score (0-100, higher = more secrecy)
-        #   index_value       FSI value (composite)
-        #   index_share       global share (0-1)
-        #   rank              integer
-        #   gsw               global scale weight
-        rows: list[dict[str, Any]] = []
-        for d in merged:
-            if not isinstance(d, dict):
-                continue
-            country = d.get("jurisdiction_name") or d.get("jurisdiction") or ""
-            if not country:
-                continue
-            rank = d.get("rank")
-            try:
-                rank = int(rank) if rank not in (None, "") else ""
-            except (TypeError, ValueError):
-                pass
-            rows.append({
-                "rank": rank,
-                "country": country,
-                "iso2": d.get("jurisdiction_id") or "",
-                "fsi_value": d.get("index_value", ""),
-                "secrecy_score": d.get("index_score", ""),
-                "global_scale": (d.get("index_share", 0) * 100) if isinstance(d.get("index_share"), (int, float)) else "",
-            })
-
-        if not rows:
-            raise FetchError("TJN payload merged but no jurisdiction rows usable")
-
-        rows.sort(key=lambda r: r.get("rank") if isinstance(r.get("rank"), int) else 10**9)
         return rows

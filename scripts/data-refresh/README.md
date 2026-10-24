@@ -8,24 +8,25 @@ The orchestrator runs every fetcher in turn, captures status to
 `public/downloads/_manifest.json`, and is wired up to a daily GitHub Actions
 workflow at `.github/workflows/refresh-data.yml` that:
 
-1. Runs all 8 fetchers
+1. Runs the offline regression tests and all 9 fetchers
 2. Commits any changed `.xlsx` files back to `main`
 3. **Opens a GitHub issue tagged `data-refresh-failure`** if any fetcher fails
 
-## Sources covered (8)
+## Sources covered (9)
 
 | ID | Name | Mode | Headless? | Records (last run) |
 |---|---|---|---|---|
-| `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Headless Chromium → Cloudflare bypass + scrape; Wayback fallback if Playwright fails | ✓ | ~25 |
+| `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Official HTTP → shared Chromium session → fresh Wayback fallback; requires both complete lists | ✓ | ~25 |
 | `ofac-country-programs` | OFAC Sanctions Programs by Country | HTML scrape | – | ~43 |
 | `un-consolidated` | UN Security Council Consolidated List | XML parse | – | ~1009 |
 | `eu-consolidated` | EU Consolidated Financial Sanctions | XML parse (token-gated) | – | ~6000 |
 | `ti-cpi` | Transparency International CPI | Annual `.xlsx` (Strict OOXML, parsed via raw XML) | – | 180 |
 | `wjp-rule-of-law` | WJP Rule of Law Index | Direct CSV (`/data/<year>.csv`) | – | 143 |
 | `basel-aml-index` | Basel AML Index | Headless Chromium → table scrape | ✓ | 177 |
-| `tjn-fsi` | Tax Justice Network FSI | Headless Chromium → network interception of `api.data.taxjustice.net/v1/query/fsi_jurisdictions` | ✓ | 141 |
+| `tjn-fsi` | Tax Justice Network FSI | Chromium on `/full-list/` → intercepts legacy `fsi_jurisdictions` and versioned `fsi2026_jurisdictions`; merges batches within one edition and verifies FSI shares sum to 1 | ✓ | 141 |
+| `eu-offshore-centres` | EU / Eurostat Offshore Financial Centres | HTML paragraph scrape | – | ~40 |
 
-The two `requires_headless` fetchers run real Chromium via Playwright. The
+The browser-backed `requires_headless` fetchers run real Chromium via Playwright. The
 daily GitHub Actions run installs Chromium with cache and invokes the
 orchestrator with `--include-headless`. Locally they're skipped by default
 (so you don't need Playwright installed) — pass `--include-headless` to
@@ -37,11 +38,16 @@ run them.
 
 ## Wayback freshness guard
 
-FATF's official site is Cloudflare-protected, so we route through the Wayback
-Machine. **Wayback can lag the live site by days or weeks.** The fetcher uses
+FATF's official site is Cloudflare-protected. We try two official entry pages
+over HTTP, then reuse one Chromium session for the index and both statements.
+Each statement is checked for its own heading and country facet, rather than
+waiting for a menu link that may be absent. Only a complete black/grey pair is
+accepted. Wayback is the last fallback. **Wayback can lag the live site by days
+or weeks.** The fetcher uses
 the Wayback CDX API to get the actual capture timestamp and **fails the run
-if the snapshot is older than 45 days** (FATF publishes 3× per year, so
-45 days is well within the publication cycle). This converts "silent staleness"
+if the index or either statement capture is older than 45 days**. This limit
+applies to the archive capture date, not the statement's publication date.
+This converts "silent staleness"
 into a loud, actionable alert.
 
 ## Layout
@@ -83,6 +89,9 @@ python -m scripts.data-refresh.refresh_all --only fatf-jurisdictions --only un-c
 
 # Make any failure exit non-zero (used in CI)
 python -m scripts.data-refresh.refresh_all --strict
+
+# Offline regression tests (no website requests or notifications)
+python -m unittest discover -s scripts/data-refresh/tests -v
 ```
 
 Every run rewrites `public/downloads/_manifest.json` with per-source status,
