@@ -1,0 +1,1130 @@
+[
+ {
+  "country": "United States",
+  "fsi_value": 2029.1642809358923,
+  "global_scale": 24.944356083869902,
+  "iso2": "US",
+  "rank": 1,
+  "secrecy_score": 68.566
+ },
+ {
+  "country": "Switzerland",
+  "fsi_value": 1220.390210041198,
+  "global_scale": 3.4989520907402,
+  "iso2": "CH",
+  "rank": 2,
+  "secrecy_score": 71.99199999999999
+ },
+ {
+  "country": "Singapore",
+  "fsi_value": 1082.37977938999,
+  "global_scale": 6.5069355070591,
+  "iso2": "SG",
+  "rank": 3,
+  "secrecy_score": 64.5615
+ },
+ {
+  "country": "Hong Kong",
+  "fsi_value": 1021.5265283807763,
+  "global_scale": 3.5325992852449404,
+  "iso2": "HK",
+  "rank": 4,
+  "secrecy_score": 67.7755
+ },
+ {
+  "country": "United Arab Emirates",
+  "fsi_value": 719.5167215733142,
+  "global_scale": 0.303800031542778,
+  "iso2": "AE",
+  "rank": 5,
+  "secrecy_score": 79.20016666666666
+ },
+ {
+  "country": "Germany",
+  "fsi_value": 685.7227721303967,
+  "global_scale": 5.18281124532223,
+  "iso2": "DE",
+  "rank": 6,
+  "secrecy_score": 56.86900000000001
+ },
+ {
+  "country": "Luxembourg",
+  "fsi_value": 651.2660127511164,
+  "global_scale": 10.764045268297199,
+  "iso2": "LU",
+  "rank": 7,
+  "secrecy_score": 51.54
+ },
+ {
+  "country": "Netherlands",
+  "fsi_value": 559.7400908632524,
+  "global_scale": 2.4189917370677003,
+  "iso2": "NL",
+  "rank": 8,
+  "secrecy_score": 57.84400000000001
+ },
+ {
+  "country": "Japan",
+  "fsi_value": 537.8121860432623,
+  "global_scale": 1.77524518221617,
+  "iso2": "JP",
+  "rank": 9,
+  "secrecy_score": 59.075
+ },
+ {
+  "country": "Guernsey",
+  "fsi_value": 537.6098578004126,
+  "global_scale": 0.348060275427997,
+  "iso2": "GG",
+  "rank": 10,
+  "secrecy_score": 70.78999999999999
+ },
+ {
+  "country": "Canada",
+  "fsi_value": 530.5675390967302,
+  "global_scale": 1.98524594306946,
+  "iso2": "CA",
+  "rank": 11,
+  "secrecy_score": 58.0825
+ },
+ {
+  "country": "Taiwan",
+  "fsi_value": 525.4278195923393,
+  "global_scale": 0.8414352312684059,
+  "iso2": "TW",
+  "rank": 12,
+  "secrecy_score": 63.688
+ },
+ {
+  "country": "South Korea",
+  "fsi_value": 513.2570645020336,
+  "global_scale": 0.634259404614568,
+  "iso2": "KR",
+  "rank": 13,
+  "secrecy_score": 65.2085
+ },
+ {
+  "country": "China",
+  "fsi_value": 510.25791703743215,
+  "global_scale": 0.514826690778136,
+  "iso2": "CN",
+  "rank": 14,
+  "secrecy_score": 66.6075
+ },
+ {
+  "country": "Panama",
+  "fsi_value": 472.5215364948238,
+  "global_scale": 0.176644267048687,
+  "iso2": "PA",
+  "rank": 15,
+  "secrecy_score": 73.11699999999999
+ },
+ {
+  "country": "British Virgin Islands",
+  "fsi_value": 470.6061465178863,
+  "global_scale": 0.258894939906895,
+  "iso2": "VG",
+  "rank": 16,
+  "secrecy_score": 69.98150000000001
+ },
+ {
+  "country": "United Kingdom",
+  "fsi_value": 451.58405917262246,
+  "global_scale": 15.4711022973061,
+  "iso2": "GB",
+  "rank": 17,
+  "secrecy_score": 43.816
+ },
+ {
+  "country": "Cayman Islands",
+  "fsi_value": 444.8382759667423,
+  "global_scale": 0.222205277532339,
+  "iso2": "KY",
+  "rank": 18,
+  "secrecy_score": 69.85633333333334
+ },
+ {
+  "country": "Saudi Arabia",
+  "fsi_value": 424.9374833155096,
+  "global_scale": 0.209692469798028,
+  "iso2": "SA",
+  "rank": 19,
+  "secrecy_score": 69.24316666666667
+ },
+ {
+  "country": "Cyprus",
+  "fsi_value": 423.5629015510869,
+  "global_scale": 0.767111731693149,
+  "iso2": "CY",
+  "rank": 20,
+  "secrecy_score": 59.8855
+ },
+ {
+  "country": "Jersey",
+  "fsi_value": 423.05098831571036,
+  "global_scale": 0.514867343008518,
+  "iso2": "JE",
+  "rank": 21,
+  "secrecy_score": 62.573
+ },
+ {
+  "country": "Ireland",
+  "fsi_value": 421.53168755303113,
+  "global_scale": 3.6006338894367196,
+  "iso2": "IE",
+  "rank": 22,
+  "secrecy_score": 50.3515
+ },
+ {
+  "country": "Russia",
+  "fsi_value": 420.52705734949916,
+  "global_scale": 0.275797303766012,
+  "iso2": "RU",
+  "rank": 23,
+  "secrecy_score": 66.93350000000001
+ },
+ {
+  "country": "Malaysia",
+  "fsi_value": 390.26354628122107,
+  "global_scale": 0.08365983958356099,
+  "iso2": "MY",
+  "rank": 24,
+  "secrecy_score": 74.541
+ },
+ {
+  "country": "India",
+  "fsi_value": 386.66955933606437,
+  "global_scale": 1.03765036910772,
+  "iso2": "IN",
+  "rank": 25,
+  "secrecy_score": 56.17616666666667
+ },
+ {
+  "country": "Italy",
+  "fsi_value": 377.3655948966567,
+  "global_scale": 1.52946254238486,
+  "iso2": "IT",
+  "rank": 26,
+  "secrecy_score": 53.371
+ },
+ {
+  "country": "France",
+  "fsi_value": 368.66404708306726,
+  "global_scale": 3.3867921680212,
+  "iso2": "FR",
+  "rank": 27,
+  "secrecy_score": 48.4805
+ },
+ {
+  "country": "Israel",
+  "fsi_value": 332.39029489929146,
+  "global_scale": 0.390431797131896,
+  "iso2": "IL",
+  "rank": 28,
+  "secrecy_score": 59.541833333333344
+ },
+ {
+  "country": "Australia",
+  "fsi_value": 315.02264635382676,
+  "global_scale": 0.445361854508519,
+  "iso2": "AU",
+  "rank": 29,
+  "secrecy_score": 57.637
+ },
+ {
+  "country": "Algeria",
+  "fsi_value": 303.6923873066501,
+  "global_scale": 0.043395379907452,
+  "iso2": "DZ",
+  "rank": 30,
+  "secrecy_score": 73.75
+ },
+ {
+  "country": "Egypt",
+  "fsi_value": 295.9411277237157,
+  "global_scale": 0.088999967556447,
+  "iso2": "EG",
+  "rank": 31,
+  "secrecy_score": 67.5085
+ },
+ {
+  "country": "Bahamas",
+  "fsi_value": 291.2947734943245,
+  "global_scale": 0.055941619211808,
+  "iso2": "BS",
+  "rank": 32,
+  "secrecy_score": 70.70883333333333
+ },
+ {
+  "country": "Malta",
+  "fsi_value": 289.3413874204643,
+  "global_scale": 0.20161499269306699,
+  "iso2": "MT",
+  "rank": 33,
+  "secrecy_score": 61.1835
+ },
+ {
+  "country": "Nigeria",
+  "fsi_value": 285.60934860022263,
+  "global_scale": 0.147162249777466,
+  "iso2": "NG",
+  "rank": 34,
+  "secrecy_score": 63.088
+ },
+ {
+  "country": "Kazakhstan",
+  "fsi_value": 280.788527378634,
+  "global_scale": 0.114740512799472,
+  "iso2": "KZ",
+  "rank": 35,
+  "secrecy_score": 64.48983333333334
+ },
+ {
+  "country": "Thailand",
+  "fsi_value": 276.3186187295555,
+  "global_scale": 0.11657514842227099,
+  "iso2": "TH",
+  "rank": 36,
+  "secrecy_score": 64.03283333333334
+ },
+ {
+  "country": "Macao",
+  "fsi_value": 275.65425215463506,
+  "global_scale": 0.143324048258364,
+  "iso2": "MO",
+  "rank": 37,
+  "secrecy_score": 62.529666666666664
+ },
+ {
+  "country": "Belgium",
+  "fsi_value": 270.69951770123623,
+  "global_scale": 1.08613073825836,
+  "iso2": "BE",
+  "rank": 38,
+  "secrecy_score": 49.6285
+ },
+ {
+  "country": "Kuwait",
+  "fsi_value": 270.4263847893836,
+  "global_scale": 0.040461082244292,
+  "iso2": "KW",
+  "rank": 39,
+  "secrecy_score": 71.5065
+ },
+ {
+  "country": "Guatemala",
+  "fsi_value": 270.4245690628497,
+  "global_scale": 0.019474836881272998,
+  "iso2": "GT",
+  "rank": 40,
+  "secrecy_score": 77.55850000000001
+ },
+ {
+  "country": "Indonesia",
+  "fsi_value": 269.81607560600986,
+  "global_scale": 0.20732085686177,
+  "iso2": "ID",
+  "rank": 41,
+  "secrecy_score": 59.589999999999996
+ },
+ {
+  "country": "Qatar",
+  "fsi_value": 262.3078848992652,
+  "global_scale": 0.052805140148848004,
+  "iso2": "QA",
+  "rank": 42,
+  "secrecy_score": 68.72016666666666
+ },
+ {
+  "country": "Spain",
+  "fsi_value": 247.27835500383114,
+  "global_scale": 0.931343715637922,
+  "iso2": "ES",
+  "rank": 43,
+  "secrecy_score": 48.9835
+ },
+ {
+  "country": "Kenya",
+  "fsi_value": 247.27136791101645,
+  "global_scale": 0.090929493308067,
+  "iso2": "KE",
+  "rank": 44,
+  "secrecy_score": 63.43266666666666
+ },
+ {
+  "country": "Austria",
+  "fsi_value": 246.5258087049245,
+  "global_scale": 0.28029961977154,
+  "iso2": "AT",
+  "rank": 45,
+  "secrecy_score": 55.91799999999999
+ },
+ {
+  "country": "New Zealand",
+  "fsi_value": 242.39585300165345,
+  "global_scale": 0.10281839640811101,
+  "iso2": "NZ",
+  "rank": 46,
+  "secrecy_score": 62.158500000000004
+ },
+ {
+  "country": "Bangladesh",
+  "fsi_value": 240.9089796655124,
+  "global_scale": 0.023442746896762,
+  "iso2": "BD",
+  "rank": 47,
+  "secrecy_score": 73.10549999999999
+ },
+ {
+  "country": "South Africa",
+  "fsi_value": 233.25884820427183,
+  "global_scale": 0.14557873364538,
+  "iso2": "ZA",
+  "rank": 48,
+  "secrecy_score": 59.0415
+ },
+ {
+  "country": "Norway",
+  "fsi_value": 231.98392933393419,
+  "global_scale": 0.459332810714841,
+  "iso2": "NO",
+  "rank": 49,
+  "secrecy_score": 51.870000000000005
+ },
+ {
+  "country": "Vietnam",
+  "fsi_value": 220.915991209458,
+  "global_scale": 0.024263313389383,
+  "iso2": "VN",
+  "rank": 50,
+  "secrecy_score": 70.7535
+ },
+ {
+  "country": "Bahrain",
+  "fsi_value": 219.66910826896518,
+  "global_scale": 0.0349937035935,
+  "iso2": "BH",
+  "rank": 51,
+  "secrecy_score": 67.80433333333335
+ },
+ {
+  "country": "Turkey",
+  "fsi_value": 216.2594229977539,
+  "global_scale": 0.094001408433542,
+  "iso2": "TR",
+  "rank": 52,
+  "secrecy_score": 60.438
+ },
+ {
+  "country": "Bermuda",
+  "fsi_value": 211.11401685035864,
+  "global_scale": 0.02615705889184,
+  "iso2": "BM",
+  "rank": 53,
+  "secrecy_score": 69.11166666666666
+ },
+ {
+  "country": "Mauritius",
+  "fsi_value": 209.35553433920734,
+  "global_scale": 0.029507296858355,
+  "iso2": "MU",
+  "rank": 54,
+  "secrecy_score": 68.0025
+ },
+ {
+  "country": "Jordan",
+  "fsi_value": 207.58805001078773,
+  "global_scale": 0.015533540863544,
+  "iso2": "JO",
+  "rank": 55,
+  "secrecy_score": 72.8215
+ },
+ {
+  "country": "Chile",
+  "fsi_value": 187.40929664709114,
+  "global_scale": 0.041603643330745,
+  "iso2": "CL",
+  "rank": 56,
+  "secrecy_score": 63.0835
+ },
+ {
+  "country": "Sri Lanka",
+  "fsi_value": 185.05093298058588,
+  "global_scale": 0.007081443618517,
+  "iso2": "LK",
+  "rank": 57,
+  "secrecy_score": 76.4765
+ },
+ {
+  "country": "Liechtenstein",
+  "fsi_value": 178.65010928533025,
+  "global_scale": 0.012317726213951,
+  "iso2": "LI",
+  "rank": 58,
+  "secrecy_score": 71.0755
+ },
+ {
+  "country": "Uruguay",
+  "fsi_value": 173.38424372519628,
+  "global_scale": 0.047791056567803,
+  "iso2": "UY",
+  "rank": 59,
+  "secrecy_score": 60.52916666666666
+ },
+ {
+  "country": "Philippines",
+  "fsi_value": 159.38823239832993,
+  "global_scale": 0.049593322910368,
+  "iso2": "PH",
+  "rank": 60,
+  "secrecy_score": 58.613
+ },
+ {
+  "country": "Lithuania",
+  "fsi_value": 157.35057214583222,
+  "global_scale": 0.248672417365015,
+  "iso2": "LT",
+  "rank": 61,
+  "secrecy_score": 48.79
+ },
+ {
+  "country": "Bolivia",
+  "fsi_value": 156.97018197259172,
+  "global_scale": 0.004794917913387,
+  "iso2": "BO",
+  "rank": 62,
+  "secrecy_score": 75.5995
+ },
+ {
+  "country": "Dominican Republic",
+  "fsi_value": 156.59550151017282,
+  "global_scale": 0.038588023744524004,
+  "iso2": "DO",
+  "rank": 63,
+  "secrecy_score": 59.916
+ },
+ {
+  "country": "Morocco",
+  "fsi_value": 155.62383574744945,
+  "global_scale": 0.018373403872829,
+  "iso2": "MA",
+  "rank": 64,
+  "secrecy_score": 64.9305
+ },
+ {
+  "country": "Mexico",
+  "fsi_value": 147.84661532904846,
+  "global_scale": 0.123054895084351,
+  "iso2": "MX",
+  "rank": 65,
+  "secrecy_score": 51.6725
+ },
+ {
+  "country": "Lebanon",
+  "fsi_value": 142.51224116316368,
+  "global_scale": 0.025743615697138,
+  "iso2": "LB",
+  "rank": 66,
+  "secrecy_score": 60.734
+ },
+ {
+  "country": "Brazil",
+  "fsi_value": 138.60919425957943,
+  "global_scale": 0.216481927782297,
+  "iso2": "BR",
+  "rank": 67,
+  "secrecy_score": 47.4965
+ },
+ {
+  "country": "Hungary",
+  "fsi_value": 133.40239655982975,
+  "global_scale": 0.10543548269197299,
+  "iso2": "HU",
+  "rank": 68,
+  "secrecy_score": 50.796499999999995
+ },
+ {
+  "country": "Tanzania",
+  "fsi_value": 133.3320931966104,
+  "global_scale": 0.006336314982036,
+  "iso2": "TZ",
+  "rank": 69,
+  "secrecy_score": 69.413
+ },
+ {
+  "country": "Ukraine",
+  "fsi_value": 132.54461858577878,
+  "global_scale": 0.045397676876746,
+  "iso2": "UA",
+  "rank": 70,
+  "secrecy_score": 55.662333333333336
+ },
+ {
+  "country": "Isle of Man",
+  "fsi_value": 132.5195105929949,
+  "global_scale": 0.011495389480842,
+  "iso2": "IM",
+  "rank": 71,
+  "secrecy_score": 64.8355
+ },
+ {
+  "country": "Curacao",
+  "fsi_value": 128.21535416914668,
+  "global_scale": 0.0028299542464080003,
+  "iso2": "CW",
+  "rank": 72,
+  "secrecy_score": 74.93266666666666
+ },
+ {
+  "country": "Barbados",
+  "fsi_value": 126.65092787260956,
+  "global_scale": 0.004493342567002,
+  "iso2": "BB",
+  "rank": 73,
+  "secrecy_score": 70.88983333333334
+ },
+ {
+  "country": "Venezuela",
+  "fsi_value": 126.62225160360757,
+  "global_scale": 0.0053613381169269995,
+  "iso2": "VE",
+  "rank": 74,
+  "secrecy_score": 69.507
+ },
+ {
+  "country": "Sweden",
+  "fsi_value": 126.51297777731627,
+  "global_scale": 0.708559062331915,
+  "iso2": "SE",
+  "rank": 75,
+  "secrecy_score": 40.3855
+ },
+ {
+  "country": "Seychelles",
+  "fsi_value": 122.54150944211828,
+  "global_scale": 0.00511526959599,
+  "iso2": "SC",
+  "rank": 76,
+  "secrecy_score": 69.112
+ },
+ {
+  "country": "Costa Rica",
+  "fsi_value": 122.53843103627051,
+  "global_scale": 0.020812041475437998,
+  "iso2": "CR",
+  "rank": 77,
+  "secrecy_score": 59.133500000000005
+ },
+ {
+  "country": "Pakistan",
+  "fsi_value": 121.97456261185482,
+  "global_scale": 0.008848699508234999,
+  "iso2": "PK",
+  "rank": 78,
+  "secrecy_score": 64.92866666666666
+ },
+ {
+  "country": "St. Kitts and Nevis",
+  "fsi_value": 119.40027592601817,
+  "global_scale": 0.0019383151084180002,
+  "iso2": "KN",
+  "rank": 79,
+  "secrecy_score": 76.317
+ },
+ {
+  "country": "Poland",
+  "fsi_value": 116.297563472572,
+  "global_scale": 0.28238894883543303,
+  "iso2": "PL",
+  "rank": 80,
+  "secrecy_score": 43.494
+ },
+ {
+  "country": "Ghana",
+  "fsi_value": 114.93189637075639,
+  "global_scale": 0.220861728303134,
+  "iso2": "GH",
+  "rank": 81,
+  "secrecy_score": 44.52233333333333
+ },
+ {
+  "country": "Oman",
+  "fsi_value": 107.11415324358208,
+  "global_scale": 0.0029007862394790002,
+  "iso2": "OM",
+  "rank": 82,
+  "secrecy_score": 70.37966666666667
+ },
+ {
+  "country": "Greece",
+  "fsi_value": 106.56734962363277,
+  "global_scale": 0.148121593520045,
+  "iso2": "GR",
+  "rank": 83,
+  "secrecy_score": 45.3855
+ },
+ {
+  "country": "Romania",
+  "fsi_value": 104.43299654918019,
+  "global_scale": 0.062375154811888996,
+  "iso2": "RO",
+  "rank": 84,
+  "secrecy_score": 49.6275
+ },
+ {
+  "country": "El Salvador",
+  "fsi_value": 103.7968056204527,
+  "global_scale": 0.009862027945928,
+  "iso2": "SV",
+  "rank": 85,
+  "secrecy_score": 60.7915
+ },
+ {
+  "country": "Aruba",
+  "fsi_value": 101.89094175503072,
+  "global_scale": 0.005120935020386,
+  "iso2": "AW",
+  "rank": 86,
+  "secrecy_score": 64.98066666666666
+ },
+ {
+  "country": "Andorra",
+  "fsi_value": 100.93901819454952,
+  "global_scale": 0.02434657944832,
+  "iso2": "AD",
+  "rank": 87,
+  "secrecy_score": 54.4745
+ },
+ {
+  "country": "Portugal",
+  "fsi_value": 100.24475816312432,
+  "global_scale": 0.10268836049363,
+  "iso2": "PT",
+  "rank": 88,
+  "secrecy_score": 46.317
+ },
+ {
+  "country": "Namibia",
+  "fsi_value": 98.61197601958118,
+  "global_scale": 0.006429680070141,
+  "iso2": "NA",
+  "rank": 89,
+  "secrecy_score": 62.67100000000001
+ },
+ {
+  "country": "Serbia",
+  "fsi_value": 96.66175920274225,
+  "global_scale": 0.007170319440775,
+  "iso2": "RS",
+  "rank": 90,
+  "secrecy_score": 61.5055
+ },
+ {
+  "country": "Samoa",
+  "fsi_value": 92.7984120523714,
+  "global_scale": 0.001505316868133,
+  "iso2": "WS",
+  "rank": 91,
+  "secrecy_score": 72.166
+ },
+ {
+  "country": "Gibraltar",
+  "fsi_value": 91.80761616731343,
+  "global_scale": 0.002956853313663,
+  "iso2": "GI",
+  "rank": 92,
+  "secrecy_score": 66.7115
+ },
+ {
+  "country": "Cameroon",
+  "fsi_value": 91.01504788520828,
+  "global_scale": 0.005280599725666,
+  "iso2": "CM",
+  "rank": 93,
+  "secrecy_score": 62.367999999999995
+ },
+ {
+  "country": "Puerto Rico",
+  "fsi_value": 90.69948830350023,
+  "global_scale": 0.001445527232136,
+  "iso2": "PR",
+  "rank": 94,
+  "secrecy_score": 71.941
+ },
+ {
+  "country": "Argentina",
+  "fsi_value": 89.4679467482825,
+  "global_scale": 0.024373510677833,
+  "iso2": "AR",
+  "rank": 95,
+  "secrecy_score": 52.321000000000005
+ },
+ {
+  "country": "Finland",
+  "fsi_value": 89.18726507599628,
+  "global_scale": 0.073273200541735,
+  "iso2": "FI",
+  "rank": 96,
+  "secrecy_score": 46.2495
+ },
+ {
+  "country": "Belize",
+  "fsi_value": 80.43962757452965,
+  "global_scale": 0.0024033943191170003,
+  "iso2": "BZ",
+  "rank": 97,
+  "secrecy_score": 65.32283333333334
+ },
+ {
+  "country": "Colombia",
+  "fsi_value": 77.61163388533349,
+  "global_scale": 0.025807495694608,
+  "iso2": "CO",
+  "rank": 98,
+  "secrecy_score": 49.5835
+ },
+ {
+  "country": "Anguilla",
+  "fsi_value": 74.10224789915675,
+  "global_scale": 0.000469591122965,
+  "iso2": "AI",
+  "rank": 99,
+  "secrecy_score": 76.20349999999999
+ },
+ {
+  "country": "Tunisia",
+  "fsi_value": 71.25070502211456,
+  "global_scale": 0.01594672066858,
+  "iso2": "TN",
+  "rank": 100,
+  "secrecy_score": 50.838
+ },
+ {
+  "country": "Bulgaria",
+  "fsi_value": 69.79168356693336,
+  "global_scale": 0.034971602144651004,
+  "iso2": "BG",
+  "rank": 101,
+  "secrecy_score": 46.269999999999996
+ },
+ {
+  "country": "Latvia",
+  "fsi_value": 68.91860036559095,
+  "global_scale": 0.02436067443341,
+  "iso2": "LV",
+  "rank": 102,
+  "secrecy_score": 47.964999999999996
+ },
+ {
+  "country": "San Marino",
+  "fsi_value": 67.96028435599284,
+  "global_scale": 0.003815813033725,
+  "iso2": "SM",
+  "rank": 103,
+  "secrecy_score": 58.661500000000004
+ },
+ {
+  "country": "St. Lucia",
+  "fsi_value": 67.80335478144269,
+  "global_scale": 0.000949523746385,
+  "iso2": "LC",
+  "rank": 104,
+  "secrecy_score": 68.413
+ },
+ {
+  "country": "Fiji",
+  "fsi_value": 64.26680335572935,
+  "global_scale": 0.0008532253559680001,
+  "iso2": "FJ",
+  "rank": 105,
+  "secrecy_score": 68.0055
+ },
+ {
+  "country": "Slovakia",
+  "fsi_value": 63.94816526638107,
+  "global_scale": 0.040913690463640004,
+  "iso2": "SK",
+  "rank": 106,
+  "secrecy_score": 44.164
+ },
+ {
+  "country": "Turks and Caicos Islands",
+  "fsi_value": 62.33611021962317,
+  "global_scale": 0.000330263719661,
+  "iso2": "TC",
+  "rank": 107,
+  "secrecy_score": 74.80466666666666
+ },
+ {
+  "country": "Czechia",
+  "fsi_value": 62.248144937489684,
+  "global_scale": 0.107918260619044,
+  "iso2": "CZ",
+  "rank": 108,
+  "secrecy_score": 39.2975
+ },
+ {
+  "country": "US Virgin Islands",
+  "fsi_value": 59.35907080773746,
+  "global_scale": 0.000700943337506,
+  "iso2": "VI",
+  "rank": 109,
+  "secrecy_score": 67.691
+ },
+ {
+  "country": "Croatia",
+  "fsi_value": 58.39954323442767,
+  "global_scale": 0.029171217465773003,
+  "iso2": "HR",
+  "rank": 110,
+  "secrecy_score": 44.489
+ },
+ {
+  "country": "Peru",
+  "fsi_value": 57.21248278798744,
+  "global_scale": 0.020859805226792,
+  "iso2": "PE",
+  "rank": 111,
+  "secrecy_score": 45.863
+ },
+ {
+  "country": "Denmark",
+  "fsi_value": 56.95911614202687,
+  "global_scale": 0.301828258670866,
+  "iso2": "DK",
+  "rank": 112,
+  "secrecy_score": 34.0315
+ },
+ {
+  "country": "Rwanda",
+  "fsi_value": 55.30256124719945,
+  "global_scale": 0.004445073136594,
+  "iso2": "RW",
+  "rank": 113,
+  "secrecy_score": 53.84566666666667
+ },
+ {
+  "country": "Montenegro",
+  "fsi_value": 54.76893429009933,
+  "global_scale": 0.007212103810161,
+  "iso2": "ME",
+  "rank": 114,
+  "secrecy_score": 50.862
+ },
+ {
+  "country": "Grenada",
+  "fsi_value": 50.709194840330944,
+  "global_scale": 0.001145238547906,
+  "iso2": "GD",
+  "rank": 115,
+  "secrecy_score": 60.81916666666666
+ },
+ {
+  "country": "Cook Islands",
+  "fsi_value": 49.52071838361596,
+  "global_scale": 0.000243172894443,
+  "iso2": "CK",
+  "rank": 116,
+  "secrecy_score": 71.6775
+ },
+ {
+  "country": "Estonia",
+  "fsi_value": 48.9219801640523,
+  "global_scale": 0.032096373615786,
+  "iso2": "EE",
+  "rank": 117,
+  "secrecy_score": 41.495999999999995
+ },
+ {
+  "country": "Paraguay",
+  "fsi_value": 45.20822725912828,
+  "global_scale": 0.001346541284875,
+  "iso2": "PY",
+  "rank": 118,
+  "secrecy_score": 57.491499999999995
+ },
+ {
+  "country": "St. Vincent & Grenadines",
+  "fsi_value": 43.872478640599326,
+  "global_scale": 0.000488611522087,
+  "iso2": "VC",
+  "rank": 119,
+  "secrecy_score": 63.70583333333334
+ },
+ {
+  "country": "Kosovo",
+  "fsi_value": 42.20946032622029,
+  "global_scale": 0.000564352330912,
+  "iso2": "XK",
+  "rank": 120,
+  "secrecy_score": 61.89149999999999
+ },
+ {
+  "country": "Iceland",
+  "fsi_value": 41.66100945295501,
+  "global_scale": 0.02443129196763,
+  "iso2": "IS",
+  "rank": 121,
+  "secrecy_score": 40.543
+ },
+ {
+  "country": "Albania",
+  "fsi_value": 35.05270577416135,
+  "global_scale": 0.002862758083211,
+  "iso2": "AL",
+  "rank": 122,
+  "secrecy_score": 48.57083333333333
+ },
+ {
+  "country": "Brunei",
+  "fsi_value": 32.87191385093209,
+  "global_scale": 8.604055779e-05,
+  "iso2": "BN",
+  "rank": 123,
+  "secrecy_score": 70.17733333333334
+ },
+ {
+  "country": "Ecuador",
+  "fsi_value": 32.81624641809205,
+  "global_scale": 0.00883066750248,
+  "iso2": "EC",
+  "rank": 124,
+  "secrecy_score": 41.92516666666667
+ },
+ {
+  "country": "North Macedonia",
+  "fsi_value": 32.364563483542774,
+  "global_scale": 0.0005781625532109999,
+  "iso2": "MK",
+  "rank": 125,
+  "secrecy_score": 56.496
+ },
+ {
+  "country": "Botswana",
+  "fsi_value": 31.854205095874313,
+  "global_scale": 0.00074230251812,
+  "iso2": "BW",
+  "rank": 126,
+  "secrecy_score": 54.658500000000004
+ },
+ {
+  "country": "Guam",
+  "fsi_value": 31.17537448116421,
+  "global_scale": 0.00010675059911600001,
+  "iso2": "GU",
+  "rank": 127,
+  "secrecy_score": 67.316
+ },
+ {
+  "country": "Marshall Islands",
+  "fsi_value": 27.329727188611937,
+  "global_scale": 0.000128370402308,
+  "iso2": "MH",
+  "rank": 128,
+  "secrecy_score": 63.11900000000001
+ },
+ {
+  "country": "Monaco",
+  "fsi_value": 26.141344689814023,
+  "global_scale": 4.8925176088000006e-05,
+  "iso2": "MC",
+  "rank": 129,
+  "secrecy_score": 69.2265
+ },
+ {
+  "country": "Dominica",
+  "fsi_value": 23.155142568577034,
+  "global_scale": 0.000157053739258,
+  "iso2": "DM",
+  "rank": 130,
+  "secrecy_score": 58.40266666666666
+ },
+ {
+  "country": "American Samoa",
+  "fsi_value": 21.24111433358903,
+  "global_scale": 3.6108349377e-05,
+  "iso2": "AS",
+  "rank": 131,
+  "secrecy_score": 66.816
+ },
+ {
+  "country": "Nauru",
+  "fsi_value": 18.19662715149842,
+  "global_scale": 0.000179361586561,
+  "iso2": "NR",
+  "rank": 132,
+  "secrecy_score": 53.10533333333334
+ },
+ {
+  "country": "Maldives",
+  "fsi_value": 15.297215571435473,
+  "global_scale": 2.6584237389e-05,
+  "iso2": "MV",
+  "rank": 133,
+  "secrecy_score": 61.96333333333333
+ },
+ {
+  "country": "Trinidad and Tobago",
+  "fsi_value": 15.067393575415567,
+  "global_scale": 2.7339589792000002e-05,
+  "iso2": "TT",
+  "rank": 134,
+  "secrecy_score": 61.459833333333336
+ },
+ {
+  "country": "Vanuatu",
+  "fsi_value": 14.76936122212129,
+  "global_scale": 4.160833456e-06,
+  "iso2": "VU",
+  "rank": 135,
+  "secrecy_score": 75.25666666666666
+ },
+ {
+  "country": "Gambia",
+  "fsi_value": 13.916359342610749,
+  "global_scale": 7.509060396e-06,
+  "iso2": "GM",
+  "rank": 136,
+  "secrecy_score": 69.09450000000001
+ },
+ {
+  "country": "Liberia",
+  "fsi_value": 12.142922044550014,
+  "global_scale": 4.994122449e-06,
+  "iso2": "LR",
+  "rank": 137,
+  "secrecy_score": 69.086
+ },
+ {
+  "country": "Antigua and Barbuda",
+  "fsi_value": 11.175585188876314,
+  "global_scale": 1.231693414e-06,
+  "iso2": "AG",
+  "rank": 138,
+  "secrecy_score": 78.50966666666666
+ },
+ {
+  "country": "Angola",
+  "fsi_value": 10.602668375944534,
+  "global_scale": 2.048217596e-06,
+  "iso2": "AO",
+  "rank": 139,
+  "secrecy_score": 72.90599999999999
+ },
+ {
+  "country": "Slovenia",
+  "fsi_value": 8.782248052901137,
+  "global_scale": 0.016874025459401,
+  "iso2": "SI",
+  "rank": 140,
+  "secrecy_score": 25.142000000000003
+ },
+ {
+  "country": "Montserrat",
+  "fsi_value": 5.81770244305531,
+  "global_scale": 5.92953109e-07,
+  "iso2": "MS",
+  "rank": 141,
+  "secrecy_score": 68.50033333333333
+ }
+]
