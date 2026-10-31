@@ -19,7 +19,7 @@ workflow at `.github/workflows/refresh-data.yml` that:
 | `fatf-jurisdictions` | FATF High-Risk & Monitored Jurisdictions | Official HTTP → FIAU original PDFs → shared Chromium → fresh Wayback; requires complete, dated black/grey lists | ✓ | ~25 |
 | `ofac-country-programs` | OFAC Sanctions Programs by Country | HTML scrape | – | ~43 |
 | `un-consolidated` | UN Security Council Consolidated List | XML parse | – | ~1009 |
-| `eu-consolidated` | EU Consolidated Financial Sanctions | XML parse (token-gated) | – | ~6000 |
+| `eu-consolidated` | EU Consolidated Financial Sanctions | Official XML with session cookies, bounded delayed retry and entity validation | – | ~6000 |
 | `ti-cpi` | Transparency International CPI | Annual `.xlsx` (Strict OOXML, parsed via raw XML) | – | 180 |
 | `wjp-rule-of-law` | WJP Rule of Law Index | Direct CSV (`/data/<year>.csv`) | – | 143 |
 | `basel-aml-index` | Basel AML Index | Headless Chromium → table scrape | ✓ | 177 |
@@ -35,6 +35,25 @@ run them.
 > Sources **not** listed above (OFAC SDN, World Bank WGI, OpenSanctions, the
 > commercial vendors) are accessed via their APIs at runtime — no daily
 > download needed.
+
+## EU Webgate session and list integrity
+
+The EU XML fetcher uses its own in-memory CookieJar. Cookies set by Webgate on
+redirects are sent back on subsequent requests; other fetchers' HTTP clients
+are unchanged. Normal urllib redirect limits remain in place. Transient network,
+redirect-loop, HTTP 429 and HTTP 5xx failures get one retry after 120 seconds,
+using the same cookie session. Other HTTP errors fail immediately.
+
+An FSF XML export must contain at least 3,000 entities, unique non-empty EU
+references, and non-empty names. A drop greater than 20% versus
+the previous record count requires manual review. After failed runs lose their
+manifest count, the retained workbook provides that comparison. Rejected
+downloads never reach the output writer, so the prior workbook is retained.
+
+The official CSV 1.1 file is not used as a transparent fallback. Its rows are
+subrecords rather than entities, and its primary-name order, country descriptions
+and remarks differ from XML. A future CSV parser must define these conversions
+and validate them before replacing the existing eight-column output contract.
 
 ## Wayback freshness guard
 
