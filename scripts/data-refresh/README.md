@@ -61,7 +61,11 @@ FATF's official site is Cloudflare-protected. We try two official entry pages
 over HTTP, then use the original statement copies on Malta FIAU's
 `https://fiaumalta.org/country-statements/` page before launching Chromium.
 The newest black and grey PDFs must share a statement date, and their document
-titles and dated final source citations must agree. Country headings are read
+titles and dated final source citations must agree. List type comes from the PDF
+title, so a grey-list link misplaced in the black-list column can still be paired
+correctly. Only the newest linked date is considered; two different documents
+of the same type or a missing counterpart remain failures. Blank extraction lines
+before the visible title are ignored. Country headings are read
 only from the active list; countries discussed in prose or removed from monitoring
 are excluded. Missing, partial, mismatched or changed-layout documents fail closed.
 

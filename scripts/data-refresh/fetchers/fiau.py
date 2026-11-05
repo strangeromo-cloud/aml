@@ -1,8 +1,9 @@
 """Complete FATF statement copies published by Malta's official FIAU.
 
-Only date-labelled PDF links in the two FATF sections are eligible. Each section
-must have the same newest edition; an incomplete update never rolls back to an
-older pair. Country names come from PDF headings, not prose mentioning countries.
+Only date-labelled PDF links in the two FATF sections are eligible. The documents'
+own titles identify their list types, even if FIAU places a link in the wrong
+column. The latest pair must share one date; incomplete updates never roll back.
+Country names come from PDF headings, not prose mentioning countries.
 """
 from __future__ import annotations
 
@@ -13,7 +14,7 @@ from dataclasses import dataclass
 from datetime import date
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup, Tag
@@ -44,6 +45,11 @@ def _clean(text: str) -> str:
     return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", text)).strip()
 
 
+def _document_title(text: str) -> str:
+    # PDF extraction can emit blank lines before the first visible title.
+    return next((_clean(line) for line in text.splitlines() if _clean(line)), "")
+
+
 def _country_name(text: str) -> str:
     # The DPRK heading appends an acronym. The current grey PDF misspells PAPUA
     # as PAPAU in its heading, while its following paragraph spells it correctly.
@@ -62,7 +68,27 @@ def _date(text: str) -> date:
         raise FetchError(f"FIAU statement date invalid: {match.group(0)}") from exc
 
 
-def discover_latest_pair(html: str) -> tuple[Statement, Statement]:
+def _identify_statement(raw: bytes, day: date, url: str) -> Statement:
+    """Identify a document by its own title/date, independent of the web column."""
+    if not raw.startswith(b"%PDF-"):
+        raise FetchError(f"FIAU statement download is not a PDF: {url}")
+    try:
+        reader = PdfReader(BytesIO(raw), strict=True)
+        if reader.is_encrypted or not reader.pages:
+            raise ValueError("encrypted or empty document")
+        first = reader.pages[0].extract_text() or ""
+        title = _document_title(first)
+    except Exception as exc:
+        raise FetchError(f"Cannot identify FIAU PDF: {type(exc).__name__}: {exc}") from exc
+    title_key = title.lower().replace("–", "-").replace("—", "-")
+    kinds = [kind for kind, prefix in _TITLES.items() if title_key.startswith(prefix)]
+    if len(kinds) != 1 or _date(title) != day:
+        raise FetchError(f"FIAU PDF title/date does not match a FATF statement for {day}: {title}")
+    return Statement(kinds[0], day, url)
+
+
+def discover_latest_pair(html: str, *, pdf_loader: Callable[[str], bytes]) -> tuple[Statement, Statement]:
+    """Resolve the newest links by document title, not their HTML column."""
     soup = BeautifulSoup(html, "html.parser")
     sections: dict[str, list[Statement]] = {"black": [], "grey": []}
     seen_sections: set[str] = set()
@@ -89,19 +115,26 @@ def discover_latest_pair(html: str) -> tuple[Statement, Statement]:
             if parts.scheme != "https" or parts.hostname not in {"fiaumalta.org", "www.fiaumalta.org"}:
                 raise FetchError(f"FIAU statement PDF is outside the official site: {url}")
             sections[kind].append(Statement(kind, _date(node.get_text(" ", strip=True)), url))
-    latest = []
+    # FIAU has placed both October 2026 documents in its black-list column.
+    # Inspect only the newest linked edition, and classify its PDFs by their
+    # actual titles. Never fill a missing counterpart from an older edition.
+    candidates = [item for items in sections.values() for item in items]
+    if not candidates:
+        raise FetchError("FIAU page has no date-labelled statement PDFs")
+    day = max(item.day for item in candidates)
+    urls = sorted({item.url for item in candidates if item.day == day})
+    if len(urls) > 2:
+        raise FetchError(f"FIAU has ambiguous PDFs for {day}: {len(urls)} distinct files")
+    sections = {"black": [], "grey": []}
+    for url in urls:
+        statement = _identify_statement(pdf_loader(url), day, url)
+        sections[statement.kind].append(statement)
     for kind, statements in sections.items():
-        if not statements:
-            raise FetchError(f"FIAU page has no date-labelled {kind} statement PDFs")
-        day = max(item.day for item in statements)
-        urls = {item.url for item in statements if item.day == day}
-        if len(urls) != 1:
+        if len(statements) > 1:
             raise FetchError(f"FIAU has ambiguous {kind} PDFs for {day}")
-        latest.append(Statement(kind, day, urls.pop()))
-    black, grey = latest
-    if black.day != grey.day:
-        raise FetchError(f"FIAU latest editions differ: black {black.day}, grey {grey.day}; refusing an older pair")
-    return black, grey
+        if not statements:
+            raise FetchError(f"FIAU latest edition {day} has no matching {kind} PDF; refusing an older pair")
+    return sections["black"][0], sections["grey"][0]
 
 
 def _headings(page) -> list[tuple[str, float, bool]]:
@@ -154,7 +187,7 @@ def parse_statement(raw: bytes, statement: Statement) -> list[dict[str, Any]]:
         page_texts = [page.extract_text() or "" for page in reader.pages]
         # Verify the document's own title/date, not dates mentioned in its prose.
         first = page_texts[0]
-        title = _clean(first.splitlines()[0]) if first.splitlines() else ""
+        title = _document_title(first)
         title_key = title.lower().replace("–", "-").replace("—", "-")
         if not title_key.startswith(_TITLES[statement.kind]) or _date(title) != statement.day:
             raise FetchError(f"FIAU {statement.kind} PDF title/date does not match {statement.day}: {title}")
@@ -216,10 +249,15 @@ def parse_statement(raw: bytes, statement: Statement) -> list[dict[str, Any]]:
 
 def fetch_fiau() -> list[dict[str, Any]]:
     html = http_get(FIAU_INDEX, timeout=45, retries=2).decode("utf-8", errors="replace")
-    pair = discover_latest_pair(html)
+    documents: dict[str, bytes] = {}
+    def load_pdf(url: str) -> bytes:
+        if url not in documents:
+            documents[url] = http_get(url, timeout=60, retries=2)
+        return documents[url]
+    pair = discover_latest_pair(html, pdf_loader=load_pdf)
     rows = []
     for statement in pair:
-        rows.extend(parse_statement(http_get(statement.url, timeout=60, retries=2), statement))
+        rows.extend(parse_statement(load_pdf(statement.url), statement))
     from ..verify_fatf import validate_rows
     rejected = validate_rows(rows)
     if rejected:

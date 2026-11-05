@@ -32,11 +32,12 @@ def index(black="19th June 2026", grey="19th June 2026", black_extra="", grey_ex
 
 
 def pdf(kind, countries=None, *, day="19th June 2026", footer=True, style=None,
-        removed=True, style_overrides=None):
+        removed=True, style_overrides=None, leading_blank=False):
     """Small actual PDF with three standard fonts; no extra test dependencies."""
     title = (BLACK_TITLE if kind == "black" else GREY_TITLE) + " - " + day
     countries = (BLACK if kind == "black" else GREY) if countries is None else countries
-    lines = [(title, "F2", 14 if kind == "black" else 16)]
+    lines = [(" ", "F1", 12)] if leading_blank else []
+    lines.append((title, "F2", 14 if kind == "black" else 16))
     lines.append(("Countries mentioned only in prose: Algeria, Namibia and South Africa.", "F1", 12))
     font, size = style or (("F3", 16) if kind == "black" else ("F2", 13.56))
     for country in countries:
@@ -78,17 +79,23 @@ def pdf(kind, countries=None, *, day="19th June 2026", footer=True, style=None,
     return bytes(data)
 
 
+def discover(html, documents=None):
+    documents = documents or {BLACK_URL: pdf("black"), GREY_URL: pdf("grey")}
+    return fiau.discover_latest_pair(html, pdf_loader=lambda url: documents[url])
+
+
 class FiauTests(unittest.TestCase):
     def test_discovery_keeps_sections_separate_and_selects_each_latest(self):
         older = '<a href="https://fiaumalta.org/older.pdf">13th February 2026</a>'
-        black, grey = fiau.discover_latest_pair(index(black_extra=older, grey_extra=older))
+        black, grey = discover(index(black_extra=older, grey_extra=older))
         self.assertEqual((black.day, grey.day), (DAY, DAY))
         self.assertEqual((black.url, grey.url), (BLACK_URL, GREY_URL))
 
     def test_one_side_update_never_rolls_back_to_matching_older_pair(self):
         older = f'<a href="{BLACK_URL}">19th June 2026</a>'
-        with self.assertRaisesRegex(fiau.FetchError, "latest editions differ"):
-            fiau.discover_latest_pair(index(black="23rd October 2026", black_extra=older))
+        with self.assertRaisesRegex(fiau.FetchError, "refusing an older pair"):
+            discover(index(black="23rd October 2026", black_extra=older),
+                     {BLACK_URL: pdf("black", day="23rd October 2026")})
 
     def test_missing_side_invalid_date_and_ambiguous_links_are_rejected(self):
         for html in [index().split('<h2>Jurisdictions Under')[0],
@@ -96,11 +103,59 @@ class FiauTests(unittest.TestCase):
                      index(black_extra='<a href="https://fiaumalta.org/other.pdf">19th June 2026</a>')]:
             with self.subTest(html=html):
                 with self.assertRaises(fiau.FetchError):
-                    fiau.discover_latest_pair(html)
+                    discover(html)
 
     def test_external_pdf_is_not_a_trusted_fiau_source(self):
         with self.assertRaisesRegex(fiau.FetchError, "outside the official site"):
-            fiau.discover_latest_pair(index().replace(BLACK_URL, "https://example.com/black.pdf"))
+            discover(index().replace(BLACK_URL, "https://example.com/black.pdf"))
+
+    def test_latest_grey_link_in_black_column_uses_its_document_title(self):
+        day = "30th October 2026"
+        opaque = "https://fiaumalta.org/app/uploads/2026/11/document-b.pdf"
+        misplaced = (f'<a href="{opaque}">{day}</a>'
+                     f'<a href="{BLACK_URL}">{day}</a>')
+        html = index(black=day, black_extra=misplaced)
+        pages = {fiau.FIAU_INDEX: html.encode(),
+                 BLACK_URL: pdf("black", day=day, leading_blank=True),
+                 opaque: pdf("grey", day=day, leading_blank=True)}
+        # The older grey-column PDF must not be downloaded to complete the pair.
+        with patch.object(fiau, "http_get", side_effect=lambda url, **kw: pages[url]) as get:
+            rows = fiau.fetch_fiau()
+        self.assertEqual({r["publication_date"] for r in rows}, {"2026-10-30"})
+        self.assertEqual({r["source_url"] for r in rows if "Greylist" in r["status"]}, {opaque})
+        self.assertEqual(len(rows), len(BLACK) + len(GREY))
+        self.assertEqual(get.call_count, 3)
+        self.assertNotIn(GREY_URL, [c.args[0] for c in get.call_args_list])
+
+    def test_swapped_columns_do_not_swap_black_and_grey_lists(self):
+        html = index().replace(BLACK_URL, "TEMP_URL").replace(GREY_URL, BLACK_URL).replace("TEMP_URL", GREY_URL)
+        black, grey = discover(html)
+        self.assertEqual((black.kind, black.url), ("black", BLACK_URL))
+        self.assertEqual((grey.kind, grey.url), ("grey", GREY_URL))
+
+    def test_two_actual_black_documents_remain_ambiguous(self):
+        day = "30th October 2026"
+        other = "https://fiaumalta.org/app/uploads/2026/11/another.pdf"
+        html = index(black=day, black_extra=f'<a href="{other}">{day}</a>')
+        with self.assertRaisesRegex(fiau.FetchError, "ambiguous black"):
+            discover(html, {BLACK_URL: pdf("black", day=day), other: pdf("black", day=day)})
+
+    def test_link_date_cannot_disguise_an_older_pdf(self):
+        with self.assertRaisesRegex(fiau.FetchError, "title/date"):
+            discover(index(black="30th October 2026"))
+
+    def test_unknown_document_title_cannot_be_classified_by_column(self):
+        raw = pdf("black").replace(BLACK_TITLE.encode(), b"Unrelated report".ljust(len(BLACK_TITLE)), 1)
+        with self.assertRaisesRegex(fiau.FetchError, "title/date"):
+            discover(index(), {BLACK_URL: raw, GREY_URL: pdf("grey")})
+
+    def test_blank_extraction_lines_before_title_are_ignored(self):
+        for kind, url in [("black", BLACK_URL), ("grey", GREY_URL)]:
+            with self.subTest(kind=kind):
+                raw = pdf(kind, leading_blank=True)
+                statement = fiau._identify_statement(raw, DAY, url)
+                self.assertEqual(statement.kind, kind)
+                self.assertTrue(fiau.parse_statement(raw, statement))
 
     def test_fetch_returns_pdf_provenance_and_only_active_country_headings(self):
         pages = {fiau.FIAU_INDEX: index().encode(), BLACK_URL: pdf("black"), GREY_URL: pdf("grey")}
