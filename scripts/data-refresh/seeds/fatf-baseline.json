@@ -1,156 +1,154 @@
 {
- "listDate": "2026-06-19",
- "provenance": "法务提供的参考文件 公开名单-CPI-离岸-FATF.xlsx（FATF 黑灰名单 tab）",
- "rows": [
-  {
-   "status": "Call for Action",
-   "country": "Democratic People's Republic of Korea",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Call for Action",
-   "country": "Iran",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Call for Action",
-   "country": "Myanmar",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Angola",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Bolivia",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Bosnia and Herzegovina",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Bulgaria",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Cameroon",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Côte d'Ivoire",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Democratic Republic of Congo",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Haiti",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Iraq",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Kenya",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Kuwait",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Lao People's Democratic Republic",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Lebanon",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Monaco",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Nepal",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Papua New Guinea",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "South Sudan",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Syria",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Venezuela",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Vietnam",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Virgin Islands (UK)",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  },
-  {
-   "status": "Increased Monitoring",
-   "country": "Yemen",
-   "publication_date": "2026-06-19",
-   "source_url": "https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html"
-  }
- ]
+  "listDate": "2026-10-30",
+  "provenance": "用户于 2026-11-06 人工确认更新；FATF 2026-10-30 声明，原文副本由 FIAU 转载（黑名单 3、灰名单 18）",
+  "rows": [
+    {
+      "status": "Call for Action",
+      "country": "Democratic People's Republic of Korea",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-Public-Statement-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Call for Action",
+      "country": "Iran",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-Public-Statement-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Call for Action",
+      "country": "Myanmar",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-Public-Statement-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Angola",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Bolivia",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Bosnia and Herzegovina",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Cameroon",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Haiti",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Iraq",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Kenya",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Kuwait",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Lao People's Democratic Republic",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Lebanon",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Nepal",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Papua New Guinea",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "South Sudan",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Syria",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Venezuela",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Vietnam",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Virgin Islands (UK)",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    },
+    {
+      "status": "Increased Monitoring",
+      "country": "Yemen",
+      "publication_date": "2026-10-30",
+      "source_url": "https://fiaumalta.org/app/uploads/2026/11/FATF-On-going-Process-30th-October-2026.pdf",
+      "source_provider": "FIAU 转载 FATF"
+    }
+  ],
+  "confirmedAt": "2026-11-06T11:57:07+08:00"
 }
