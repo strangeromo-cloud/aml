@@ -6,8 +6,8 @@ export function generateStaticParams() {
   return companies.map((c) => ({ id: c.id }));
 }
 
-export default function CompanyPage({ params }: { params: { id: string } }) {
-  const result = assessmentFor(params.id);
+export default async function CompanyPage({ params }: { params: Promise<{ id: string }> }) {
+  const result = assessmentFor((await params).id);
   if (!result) notFound();
   return (
     <CompanyDetail
